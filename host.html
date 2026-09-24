@@ -156,10 +156,16 @@
     <div id="teamList"></div>
 
     <div id="controls">
-      <button id="startButton" disabled>
-        Start Questions
-      </button>
-    </div>
+
+  <button id="playIntroButton" disabled>
+    ▶ Play Intro
+  </button>
+
+  <button id="startButton" disabled>
+    Skip Intro → Start Questions
+  </button>
+
+</div>
 
   </section>
 
@@ -207,6 +213,9 @@ const photoChannel =
     const startButton =
       document.getElementById("startButton");
 
+const playIntroButton =
+  document.getElementById("playIntroButton");
+    
     const statusEl =
       document.getElementById("status");
 
@@ -644,8 +653,10 @@ const photoChannel =
 
 
       startButton.disabled =
-        joinedCount === 0;
+  joinedCount === 0;
 
+playIntroButton.disabled =
+  joinedCount === 0;
 
       if (joinedCount === 10) {
 
@@ -662,6 +673,30 @@ const photoChannel =
 
     }
 
+    playIntroButton.addEventListener(
+  "click",
+  async () => {
+
+    if (!currentRoomCode) {
+      return;
+    }
+
+    await update(
+      ref(
+        db,
+        "rooms/" +
+        currentRoomCode
+      ),
+      {
+        state: "intro"
+      }
+    );
+
+    statusEl.textContent =
+      "Intro playing on TV.";
+
+  }
+);
 
     startButton.addEventListener(
       "click",
