@@ -69,6 +69,31 @@
       font-size: 24px;
       margin-top: 30px;
     }
+
+    #photoTestSection {
+      margin-top: 40px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255,255,255,0.2);
+    }
+
+    #photoTestTitle {
+      font-size: 28px;
+      margin-bottom: 15px;
+    }
+
+    #photoTest {
+      width: min(700px, 80vw);
+      height: 360px;
+      object-fit: contain;
+      border-radius: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.05);
+    }
+
+    #photoMessage {
+      margin-top: 12px;
+      font-size: 20px;
+    }
   </style>
 </head>
 
@@ -89,12 +114,35 @@
     Waiting for host to create a room...
   </div>
 
+  <section id="photoTestSection">
+    <div id="photoTestTitle">
+      Local Team Photo Test
+    </div>
+
+    <img
+      id="photoTest"
+      alt="Local team photo test"
+      hidden
+    >
+
+    <div id="photoMessage">
+      Waiting for a locally stored team photo...
+    </div>
+  </section>
+
+
   <script type="module">
+
     import {
       db,
       ref,
       onValue
     } from "./firebase.js";
+
+    import {
+      getTeamPhoto
+    } from "./local-media.js";
+
 
     const roomCodeEl =
       document.getElementById("roomCode");
@@ -108,74 +156,250 @@
     const statusEl =
       document.getElementById("status");
 
-    let stopTeamListener = null;
+    const photoTest =
+      document.getElementById("photoTest");
+
+    const photoMessage =
+      document.getElementById("photoMessage");
+
+
+    let activeRoomCode = null;
+
 
     const currentRoomRef =
       ref(db, "currentRoom");
 
-    onValue(currentRoomRef, (snapshot) => {
-      const roomCode = snapshot.val();
 
-      if (!roomCode) {
-        roomCodeEl.textContent = "----";
-        joinedCountEl.textContent = "Waiting for teams...";
-        statusEl.textContent = "Waiting for host to create a room...";
-        teamGrid.innerHTML = "";
-        return;
+    onValue(
+      currentRoomRef,
+      (snapshot) => {
+
+        const roomCode =
+          snapshot.val();
+
+        activeRoomCode =
+          roomCode || null;
+
+
+        if (!roomCode) {
+
+          roomCodeEl.textContent =
+            "----";
+
+          joinedCountEl.textContent =
+            "Waiting for teams...";
+
+          statusEl.textContent =
+            "Waiting for host to create a room...";
+
+          teamGrid.innerHTML =
+            "";
+
+          photoTest.hidden =
+            true;
+
+          photoMessage.textContent =
+            "Waiting for a locally stored team photo...";
+
+          return;
+        }
+
+
+        roomCodeEl.textContent =
+          roomCode;
+
+        statusEl.textContent =
+          "Join using the room code above";
+
+        watchTeams(
+          roomCode
+        );
+
       }
+    );
 
-      roomCodeEl.textContent = roomCode;
-      statusEl.textContent = "Join using the room code above";
-
-      watchTeams(roomCode);
-    });
 
     function watchTeams(roomCode) {
+
       const teamsRef =
-        ref(db, "rooms/" + roomCode + "/teams");
+        ref(
+          db,
+          "rooms/" +
+          roomCode +
+          "/teams"
+        );
 
-      onValue(teamsRef, (snapshot) => {
-        const teams = snapshot.val() || {};
 
-        teamGrid.innerHTML = "";
+      onValue(
+        teamsRef,
+        async (snapshot) => {
 
-        let joinedCount = 0;
+          const teams =
+            snapshot.val() || {};
 
-        for (let teamNumber = 1; teamNumber <= 10; teamNumber++) {
-          const teamKey = "team" + teamNumber;
+          teamGrid.innerHTML =
+            "";
 
-          const joined =
-            teams[teamKey] &&
-            teams[teamKey].joined === true;
+          let joinedCount =
+            0;
 
-          if (joined) {
-            joinedCount++;
+
+          for (
+            let teamNumber = 1;
+            teamNumber <= 10;
+            teamNumber++
+          ) {
+
+            const teamKey =
+              "team" + teamNumber;
+
+            const joined =
+              teams[teamKey] &&
+              teams[teamKey].joined === true;
+
+
+            if (joined) {
+              joinedCount++;
+            }
+
+
+            const card =
+              document.createElement("div");
+
+            card.className =
+              "teamCard " +
+              (
+                joined
+                  ? "joined"
+                  : "waiting"
+              );
+
+
+            card.textContent =
+              joined
+                ? "Team " +
+                  teamNumber +
+                  " ✓"
+                : "Team " +
+                  teamNumber;
+
+
+            teamGrid.appendChild(
+              card
+            );
+
           }
 
-          const card =
-            document.createElement("div");
 
-          card.className =
-            "teamCard " +
-            (joined ? "joined" : "waiting");
+          joinedCountEl.textContent =
+            joinedCount +
+            " / 10 teams joined";
 
-          card.textContent =
-            joined
-              ? "Team " + teamNumber + " ✓"
-              : "Team " + teamNumber;
 
-          teamGrid.appendChild(card);
+          if (joinedCount === 10) {
+
+            statusEl.textContent =
+              "All teams are ready ✓";
+
+          }
+
+
+          await loadFirstAvailableTeamPhoto(
+            roomCode,
+            teams
+          );
+
         }
+      );
 
-        joinedCountEl.textContent =
-          joinedCount + " / 10 teams joined";
-
-        if (joinedCount === 10) {
-          statusEl.textContent =
-            "All teams are ready ✓";
-        }
-      });
     }
+
+
+    async function loadFirstAvailableTeamPhoto(
+      roomCode,
+      teams
+    ) {
+
+      photoTest.hidden =
+        true;
+
+      photoMessage.textContent =
+        "Checking local team photos...";
+
+
+      for (
+        let teamNumber = 1;
+        teamNumber <= 10;
+        teamNumber++
+      ) {
+
+        const teamKey =
+          "team" + teamNumber;
+
+
+        const joined =
+          teams[teamKey] &&
+          teams[teamKey].joined === true;
+
+
+        if (!joined) {
+          continue;
+        }
+
+
+        const photoStorageKey =
+          roomCode +
+          "-" +
+          teamKey;
+
+
+        try {
+
+          const photo =
+            await getTeamPhoto(
+              photoStorageKey
+            );
+
+
+          if (photo) {
+
+            const photoURL =
+              URL.createObjectURL(
+                photo
+              );
+
+
+            photoTest.src =
+              photoURL;
+
+            photoTest.hidden =
+              false;
+
+            photoMessage.textContent =
+              "Loaded local photo for Team " +
+              teamNumber;
+
+            return;
+
+          }
+
+        } catch (error) {
+
+          console.error(
+            "Could not load local team photo:",
+            error
+          );
+
+        }
+
+      }
+
+
+      photoMessage.textContent =
+        "No local team photo found yet.";
+
+    }
+
   </script>
 
 </body>
