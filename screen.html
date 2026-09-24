@@ -3,36 +3,127 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Moon Palace TV</title>
+
+  <style>
+
+    body {
+      margin: 0;
+      padding: 40px;
+      font-family: Arial, sans-serif;
+      text-align: center;
+
+      background:
+        radial-gradient(
+          circle at top,
+          #313974,
+          #101426 65%
+        );
+
+      color: white;
+    }
+
+    h1 {
+      font-size: 56px;
+      margin-bottom: 15px;
+    }
+
+    h2 {
+      font-size: 36px;
+    }
+
+    #roomCode {
+      font-size: 100px;
+      font-weight: bold;
+      letter-spacing: 18px;
+
+      margin: 35px 0;
+
+      color: #ffe89a;
+    }
+
+    #joinStatus {
+      font-size: 30px;
+      margin-top: 40px;
+    }
+
+  </style>
 </head>
 
 <body>
-  <h1>🌙 Moon Palace TV Screen</h1>
 
-  <p>Waiting for Firebase...</p>
+  <h1>
+    🌙 Moon Palace Adventure
+  </h1>
 
-  <h2 id="message">No message yet.</h2>
+  <h2>
+    月宮大冒險
+  </h2>
+
+  <p style="font-size:30px;">
+    Join the game
+  </p>
+
+  <div id="roomCode">
+    ----
+  </div>
+
+  <div id="joinStatus">
+    Waiting for host to create a room...
+  </div>
+
 
   <script type="module">
+
     import {
       db,
       ref,
       onValue
     } from "./firebase.js";
 
-    const messageEl = document.getElementById("message");
 
-    const messageRef = ref(db, "test/message");
+    const roomCodeEl =
+      document.getElementById("roomCode");
 
-    onValue(messageRef, (snapshot) => {
-      const data = snapshot.val();
+    const joinStatusEl =
+      document.getElementById("joinStatus");
 
-      if (data && data.text) {
-        messageEl.textContent = data.text;
-      } else {
-        messageEl.textContent = "No message yet.";
+
+    const currentRoomRef =
+      ref(db, "currentRoom");
+
+
+    onValue(
+      currentRoomRef,
+      (snapshot) => {
+
+        const roomCode =
+          snapshot.val();
+
+
+        if (roomCode) {
+
+          roomCodeEl.textContent =
+            roomCode;
+
+          joinStatusEl.textContent =
+            "Waiting for teams to join...";
+
+        } else {
+
+          roomCodeEl.textContent =
+            "----";
+
+          joinStatusEl.textContent =
+            "Waiting for host to create a room...";
+
+        }
+
       }
-    });
+    );
+
   </script>
+
 </body>
 </html>
