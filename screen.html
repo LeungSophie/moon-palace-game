@@ -8,6 +8,31 @@
 
 <body>
   <h1>🌙 Moon Palace TV Screen</h1>
-  <p>TV display working.</p>
+
+  <p>Waiting for Firebase...</p>
+
+  <h2 id="message">No message yet.</h2>
+
+  <script type="module">
+    import {
+      db,
+      ref,
+      onValue
+    } from "./firebase.js";
+
+    const messageEl = document.getElementById("message");
+
+    const messageRef = ref(db, "test/message");
+
+    onValue(messageRef, (snapshot) => {
+      const data = snapshot.val();
+
+      if (data && data.text) {
+        messageEl.textContent = data.text;
+      } else {
+        messageEl.textContent = "No message yet.";
+      }
+    });
+  </script>
 </body>
 </html>
