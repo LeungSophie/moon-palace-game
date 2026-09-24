@@ -182,7 +182,10 @@
       getTeamPhoto
     } from "./local-media.js";
 
-
+const photoChannel =
+  new BroadcastChannel(
+    "moon-palace-photos"
+  );
     const createRoomButton =
       document.getElementById("createRoomButton");
 
@@ -517,6 +520,11 @@
                   file
                 );
 
+                photoChannel.postMessage({
+  type: "photo-updated",
+  roomCode: currentRoomCode,
+  teamKey: teamKey
+});
 
                 const previewURL =
                   URL.createObjectURL(file);
