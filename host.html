@@ -3,32 +3,87 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Moon Palace Host</title>
 
   <style>
     body {
+      margin: 0;
+      padding: 28px;
       font-family: Arial, sans-serif;
-      padding: 30px;
       background: #11152b;
       color: white;
     }
 
+    h1 {
+      margin-top: 0;
+    }
+
     button {
-      font-size: 22px;
-      padding: 15px 25px;
+      font-size: 18px;
+      padding: 12px 18px;
+      border-radius: 10px;
+      border: none;
       cursor: pointer;
     }
 
     #roomCode {
-      font-size: 60px;
+      font-size: 48px;
       font-weight: bold;
-      margin: 25px 0;
       letter-spacing: 8px;
+      margin: 16px 0;
+    }
+
+    #teamList {
+      margin-top: 25px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .teamRow {
+      display: grid;
+      grid-template-columns: 120px 130px 1fr;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 10px;
+    }
+
+    .teamName {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .statusJoined {
+      color: #8ff0a4;
+    }
+
+    .statusWaiting {
+      color: #aaa;
+    }
+
+    input[type="number"] {
+      width: 140px;
+      font-size: 18px;
+      padding: 8px;
+      border-radius: 8px;
+      border: none;
+    }
+
+    #controls {
+      margin-top: 28px;
+    }
+
+    #startButton {
+      background: #ffe89a;
+      color: #11152b;
+      font-weight: bold;
     }
 
     #status {
-      margin-top: 20px;
-      font-size: 18px;
+      margin-top: 16px;
+      font-size: 17px;
     }
   </style>
 </head>
@@ -41,24 +96,38 @@
     Create New Game Room
   </button>
 
-  <div id="roomSection" hidden>
+  <section id="roomSection" hidden>
+
     <p>Room Code</p>
 
     <div id="roomCode">----</div>
 
-    <p>
-      Waiting for teams...
+    <p id="joinedCount">
+      0 / 10 teams joined
     </p>
-  </div>
+
+    <div id="teamList"></div>
+
+    <div id="controls">
+      <button id="startButton" disabled>
+        Start Questions
+      </button>
+    </div>
+
+  </section>
 
   <p id="status"></p>
+
 
   <script type="module">
     import {
       db,
       ref,
-      set
+      set,
+      update,
+      onValue
     } from "./firebase.js";
+
 
     const createRoomButton =
       document.getElementById("createRoomButton");
@@ -69,8 +138,19 @@
     const roomCodeEl =
       document.getElementById("roomCode");
 
+    const joinedCountEl =
+      document.getElementById("joinedCount");
+
+    const teamList =
+      document.getElementById("teamList");
+
+    const startButton =
+      document.getElementById("startButton");
+
     const statusEl =
       document.getElementById("status");
+
+    let currentRoomCode = null;
 
 
     function generateRoomCode() {
@@ -84,14 +164,17 @@
       "click",
       async () => {
 
-        const roomCode = generateRoomCode();
+        const roomCode =
+          generateRoomCode();
+
+        currentRoomCode =
+          roomCode;
 
         statusEl.textContent =
           "Creating room...";
 
         try {
 
-          // Create the actual game room
           await set(
             ref(db, "rooms/" + roomCode),
             {
@@ -103,21 +186,21 @@
             }
           );
 
-
-          // Tell the TV which room is active
           await set(
             ref(db, "currentRoom"),
             roomCode
           );
 
-
           roomCodeEl.textContent =
             roomCode;
 
-          roomSection.hidden = false;
+          roomSection.hidden =
+            false;
 
           statusEl.textContent =
-            "✅ Game room created successfully.";
+            "✅ Room created.";
+
+          watchTeams();
 
         } catch (error) {
 
@@ -129,6 +212,224 @@
         }
       }
     );
+
+
+    function watchTeams() {
+
+      const teamsRef =
+        ref(
+          db,
+          "rooms/" +
+          currentRoomCode +
+          "/teams"
+        );
+
+      onValue(
+        teamsRef,
+        (snapshot) => {
+
+          const teams =
+            snapshot.val() || {};
+
+          renderTeams(teams);
+
+        }
+      );
+    }
+
+
+    function renderTeams(teams) {
+
+      teamList.innerHTML = "";
+
+      let joinedCount = 0;
+
+      for (
+        let teamNumber = 1;
+        teamNumber <= 10;
+        teamNumber++
+      ) {
+
+        const teamKey =
+          "team" + teamNumber;
+
+        const teamData =
+          teams[teamKey] || {};
+
+        const joined =
+          teamData.joined === true;
+
+        if (joined) {
+          joinedCount++;
+        }
+
+        const row =
+          document.createElement("div");
+
+        row.className =
+          "teamRow";
+
+
+        const name =
+          document.createElement("div");
+
+        name.className =
+          "teamName";
+
+        name.textContent =
+          "Team " + teamNumber;
+
+
+        const status =
+          document.createElement("div");
+
+        status.textContent =
+          joined
+            ? "● Connected"
+            : "○ Waiting";
+
+        status.className =
+          joined
+            ? "statusJoined"
+            : "statusWaiting";
+
+
+        const scoreArea =
+          document.createElement("div");
+
+
+        if (joined) {
+
+          const input =
+            document.createElement("input");
+
+          input.type =
+            "number";
+
+          input.min =
+            "0";
+
+          input.step =
+            "1";
+
+          input.placeholder =
+            "Previous score";
+
+          input.value =
+            teamData.previousScore ?? 0;
+
+
+          input.addEventListener(
+            "change",
+            async () => {
+
+              const score =
+                Math.max(
+                  0,
+                  Number(
+                    input.value
+                  ) || 0
+                );
+
+              await update(
+                ref(
+                  db,
+                  "rooms/" +
+                  currentRoomCode +
+                  "/teams/" +
+                  teamKey
+                ),
+                {
+                  previousScore:
+                    score
+                }
+              );
+
+            }
+          );
+
+          scoreArea.appendChild(
+            input
+          );
+
+        } else {
+
+          scoreArea.textContent =
+            "—";
+
+        }
+
+
+        row.appendChild(
+          name
+        );
+
+        row.appendChild(
+          status
+        );
+
+        row.appendChild(
+          scoreArea
+        );
+
+        teamList.appendChild(
+          row
+        );
+      }
+
+
+      joinedCountEl.textContent =
+        joinedCount +
+        " / 10 teams joined";
+
+
+      startButton.disabled =
+        joinedCount === 0;
+
+
+      if (joinedCount === 10) {
+
+        statusEl.textContent =
+          "✅ All 10 teams are ready.";
+
+      } else {
+
+        statusEl.textContent =
+          joinedCount +
+          " team(s) currently connected.";
+
+      }
+    }
+
+
+    startButton.addEventListener(
+      "click",
+      async () => {
+
+        if (!currentRoomCode) {
+          return;
+        }
+
+        await update(
+          ref(
+            db,
+            "rooms/" +
+            currentRoomCode
+          ),
+          {
+            state:
+              "questions",
+            currentQuestion:
+              1
+          }
+        );
+
+        statusEl.textContent =
+          "Questions started.";
+
+      }
+    );
+
   </script>
 
 </body>
