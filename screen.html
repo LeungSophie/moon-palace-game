@@ -7,122 +7,175 @@
   <title>Moon Palace TV</title>
 
   <style>
-
     body {
       margin: 0;
       padding: 40px;
       font-family: Arial, sans-serif;
       text-align: center;
-
-      background:
-        radial-gradient(
-          circle at top,
-          #313974,
-          #101426 65%
-        );
-
+      background: radial-gradient(circle at top, #313974, #101426 65%);
       color: white;
     }
 
     h1 {
       font-size: 56px;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
     }
 
     h2 {
-      font-size: 36px;
+      font-size: 34px;
+      margin-top: 0;
     }
 
     #roomCode {
-      font-size: 100px;
+      font-size: 92px;
       font-weight: bold;
-      letter-spacing: 18px;
-
-      margin: 35px 0;
-
+      letter-spacing: 16px;
+      margin: 25px 0;
       color: #ffe89a;
     }
 
-    #joinStatus {
+    #joinedCount {
       font-size: 30px;
-      margin-top: 40px;
+      margin: 20px 0 30px;
     }
 
+    #teamGrid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 16px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .teamCard {
+      padding: 20px 10px;
+      border-radius: 14px;
+      font-size: 24px;
+      font-weight: bold;
+      background: rgba(255,255,255,0.08);
+      border: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .joined {
+      background: rgba(110, 220, 140, 0.2);
+      border-color: rgba(110, 220, 140, 0.9);
+    }
+
+    .waiting {
+      opacity: 0.55;
+    }
+
+    #status {
+      font-size: 24px;
+      margin-top: 30px;
+    }
   </style>
 </head>
 
 <body>
 
-  <h1>
-    🌙 Moon Palace Adventure
-  </h1>
+  <h1>🌙 Moon Palace Adventure</h1>
+  <h2>月宮大冒險</h2>
 
-  <h2>
-    月宮大冒險
-  </h2>
+  <div id="roomCode">----</div>
 
-  <p style="font-size:30px;">
-    Join the game
-  </p>
-
-  <div id="roomCode">
-    ----
+  <div id="joinedCount">
+    Waiting for teams...
   </div>
 
-  <div id="joinStatus">
+  <div id="teamGrid"></div>
+
+  <div id="status">
     Waiting for host to create a room...
   </div>
 
-
   <script type="module">
-
     import {
       db,
       ref,
       onValue
     } from "./firebase.js";
 
-
     const roomCodeEl =
       document.getElementById("roomCode");
 
-    const joinStatusEl =
-      document.getElementById("joinStatus");
+    const joinedCountEl =
+      document.getElementById("joinedCount");
 
+    const teamGrid =
+      document.getElementById("teamGrid");
+
+    const statusEl =
+      document.getElementById("status");
+
+    let stopTeamListener = null;
 
     const currentRoomRef =
       ref(db, "currentRoom");
 
+    onValue(currentRoomRef, (snapshot) => {
+      const roomCode = snapshot.val();
 
-    onValue(
-      currentRoomRef,
-      (snapshot) => {
+      if (!roomCode) {
+        roomCodeEl.textContent = "----";
+        joinedCountEl.textContent = "Waiting for teams...";
+        statusEl.textContent = "Waiting for host to create a room...";
+        teamGrid.innerHTML = "";
+        return;
+      }
 
-        const roomCode =
-          snapshot.val();
+      roomCodeEl.textContent = roomCode;
+      statusEl.textContent = "Join using the room code above";
 
+      watchTeams(roomCode);
+    });
 
-        if (roomCode) {
+    function watchTeams(roomCode) {
+      const teamsRef =
+        ref(db, "rooms/" + roomCode + "/teams");
 
-          roomCodeEl.textContent =
-            roomCode;
+      onValue(teamsRef, (snapshot) => {
+        const teams = snapshot.val() || {};
 
-          joinStatusEl.textContent =
-            "Waiting for teams to join...";
+        teamGrid.innerHTML = "";
 
-        } else {
+        let joinedCount = 0;
 
-          roomCodeEl.textContent =
-            "----";
+        for (let teamNumber = 1; teamNumber <= 10; teamNumber++) {
+          const teamKey = "team" + teamNumber;
 
-          joinStatusEl.textContent =
-            "Waiting for host to create a room...";
+          const joined =
+            teams[teamKey] &&
+            teams[teamKey].joined === true;
 
+          if (joined) {
+            joinedCount++;
+          }
+
+          const card =
+            document.createElement("div");
+
+          card.className =
+            "teamCard " +
+            (joined ? "joined" : "waiting");
+
+          card.textContent =
+            joined
+              ? "Team " + teamNumber + " ✓"
+              : "Team " + teamNumber;
+
+          teamGrid.appendChild(card);
         }
 
-      }
-    );
+        joinedCountEl.textContent =
+          joinedCount + " / 10 teams joined";
 
+        if (joinedCount === 10) {
+          statusEl.textContent =
+            "All teams are ready ✓";
+        }
+      });
+    }
   </script>
 
 </body>
