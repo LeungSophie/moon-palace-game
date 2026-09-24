@@ -50,6 +50,21 @@ body {
   overflow-x: hidden;
 }
 
+  .teamEnglishName {
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+
+.teamChineseName {
+  margin-top: 5px;
+
+  font-size: 0.82em;
+
+  opacity: 0.85;
+
+  line-height: 1.2;
+}
 
 /* ==========================================
    SOUND CONTROL
@@ -2625,7 +2640,86 @@ const photoChannel =
     "moon-palace-photos"
   );
 
+/* ==========================================
+   TEAM NAMES
+========================================== */
 
+const TEAM_NAMES = {
+
+  1: {
+    english: "Team 1 Moonblade",
+    chinese: "第一隊 月刃"
+  },
+
+  2: {
+    english: "Team 2 Starhunter",
+    chinese: "第二隊 獵星者"
+  },
+
+  3: {
+    english: "Team 3 Rabbitshade",
+    chinese: "第三隊 兔影衛"
+  },
+
+  4: {
+    english: "Team 4 Nightflare",
+    chinese: "第四隊 夜煌隊"
+  },
+
+  5: {
+    english: "Team 5 Moonscar",
+    chinese: "第五隊 月痕使"
+  },
+
+  6: {
+    english: "Team 6 Starfire",
+    chinese: "第六隊 星焰團"
+  },
+
+  7: {
+    english: "Team 7 Dark Rabbit",
+    chinese: "第七隊 玄兔眾"
+  },
+
+  8: {
+    english: "Team 8 Silvermoon",
+    chinese: "第八隊 銀月盟"
+  },
+
+  9: {
+    english: "Team 9 Sky Lantern",
+    chinese: "第九隊 天燈使"
+  },
+
+  10: {
+    english: "Team 10 Moonsoul",
+    chinese: "第十隊 月魂隊"
+  }
+
+};
+
+
+
+function getTeamName(
+  teamNumber
+) {
+
+  return TEAM_NAMES[
+    teamNumber
+  ] || {
+
+    english:
+      "Team " +
+      teamNumber,
+
+    chinese:
+      "第 " +
+      teamNumber +
+      " 隊"
+
+  };
+
+}
 
 /* ==========================================
    AUDIO FILES
@@ -4785,9 +4879,22 @@ async function createFeaturedTeamCard(
     "featuredTeamName";
 
 
-  teamName.textContent =
-    "TEAM " +
-    team.teamNumber;
+  const displayName =
+  getTeamName(
+    team.teamNumber
+  );
+
+
+teamName.innerHTML =
+  `
+    <div class="teamEnglishName">
+      ${displayName.english}
+    </div>
+
+    <div class="teamChineseName">
+      ${displayName.chinese}
+    </div>
+  `;
 
 
   const scoreLabel =
@@ -4953,9 +5060,22 @@ async function createMiniRankCard(
     "miniTeamName";
 
 
-  name.textContent =
-    "Team " +
-    team.teamNumber;
+  const displayName =
+  getTeamName(
+    team.teamNumber
+  );
+
+
+name.innerHTML =
+  `
+    <div class="teamEnglishName">
+      ${displayName.english}
+    </div>
+
+    <div class="teamChineseName">
+      ${displayName.chinese}
+    </div>
+  `;
 
 
   const score =
@@ -5499,9 +5619,22 @@ async function createFullLeaderboardRow(
     "fullTeamName";
 
 
-  teamName.textContent =
-    "TEAM " +
-    team.teamNumber;
+  const displayName =
+  getTeamName(
+    team.teamNumber
+  );
+
+
+teamName.innerHTML =
+  `
+    <div class="teamEnglishName">
+      ${displayName.english}
+    </div>
+
+    <div class="teamChineseName">
+      ${displayName.chinese}
+    </div>
+  `;
 
 
   const breakdown =
@@ -6484,13 +6617,22 @@ function watchTeams(
             );
 
 
-          card.textContent =
-            joined
-              ? "Team " +
-                teamNumber +
-                " ✓"
-              : "Team " +
-                teamNumber;
+          const teamName =
+  getTeamName(
+    teamNumber
+  );
+
+
+card.innerHTML =
+  `
+    <div class="teamEnglishName">
+      ${teamName.english}${joined ? " ✓" : ""}
+    </div>
+
+    <div class="teamChineseName">
+      ${teamName.chinese}
+    </div>
+  `;
 
 
           teamGrid.appendChild(
