@@ -571,8 +571,42 @@
         target;
 
 
-      answeredStatus.textContent =
-        "0 / 0 teams answered";
+      const teams =
+  roomData.teams || {};
+
+const activeTeamKeys =
+  Object.keys(teams).filter(
+    teamKey =>
+      teams[teamKey] &&
+      teams[teamKey].joined === true
+  );
+
+const activeTeamCount =
+  activeTeamKeys.length;
+
+
+const questionKey =
+  "q" + questionNumber;
+
+const questionAnswers =
+  (
+    roomData.answers &&
+    roomData.answers[questionKey]
+  ) || {};
+
+
+const answeredCount =
+  activeTeamKeys.filter(
+    teamKey =>
+      questionAnswers[teamKey]
+  ).length;
+
+
+answeredStatus.textContent =
+  answeredCount +
+  " / " +
+  activeTeamCount +
+  " teams answered";
     }
 
 
