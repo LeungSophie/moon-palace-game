@@ -11,7 +11,6 @@
   <title>Moon Palace Host</title>
 
   <style>
-
     body {
       margin: 0;
       padding: 28px;
@@ -37,13 +36,11 @@
       cursor: not-allowed;
     }
 
-
     #topButtons {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
     }
-
 
     #roomCode {
       font-size: 48px;
@@ -52,16 +49,15 @@
       margin: 16px 0;
     }
 
-
     #teamList {
       margin-top: 25px;
       display: grid;
       gap: 12px;
     }
 
-
     .teamRow {
       display: grid;
+
       grid-template-columns:
         110px
         125px
@@ -79,22 +75,18 @@
       border-radius: 10px;
     }
 
-
     .teamName {
       font-weight: bold;
       font-size: 18px;
     }
 
-
     .statusJoined {
       color: #8ff0a4;
     }
 
-
     .statusWaiting {
       color: #aaa;
     }
-
 
     input[type="number"] {
       width: 135px;
@@ -105,7 +97,6 @@
       border: none;
     }
 
-
     .photoArea {
       display: flex;
       align-items: center;
@@ -113,12 +104,10 @@
       flex-wrap: wrap;
     }
 
-
     .photoButton {
       font-size: 15px;
       padding: 9px 12px;
     }
-
 
     .photoPreview {
       width: 70px;
@@ -133,12 +122,10 @@
         rgba(255,255,255,0.35);
     }
 
-
     .photoStatus {
       font-size: 14px;
       color: #8ff0a4;
     }
-
 
     #controls {
       margin-top: 28px;
@@ -148,13 +135,11 @@
       flex-wrap: wrap;
     }
 
-
     #playIntroButton {
       background: #d7cbff;
       color: #11152b;
       font-weight: bold;
     }
-
 
     #startButton {
       background: #ffe89a;
@@ -162,13 +147,11 @@
       font-weight: bold;
     }
 
-
     #revealButton {
       background: #8ff0a4;
       color: #11152b;
       font-weight: bold;
     }
-
 
     #nextQuestionButton {
       background: #8dd9ff;
@@ -176,22 +159,23 @@
       font-weight: bold;
     }
 
+    #finishQuizButton {
+      background: #ffcf70;
+      color: #11152b;
+      font-weight: bold;
+    }
 
     #status {
-      margin-top: 16px;
-      font-size: 17px;
+      margin-top: 18px;
+      font-size: 18px;
       line-height: 1.5;
     }
 
-
     @media (max-width: 800px) {
-
       .teamRow {
         grid-template-columns: 1fr;
       }
-
     }
-
   </style>
 </head>
 
@@ -208,7 +192,6 @@
     <button id="createRoomButton">
       Create New Game Room
     </button>
-
 
     <button id="resetRoomButton">
       Reset / End Current Game
@@ -244,7 +227,6 @@
 
     <div id="controls">
 
-
       <button
         id="playIntroButton"
         disabled
@@ -277,6 +259,13 @@
       </button>
 
 
+      <button
+        id="finishQuizButton"
+        disabled
+      >
+        Finish Quiz →
+      </button>
+
     </div>
 
   </section>
@@ -287,7 +276,6 @@
 
 
   <script type="module">
-
 
     /* =========================
        FIREBASE
@@ -314,7 +302,7 @@
 
 
     /* =========================
-       QUESTION DATA
+       QUESTIONS
     ========================== */
 
     import {
@@ -394,6 +382,12 @@
       );
 
 
+    const finishQuizButton =
+      document.getElementById(
+        "finishQuizButton"
+      );
+
+
     const statusEl =
       document.getElementById(
         "status"
@@ -413,6 +407,10 @@
       "none";
 
 
+    let currentJoinedCount =
+      0;
+
+
     let revealInProgress =
       false;
 
@@ -427,7 +425,7 @@
 
 
     /* =========================
-       ROOM CODE
+       HELPERS
     ========================== */
 
     function generateRoomCode() {
@@ -440,10 +438,6 @@
     }
 
 
-
-    /* =========================
-       STOP OLD LISTENERS
-    ========================== */
 
     function stopExistingListeners() {
 
@@ -474,6 +468,45 @@
 
 
 
+    function updatePrimaryButtons() {
+
+      const hasTeams =
+        currentJoinedCount > 0;
+
+
+      /*
+        Intro only from lobby.
+      */
+
+      playIntroButton.disabled =
+        !(
+          hasTeams &&
+          currentGameState ===
+            "lobby"
+        );
+
+
+      /*
+        Questions may start directly
+        from lobby or after intro.
+      */
+
+      startButton.disabled =
+        !(
+          hasTeams &&
+          (
+            currentGameState ===
+              "lobby" ||
+
+            currentGameState ===
+              "intro"
+          )
+        );
+
+    }
+
+
+
     /* =========================
        CREATE ROOM
     ========================== */
@@ -481,7 +514,6 @@
     createRoomButton.addEventListener(
       "click",
       async () => {
-
 
         stopExistingListeners();
 
@@ -498,12 +530,12 @@
           "lobby";
 
 
+        currentJoinedCount =
+          0;
+
+
         revealInProgress =
           false;
-
-
-        nextQuestionButton.textContent =
-          "Next Question →";
 
 
         statusEl.textContent =
@@ -512,7 +544,6 @@
 
         try {
 
-
           await set(
             ref(
               db,
@@ -520,7 +551,6 @@
               roomCode
             ),
             {
-
               state:
                 "lobby",
 
@@ -530,15 +560,23 @@
               targetMoonPower:
                 1500,
 
+              moonPowerComplete:
+                false,
+
+              moonPowerCompletedByHost:
+                false,
+
               currentQuestion:
                 0,
 
               totalQuestions:
                 questions.length,
 
+              quizCompleted:
+                false,
+
               createdAt:
                 Date.now()
-
             }
           );
 
@@ -568,8 +606,23 @@
             true;
 
 
+          finishQuizButton.disabled =
+            true;
+
+
+          nextQuestionButton.textContent =
+            "Next Question →";
+
+
+          finishQuizButton.textContent =
+            "Finish Quiz →";
+
+
           statusEl.textContent =
             "✅ Room created.";
+
+
+          updatePrimaryButtons();
 
 
           watchTeams(
@@ -585,7 +638,6 @@
         } catch (
           error
         ) {
-
 
           console.error(
             error
@@ -611,7 +663,6 @@
       roomCode
     ) {
 
-
       const teamsRef =
         ref(
           db,
@@ -627,7 +678,6 @@
           (
             snapshot
           ) => {
-
 
             const teams =
               snapshot.val() ||
@@ -653,7 +703,6 @@
       roomCode
     ) {
 
-
       const roomRef =
         ref(
           db,
@@ -668,7 +717,6 @@
           async (
             snapshot
           ) => {
-
 
             const room =
               snapshot.val();
@@ -692,106 +740,29 @@
               state;
 
 
+            updatePrimaryButtons();
+
+
 
             /* =====================
-               NOT IN OPEN QUESTION
+               LOBBY
             ===================== */
 
             if (
-              state !==
-              "questions"
+              state ===
+              "lobby"
             ) {
-
 
               revealButton.disabled =
                 true;
 
 
-
-              /* =====================
-                 ANSWER REVEAL
-              ===================== */
-
-              if (
-                state ===
-                "reveal"
-              ) {
+              nextQuestionButton.disabled =
+                true;
 
 
-                const gain =
-                  Number(
-                    room.lastQuestionGain
-                  ) || 0;
-
-
-                const questionNumber =
-                  Number(
-                    room.currentQuestion
-                  ) || 1;
-
-
-
-                /*
-                  If final question
-                  has finished.
-                */
-
-                if (
-                  questionNumber >=
-                  questions.length
-                ) {
-
-
-                  nextQuestionButton.disabled =
-                    true;
-
-
-                  nextQuestionButton.textContent =
-                    "Quiz Complete ✓";
-
-
-                  statusEl.textContent =
-                    "Question " +
-                    questionNumber +
-                    " revealed. Moon Power +" +
-                    gain +
-                    ". All " +
-                    questions.length +
-                    " questions are complete.";
-
-
-                } else {
-
-
-                  nextQuestionButton.disabled =
-                    false;
-
-
-                  nextQuestionButton.textContent =
-                    "Next Question →";
-
-
-                  statusEl.textContent =
-                    "Question " +
-                    questionNumber +
-                    " revealed. Moon Power +" +
-                    gain +
-                    ". Ready for next question.";
-
-                }
-
-
-              } else {
-
-
-                nextQuestionButton.disabled =
-                  true;
-
-
-                nextQuestionButton.textContent =
-                  "Next Question →";
-
-              }
+              finishQuizButton.disabled =
+                true;
 
 
               revealInProgress =
@@ -805,8 +776,338 @@
 
 
             /* =====================
-               QUESTION IS OPEN
+               INTRO
             ===================== */
+
+            if (
+              state ===
+              "intro"
+            ) {
+
+              revealButton.disabled =
+                true;
+
+
+              nextQuestionButton.disabled =
+                true;
+
+
+              finishQuizButton.disabled =
+                true;
+
+
+              revealInProgress =
+                false;
+
+
+              statusEl.textContent =
+                "Intro playing on TV.";
+
+
+              return;
+
+            }
+
+
+
+            /* =====================
+               QUIZ COMPLETE
+            ===================== */
+
+            if (
+              state ===
+              "quizComplete"
+            ) {
+
+              revealButton.disabled =
+                true;
+
+
+              nextQuestionButton.disabled =
+                true;
+
+
+              finishQuizButton.disabled =
+                true;
+
+
+              nextQuestionButton.textContent =
+                "Quiz Complete ✓";
+
+
+              finishQuizButton.textContent =
+                "Quiz Complete ✓";
+
+
+              revealInProgress =
+                false;
+
+
+              const rawMoonPower =
+                Number(
+                  room.moonPower
+                ) || 0;
+
+
+              const target =
+                Number(
+                  room.targetMoonPower
+                ) || 1500;
+
+
+              statusEl.textContent =
+                "🌕 Quiz complete. Moon Power " +
+                rawMoonPower +
+                " / " +
+                target +
+                ". TV is ready for the completion scene.";
+
+
+              return;
+
+            }
+
+
+
+            /* =====================
+               ANSWER REVEAL
+            ===================== */
+
+            if (
+              state ===
+              "reveal"
+            ) {
+
+              revealButton.disabled =
+                true;
+
+
+              revealInProgress =
+                false;
+
+
+              const gain =
+                Number(
+                  room.lastQuestionGain
+                ) || 0;
+
+
+              const questionNumber =
+                Number(
+                  room.currentQuestion
+                ) || 1;
+
+
+              const rawMoonPower =
+                Number(
+                  room.moonPower
+                ) || 0;
+
+
+              const target =
+                Number(
+                  room.targetMoonPower
+                ) || 1500;
+
+
+              const moonPowerComplete =
+                room.moonPowerComplete ===
+                  true ||
+                rawMoonPower >=
+                  target;
+
+
+              const isLastQuestion =
+                questionNumber >=
+                questions.length;
+
+
+
+              /*
+                CASE 1:
+                Moon Power reached early.
+              */
+
+              if (
+                moonPowerComplete &&
+                !isLastQuestion
+              ) {
+
+                nextQuestionButton.disabled =
+                  false;
+
+
+                nextQuestionButton.textContent =
+                  "Continue Questions →";
+
+
+                finishQuizButton.disabled =
+                  false;
+
+
+                finishQuizButton.textContent =
+                  "Finish Quiz →";
+
+
+                statusEl.textContent =
+                  "🌕 MOON POWER COMPLETE! " +
+                  rawMoonPower +
+                  " / " +
+                  target +
+                  ". Question " +
+                  questionNumber +
+                  " gained +" +
+                  gain +
+                  ". Continue the quiz or finish now.";
+
+
+                return;
+
+              }
+
+
+
+              /*
+                CASE 2:
+                Last question and
+                target reached.
+              */
+
+              if (
+                moonPowerComplete &&
+                isLastQuestion
+              ) {
+
+                nextQuestionButton.disabled =
+                  true;
+
+
+                nextQuestionButton.textContent =
+                  "No More Questions";
+
+
+                finishQuizButton.disabled =
+                  false;
+
+
+                finishQuizButton.textContent =
+                  "Finish Quiz →";
+
+
+                statusEl.textContent =
+                  "🌕 All questions complete. Moon Power target achieved: " +
+                  rawMoonPower +
+                  " / " +
+                  target +
+                  ". Press Finish Quiz.";
+
+
+                return;
+
+              }
+
+
+
+              /*
+                CASE 3:
+                Last question but
+                below target.
+
+                Individual scores remain
+                untouched. Host can mark
+                collective Moon Power as
+                successfully completed.
+              */
+
+              if (
+                !moonPowerComplete &&
+                isLastQuestion
+              ) {
+
+                nextQuestionButton.disabled =
+                  true;
+
+
+                nextQuestionButton.textContent =
+                  "No More Questions";
+
+
+                finishQuizButton.disabled =
+                  false;
+
+
+                finishQuizButton.textContent =
+                  "Complete Moon Power & Finish →";
+
+
+                statusEl.textContent =
+                  "All " +
+                  questions.length +
+                  " questions are complete. Moon Power: " +
+                  rawMoonPower +
+                  " / " +
+                  target +
+                  ". You can complete the Moon Power without changing team scores.";
+
+
+                return;
+
+              }
+
+
+
+              /*
+                CASE 4:
+                Normal reveal and target
+                not reached yet.
+              */
+
+              nextQuestionButton.disabled =
+                false;
+
+
+              nextQuestionButton.textContent =
+                "Next Question →";
+
+
+              finishQuizButton.disabled =
+                true;
+
+
+              finishQuizButton.textContent =
+                "Finish Quiz →";
+
+
+              statusEl.textContent =
+                "Question " +
+                questionNumber +
+                " revealed. Moon Power +" +
+                gain +
+                ". Total: " +
+                rawMoonPower +
+                " / " +
+                target +
+                ".";
+
+
+              return;
+
+            }
+
+
+
+            /* =====================
+               QUESTION OPEN
+            ===================== */
+
+            if (
+              state !==
+              "questions"
+            ) {
+
+              return;
+
+            }
 
 
             revealButton.disabled =
@@ -817,8 +1118,16 @@
               true;
 
 
+            finishQuizButton.disabled =
+              true;
+
+
             nextQuestionButton.textContent =
               "Next Question →";
+
+
+            finishQuizButton.textContent =
+              "Finish Quiz →";
 
 
 
@@ -832,11 +1141,9 @@
                 teams
               ).filter(
                 teamKey =>
-
                   teams[
                     teamKey
                   ] &&
-
                   teams[
                     teamKey
                   ].joined ===
@@ -900,7 +1207,6 @@
             ===================== */
 
             if (
-
               activeTeamCount >
                 0 &&
 
@@ -908,9 +1214,7 @@
                 activeTeamCount &&
 
               !revealInProgress
-
             ) {
-
 
               revealInProgress =
                 true;
@@ -937,7 +1241,6 @@
       roomCode
     ) {
 
-
       if (
         !roomCode
       ) {
@@ -949,14 +1252,12 @@
 
       try {
 
-
         const roomRef =
           ref(
             db,
             "rooms/" +
             roomCode
           );
-
 
 
         const snapshot =
@@ -969,15 +1270,12 @@
           !snapshot.exists()
         ) {
 
-
           revealInProgress =
             false;
-
 
           return;
 
         }
-
 
 
         const room =
@@ -1010,7 +1308,6 @@
         if (
           !question
         ) {
-
 
           revealInProgress =
             false;
@@ -1045,7 +1342,6 @@
           alreadyScored
         ) {
 
-
           await update(
             roomRef,
             {
@@ -1068,6 +1364,7 @@
         const teams =
           room.teams ||
           {};
+
 
 
         const answers =
@@ -1096,7 +1393,7 @@
 
 
         /* =====================
-           SCORE ACTIVE TEAMS
+           SCORE EACH ACTIVE TEAM
         ===================== */
 
         for (
@@ -1109,14 +1406,10 @@
           )
         ) {
 
-
           if (
-
             !teamData ||
-
             teamData.joined !==
               true
-
           ) {
 
             continue;
@@ -1187,18 +1480,14 @@
             teamKey
           ] = {
 
-
             answer:
               teamAnswer,
-
 
             correct:
               isCorrect,
 
-
             points:
               points,
-
 
             quizScore:
               newQuizScore
@@ -1220,9 +1509,38 @@
 
 
 
+        const targetMoonPower =
+          Number(
+            room.targetMoonPower
+          ) || 1500;
+
+
+
         const newMoonPower =
           currentMoonPower +
           moonPowerGain;
+
+
+
+        const wasAlreadyComplete =
+          room.moonPowerComplete ===
+            true ||
+          currentMoonPower >=
+            targetMoonPower;
+
+
+
+        const isNowComplete =
+          wasAlreadyComplete ||
+          newMoonPower >=
+            targetMoonPower;
+
+
+
+        const justReachedTarget =
+          !wasAlreadyComplete &&
+          newMoonPower >=
+            targetMoonPower;
 
 
 
@@ -1237,6 +1555,42 @@
           "lastQuestionGain"
         ] =
           moonPowerGain;
+
+
+
+        updates[
+          "moonPowerComplete"
+        ] =
+          isNowComplete;
+
+
+
+        /*
+          Record the exact question
+          where the Moon Power target
+          was first reached.
+
+          screen.html can later use
+          this for the large one-time
+          celebration.
+        */
+
+        if (
+          justReachedTarget
+        ) {
+
+          updates[
+            "moonPowerReachedAtQuestion"
+          ] =
+            questionNumber;
+
+
+          updates[
+            "moonPowerReachedAt"
+          ] =
+            Date.now();
+
+        }
 
 
 
@@ -1264,9 +1618,8 @@
 
 
         /*
-          Score + Moon Power +
-          results + reveal are written
-          together.
+          Apply all scoring and reveal
+          changes together.
         */
 
         await update(
@@ -1281,17 +1634,27 @@
 
 
 
-        statusEl.textContent =
-          "Answer revealed. Moon Power +" +
-          moonPowerGain +
-          ".";
+        if (
+          justReachedTarget
+        ) {
+
+          statusEl.textContent =
+            "🌕 Moon Power target reached!";
+
+        } else {
+
+          statusEl.textContent =
+            "Answer revealed. Moon Power +" +
+            moonPowerGain +
+            ".";
+
+        }
 
 
 
       } catch (
         error
       ) {
-
 
         console.error(
           error
@@ -1320,14 +1683,10 @@
       "click",
       async () => {
 
-
         if (
-
           !currentRoomCode ||
-
           currentGameState !==
             "questions"
-
         ) {
 
           return;
@@ -1335,15 +1694,12 @@
         }
 
 
-
         revealInProgress =
           true;
 
 
-
         revealButton.disabled =
           true;
-
 
 
         await revealCurrentQuestion(
@@ -1356,21 +1712,17 @@
 
 
     /* =========================
-       NEXT QUESTION
+       NEXT / CONTINUE QUESTION
     ========================== */
 
     nextQuestionButton.addEventListener(
       "click",
       async () => {
 
-
         if (
-
           !currentRoomCode ||
-
           currentGameState !==
             "reveal"
-
         ) {
 
           return;
@@ -1378,14 +1730,15 @@
         }
 
 
-
         nextQuestionButton.disabled =
           true;
 
 
+        finishQuizButton.disabled =
+          true;
+
 
         try {
-
 
           const roomRef =
             ref(
@@ -1395,26 +1748,19 @@
             );
 
 
-
           const snapshot =
             await get(
               roomRef
             );
 
 
-
           if (
             !snapshot.exists()
           ) {
 
-            nextQuestionButton.disabled =
-              false;
-
-
             return;
 
           }
-
 
 
           const room =
@@ -1435,10 +1781,6 @@
 
 
 
-          /* =====================
-             CHECK NEXT QUESTION
-          ===================== */
-
           const nextQuestionExists =
             questions.some(
               q =>
@@ -1452,19 +1794,20 @@
             !nextQuestionExists
           ) {
 
-
             nextQuestionButton.disabled =
               true;
 
 
             nextQuestionButton.textContent =
-              "Quiz Complete ✓";
+              "No More Questions";
+
+
+            finishQuizButton.disabled =
+              false;
 
 
             statusEl.textContent =
-              "All " +
-              questions.length +
-              " questions are complete.";
+              "No more questions. Press Finish Quiz.";
 
 
             return;
@@ -1481,7 +1824,6 @@
           await update(
             roomRef,
             {
-
               state:
                 "questions",
 
@@ -1490,7 +1832,6 @@
 
               lastQuestionGain:
                 0
-
             }
           );
 
@@ -1498,12 +1839,6 @@
 
           currentGameState =
             "questions";
-
-
-
-          nextQuestionButton.textContent =
-            "Next Question →";
-
 
 
           statusEl.textContent =
@@ -1516,7 +1851,6 @@
         } catch (
           error
         ) {
-
 
           console.error(
             error
@@ -1539,6 +1873,239 @@
 
 
     /* =========================
+       FINISH QUIZ
+    ========================== */
+
+    finishQuizButton.addEventListener(
+      "click",
+      async () => {
+
+        if (
+          !currentRoomCode ||
+          currentGameState !==
+            "reveal"
+        ) {
+
+          return;
+
+        }
+
+
+        finishQuizButton.disabled =
+          true;
+
+
+        nextQuestionButton.disabled =
+          true;
+
+
+        try {
+
+          const roomRef =
+            ref(
+              db,
+              "rooms/" +
+              currentRoomCode
+            );
+
+
+          const snapshot =
+            await get(
+              roomRef
+            );
+
+
+          if (
+            !snapshot.exists()
+          ) {
+
+            return;
+
+          }
+
+
+          const room =
+            snapshot.val();
+
+
+
+          const rawMoonPower =
+            Number(
+              room.moonPower
+            ) || 0;
+
+
+
+          const targetMoonPower =
+            Number(
+              room.targetMoonPower
+            ) || 1500;
+
+
+
+          const questionNumber =
+            Number(
+              room.currentQuestion
+            ) || 1;
+
+
+
+          const isLastQuestion =
+            questionNumber >=
+            questions.length;
+
+
+
+          const naturallyComplete =
+            room.moonPowerComplete ===
+              true ||
+            rawMoonPower >=
+              targetMoonPower;
+
+
+
+          /*
+            Do not allow an early finish
+            below the Moon Power target.
+
+            The exception is after the
+            final question.
+          */
+
+          if (
+            !naturallyComplete &&
+            !isLastQuestion
+          ) {
+
+            finishQuizButton.disabled =
+              true;
+
+
+            statusEl.textContent =
+              "Moon Power has not reached the target yet.";
+
+
+            return;
+
+          }
+
+
+
+          /*
+            If all 10 questions are done
+            but Moon Power is below 1500,
+            we mark the collective mission
+            as completed WITHOUT modifying:
+
+            - individual quiz scores
+            - raw Moon Power earned
+          */
+
+          const completedByHost =
+            !naturallyComplete;
+
+
+
+          const completionReason =
+            naturallyComplete
+              ? "targetReached"
+              : "allQuestionsFinished";
+
+
+
+          await update(
+            roomRef,
+            {
+              state:
+                "quizComplete",
+
+              quizCompleted:
+                true,
+
+              quizCompletedAt:
+                Date.now(),
+
+              moonPowerComplete:
+                true,
+
+              moonPowerCompletedByHost:
+                completedByHost,
+
+              rawMoonPowerAtQuizComplete:
+                rawMoonPower,
+
+              completionReason:
+                completionReason
+            }
+          );
+
+
+
+          currentGameState =
+            "quizComplete";
+
+
+          revealButton.disabled =
+            true;
+
+
+          nextQuestionButton.disabled =
+            true;
+
+
+          finishQuizButton.disabled =
+            true;
+
+
+          nextQuestionButton.textContent =
+            "Quiz Complete ✓";
+
+
+          finishQuizButton.textContent =
+            "Quiz Complete ✓";
+
+
+          if (
+            completedByHost
+          ) {
+
+            statusEl.textContent =
+              "🌕 Quiz complete. Moon Power mission completed by Host. Individual team scores were not changed.";
+
+          } else {
+
+            statusEl.textContent =
+              "🌕 Quiz complete. Moon Power target achieved!";
+
+          }
+
+
+
+        } catch (
+          error
+        ) {
+
+          console.error(
+            error
+          );
+
+
+          finishQuizButton.disabled =
+            false;
+
+
+          statusEl.textContent =
+            "Could not finish quiz: " +
+            error.message;
+
+        }
+
+      }
+    );
+
+
+
+    /* =========================
        RENDER TEAM LIST
     ========================== */
 
@@ -1546,10 +2113,8 @@
       teams
     ) {
 
-
       teamList.innerHTML =
         "";
-
 
 
       let joinedCount =
@@ -1562,7 +2127,6 @@
         teamNumber <= 10;
         teamNumber++
       ) {
-
 
         const teamKey =
           "team" +
@@ -1579,7 +2143,7 @@
 
         const joined =
           teamData.joined ===
-          true;
+            true;
 
 
 
@@ -1604,9 +2168,7 @@
 
 
 
-        /* =====================
-           TEAM NAME
-        ===================== */
+        /* TEAM NAME */
 
         const name =
           document.createElement(
@@ -1624,9 +2186,7 @@
 
 
 
-        /* =====================
-           CONNECTION STATUS
-        ===================== */
+        /* CONNECTION STATUS */
 
         const connectionStatus =
           document.createElement(
@@ -1647,9 +2207,7 @@
 
 
 
-        /* =====================
-           PREVIOUS SCORE
-        ===================== */
+        /* PREVIOUS ACTIVITY SCORE */
 
         const scoreArea =
           document.createElement(
@@ -1661,7 +2219,6 @@
         if (
           joined
         ) {
-
 
           const input =
             document.createElement(
@@ -1695,7 +2252,6 @@
             "change",
             async () => {
 
-
               const score =
                 Math.max(
                   0,
@@ -1703,7 +2259,6 @@
                     input.value
                   ) || 0
                 );
-
 
 
               await update(
@@ -1731,7 +2286,6 @@
 
         } else {
 
-
           scoreArea.textContent =
             "—";
 
@@ -1739,9 +2293,7 @@
 
 
 
-        /* =====================
-           TEAM PHOTO
-        ===================== */
+        /* TEAM PHOTO */
 
         const photoArea =
           document.createElement(
@@ -1757,7 +2309,6 @@
         if (
           joined
         ) {
-
 
           const photoStorageKey =
             currentRoomCode +
@@ -1851,12 +2402,10 @@
             "change",
             async () => {
 
-
               const file =
                 fileInput.files[
                   0
                 ];
-
 
 
               if (
@@ -1868,13 +2417,11 @@
               }
 
 
-
               if (
                 !file.type.startsWith(
                   "image/"
                 )
               ) {
-
 
                 alert(
                   "Please choose an image file."
@@ -1886,9 +2433,7 @@
               }
 
 
-
               try {
-
 
                 await saveTeamPhoto(
                   photoStorageKey,
@@ -1896,10 +2441,8 @@
                 );
 
 
-
                 photoChannel.postMessage(
                   {
-
                     type:
                       "photo-updated",
 
@@ -1908,10 +2451,8 @@
 
                     teamKey:
                       teamKey
-
                   }
                 );
-
 
 
                 const previewURL =
@@ -1920,31 +2461,25 @@
                   );
 
 
-
                 preview.src =
                   previewURL;
-
 
 
                 preview.hidden =
                   false;
 
 
-
                 photoStatus.textContent =
                   "✓ Photo stored locally";
-
 
 
                 chooseButton.textContent =
                   "Change Photo";
 
 
-
               } catch (
                 error
               ) {
-
 
                 console.error(
                   error
@@ -1961,12 +2496,9 @@
 
 
 
-          /* =====================
-             EXISTING PHOTO
-          ===================== */
+          /* EXISTING LOCAL PHOTO */
 
           try {
-
 
             const savedPhoto =
               await getTeamPhoto(
@@ -1974,11 +2506,9 @@
               );
 
 
-
             if (
               savedPhoto
             ) {
-
 
               const savedURL =
                 URL.createObjectURL(
@@ -1986,20 +2516,16 @@
                 );
 
 
-
               preview.src =
                 savedURL;
-
 
 
               preview.hidden =
                 false;
 
 
-
               photoStatus.textContent =
                 "✓ Photo stored locally";
-
 
 
               chooseButton.textContent =
@@ -2008,11 +2534,9 @@
             }
 
 
-
           } catch (
             error
           ) {
-
 
             console.error(
               "Could not load stored photo:",
@@ -2043,9 +2567,7 @@
           );
 
 
-
         } else {
-
 
           photoArea.textContent =
             "—";
@@ -2074,12 +2596,16 @@
         );
 
 
-
         teamList.appendChild(
           row
         );
 
       }
+
+
+
+      currentJoinedCount =
+        joinedCount;
 
 
 
@@ -2089,46 +2615,31 @@
 
 
 
-      startButton.disabled =
-        joinedCount ===
-        0;
-
-
-
-      playIntroButton.disabled =
-        joinedCount ===
-        0;
+      updatePrimaryButtons();
 
 
 
       /*
-        Don't overwrite the live
-        question/reveal status.
+        Don't overwrite live
+        quiz/reveal/completion status.
       */
 
       if (
-
         currentGameState ===
           "lobby" ||
-
         currentGameState ===
           "none"
-
       ) {
-
 
         if (
           joinedCount ===
-          10
+            10
         ) {
-
 
           statusEl.textContent =
             "✅ All 10 teams are ready.";
 
-
         } else {
-
 
           statusEl.textContent =
             joinedCount +
@@ -2150,7 +2661,6 @@
       "click",
       async () => {
 
-
         if (
           !currentRoomCode
         ) {
@@ -2160,7 +2670,6 @@
         }
 
 
-
         await update(
           ref(
             db,
@@ -2168,28 +2677,29 @@
             currentRoomCode
           ),
           {
-
             state:
               "intro"
-
           }
         );
-
 
 
         currentGameState =
           "intro";
 
 
+        updatePrimaryButtons();
+
 
         revealButton.disabled =
           true;
 
 
-
         nextQuestionButton.disabled =
           true;
 
+
+        finishQuizButton.disabled =
+          true;
 
 
         statusEl.textContent =
@@ -2208,7 +2718,6 @@
       "click",
       async () => {
 
-
         if (
           !currentRoomCode
         ) {
@@ -2218,12 +2727,10 @@
         }
 
 
-
         if (
           questions.length ===
-          0
+            0
         ) {
-
 
           statusEl.textContent =
             "No questions found in questions.js.";
@@ -2232,7 +2739,6 @@
           return;
 
         }
-
 
 
         revealInProgress =
@@ -2254,26 +2760,28 @@
             currentRoomCode
           ),
           {
-
             state:
               "questions",
 
             currentQuestion:
               firstQuestionId
-
           }
         );
-
 
 
         currentGameState =
           "questions";
 
 
+        updatePrimaryButtons();
+
 
         nextQuestionButton.disabled =
           true;
 
+
+        finishQuizButton.disabled =
+          true;
 
 
         statusEl.textContent =
@@ -2294,12 +2802,10 @@
       "click",
       async () => {
 
-
         const confirmed =
           confirm(
             "End the current game and return the TV to the waiting screen?"
           );
-
 
 
         if (
@@ -2311,9 +2817,7 @@
         }
 
 
-
         try {
-
 
           await set(
             ref(
@@ -2324,80 +2828,76 @@
           );
 
 
-
           stopExistingListeners();
-
 
 
           currentRoomCode =
             null;
 
 
-
           currentGameState =
             "none";
 
+
+          currentJoinedCount =
+            0;
 
 
           revealInProgress =
             false;
 
 
-
           roomSection.hidden =
             true;
-
 
 
           roomCodeEl.textContent =
             "----";
 
 
-
           joinedCountEl.textContent =
             "0 / 10 teams joined";
-
 
 
           teamList.innerHTML =
             "";
 
 
-
           playIntroButton.disabled =
             true;
-
 
 
           startButton.disabled =
             true;
 
 
-
           revealButton.disabled =
             true;
-
 
 
           nextQuestionButton.disabled =
             true;
 
 
+          finishQuizButton.disabled =
+            true;
+
 
           nextQuestionButton.textContent =
             "Next Question →";
 
+
+          finishQuizButton.textContent =
+            "Finish Quiz →";
 
 
           statusEl.textContent =
             "Current game ended. Ready to create a new room.";
 
 
-
         } catch (
           error
         ) {
-
 
           console.error(
             error
