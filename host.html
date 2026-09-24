@@ -4,16 +4,54 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Moon Palace Host</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background: #11152b;
+      color: white;
+    }
+
+    button {
+      font-size: 22px;
+      padding: 15px 25px;
+      cursor: pointer;
+    }
+
+    #roomCode {
+      font-size: 60px;
+      font-weight: bold;
+      margin: 25px 0;
+      letter-spacing: 8px;
+    }
+
+    #status {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+  </style>
 </head>
 
 <body>
-  <h1>Moon Palace Host</h1>
 
-  <p>Firebase connection test</p>
+  <h1>🌙 Moon Palace Host</h1>
 
-  <button id="testButton">Send Test Message</button>
+  <button id="createRoomButton">
+    Create New Game Room
+  </button>
 
-  <p id="status">Not sent yet.</p>
+  <div id="roomSection" hidden>
+    <p>Room Code</p>
+
+    <div id="roomCode">----</div>
+
+    <p>
+      Waiting for teams...
+    </p>
+  </div>
+
+  <p id="status"></p>
 
   <script type="module">
     import {
@@ -22,24 +60,76 @@
       set
     } from "./firebase.js";
 
-    const testButton = document.getElementById("testButton");
-    const status = document.getElementById("status");
+    const createRoomButton =
+      document.getElementById("createRoomButton");
 
-    testButton.addEventListener("click", async () => {
-      status.textContent = "Sending...";
+    const roomSection =
+      document.getElementById("roomSection");
 
-      try {
-        await set(ref(db, "test/message"), {
-          text: "Moon Palace is awake! 🌙",
-          time: Date.now()
-        });
+    const roomCodeEl =
+      document.getElementById("roomCode");
 
-        status.textContent = "✅ Message sent to Firebase!";
-      } catch (error) {
-        console.error(error);
-        status.textContent = "❌ Error: " + error.message;
+    const statusEl =
+      document.getElementById("status");
+
+
+    function generateRoomCode() {
+      return Math.floor(
+        1000 + Math.random() * 9000
+      ).toString();
+    }
+
+
+    createRoomButton.addEventListener(
+      "click",
+      async () => {
+
+        const roomCode = generateRoomCode();
+
+        statusEl.textContent =
+          "Creating room...";
+
+        try {
+
+          // Create the actual game room
+          await set(
+            ref(db, "rooms/" + roomCode),
+            {
+              state: "lobby",
+              moonPower: 0,
+              targetMoonPower: 1500,
+              currentQuestion: 0,
+              createdAt: Date.now()
+            }
+          );
+
+
+          // Tell the TV which room is active
+          await set(
+            ref(db, "currentRoom"),
+            roomCode
+          );
+
+
+          roomCodeEl.textContent =
+            roomCode;
+
+          roomSection.hidden = false;
+
+          statusEl.textContent =
+            "✅ Game room created successfully.";
+
+        } catch (error) {
+
+          console.error(error);
+
+          statusEl.textContent =
+            "❌ Error: " + error.message;
+
+        }
       }
-    });
+    );
   </script>
+
 </body>
 </html>
