@@ -39,7 +39,8 @@
 
     #topButtons,
     #controls,
-    #leaderboardControls {
+    #leaderboardControls,
+    #finaleControls {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
@@ -138,6 +139,10 @@
       margin-top: 16px;
     }
 
+    #finaleControls {
+      margin-top: 16px;
+    }
+
     #playIntroButton {
       background: #d7cbff;
       color: #11152b;
@@ -184,6 +189,13 @@
       background: #ffd76e;
       color: #11152b;
       font-weight: bold;
+    }
+
+    #playFinaleButton {
+      background: #fff0a6;
+      color: #11152b;
+      font-weight: bold;
+      font-size: 20px;
     }
 
     #status {
@@ -318,6 +330,18 @@
 
     </div>
 
+
+    <div id="finaleControls">
+
+      <button
+        id="playFinaleButton"
+        disabled
+      >
+        ▶ Play Finale
+      </button>
+
+    </div>
+
   </section>
 
 
@@ -423,6 +447,11 @@
         "showFullLeaderboardButton"
       );
 
+    const playFinaleButton =
+      document.getElementById(
+        "playFinaleButton"
+      );
+
     const statusEl =
       document.getElementById(
         "status"
@@ -468,6 +497,7 @@
 
         stopTeamsListener =
           null;
+
       }
 
 
@@ -479,6 +509,7 @@
 
         stopRoomListener =
           null;
+
       }
 
     }
@@ -518,11 +549,18 @@
       startLeaderboardButton.disabled =
         true;
 
+
       revealRankButton.disabled =
         true;
 
+
       showFullLeaderboardButton.disabled =
         true;
+
+
+      playFinaleButton.disabled =
+        true;
+
 
       revealRankButton.textContent =
         "Reveal Next Rank";
@@ -530,9 +568,10 @@
     }
 
 
-    /* =========================
+
+    /* ==========================================
        CREATE ROOM
-    ========================== */
+    ========================================== */
 
     createRoomButton.addEventListener(
       "click",
@@ -548,11 +587,14 @@
         currentRoomCode =
           roomCode;
 
+
         currentGameState =
           "lobby";
 
+
         currentJoinedCount =
           0;
+
 
         revealInProgress =
           false;
@@ -621,8 +663,10 @@
           revealButton.disabled =
             true;
 
+
           nextQuestionButton.disabled =
             true;
+
 
           finishQuizButton.disabled =
             true;
@@ -637,6 +681,10 @@
 
           finishQuizButton.textContent =
             "Finish Quiz →";
+
+
+          playFinaleButton.textContent =
+            "▶ Play Finale";
 
 
           statusEl.textContent =
@@ -675,9 +723,10 @@
     );
 
 
-    /* =========================
+
+    /* ==========================================
        WATCH TEAMS
-    ========================== */
+    ========================================== */
 
     function watchTeams(
       roomCode
@@ -714,9 +763,10 @@
     }
 
 
-    /* =========================
+
+    /* ==========================================
        WATCH ROOM
-    ========================== */
+    ========================================== */
 
     function watchRoomForAnswers(
       roomCode
@@ -762,9 +812,8 @@
             updatePrimaryButtons();
 
 
-            /* =====================
-               LOBBY
-            ===================== */
+
+            /* LOBBY */
 
             if (
               state ===
@@ -774,25 +823,29 @@
               revealButton.disabled =
                 true;
 
+
               nextQuestionButton.disabled =
                 true;
+
 
               finishQuizButton.disabled =
                 true;
 
+
               resetLeaderboardButtons();
+
 
               revealInProgress =
                 false;
+
 
               return;
 
             }
 
 
-            /* =====================
-               INTRO
-            ===================== */
+
+            /* INTRO */
 
             if (
               state ===
@@ -802,13 +855,17 @@
               revealButton.disabled =
                 true;
 
+
               nextQuestionButton.disabled =
                 true;
+
 
               finishQuizButton.disabled =
                 true;
 
+
               resetLeaderboardButtons();
+
 
               revealInProgress =
                 false;
@@ -823,9 +880,8 @@
             }
 
 
-            /* =====================
-               QUIZ COMPLETE
-            ===================== */
+
+            /* QUIZ COMPLETE */
 
             if (
               state ===
@@ -835,8 +891,10 @@
               revealButton.disabled =
                 true;
 
+
               nextQuestionButton.disabled =
                 true;
+
 
               finishQuizButton.disabled =
                 true;
@@ -845,10 +903,16 @@
               startLeaderboardButton.disabled =
                 false;
 
+
               revealRankButton.disabled =
                 true;
 
+
               showFullLeaderboardButton.disabled =
+                true;
+
+
+              playFinaleButton.disabled =
                 true;
 
 
@@ -865,9 +929,8 @@
             }
 
 
-            /* =====================
-               LEADERBOARD
-            ===================== */
+
+            /* PROGRESSIVE LEADERBOARD */
 
             if (
               state ===
@@ -877,13 +940,24 @@
               revealButton.disabled =
                 true;
 
+
               nextQuestionButton.disabled =
                 true;
+
 
               finishQuizButton.disabled =
                 true;
 
+
               startLeaderboardButton.disabled =
+                true;
+
+
+              showFullLeaderboardButton.disabled =
+                true;
+
+
+              playFinaleButton.disabled =
                 true;
 
 
@@ -912,10 +986,6 @@
 
                 revealRankButton.disabled =
                   false;
-
-
-                showFullLeaderboardButton.disabled =
-                  true;
 
 
                 const nextRank =
@@ -963,9 +1033,8 @@
             }
 
 
-            /* =====================
-               FULL LEADERBOARD
-            ===================== */
+
+            /* FULL LEADERBOARD */
 
             if (
               state ===
@@ -975,24 +1044,37 @@
               revealButton.disabled =
                 true;
 
+
               nextQuestionButton.disabled =
                 true;
+
 
               finishQuizButton.disabled =
                 true;
 
+
               startLeaderboardButton.disabled =
                 true;
 
+
               revealRankButton.disabled =
                 true;
+
 
               showFullLeaderboardButton.disabled =
                 true;
 
 
+              playFinaleButton.disabled =
+                false;
+
+
+              playFinaleButton.textContent =
+                "▶ Play Finale";
+
+
               statusEl.textContent =
-                "🏆 Full Final Leaderboard is displayed on TV.";
+                "🏆 Full Final Leaderboard is displayed. When ready, play the finale.";
 
 
               return;
@@ -1000,9 +1082,57 @@
             }
 
 
-            /* =====================
-               ANSWER REVEAL
-            ===================== */
+
+            /* FINALE */
+
+            if (
+              state ===
+              "finale"
+            ) {
+
+              revealButton.disabled =
+                true;
+
+
+              nextQuestionButton.disabled =
+                true;
+
+
+              finishQuizButton.disabled =
+                true;
+
+
+              startLeaderboardButton.disabled =
+                true;
+
+
+              revealRankButton.disabled =
+                true;
+
+
+              showFullLeaderboardButton.disabled =
+                true;
+
+
+              playFinaleButton.disabled =
+                true;
+
+
+              playFinaleButton.textContent =
+                "Finale Playing ✓";
+
+
+              statusEl.textContent =
+                "🌕 Finale is playing on the TV.";
+
+
+              return;
+
+            }
+
+
+
+            /* ANSWER REVEAL */
 
             if (
               state ===
@@ -1012,7 +1142,9 @@
               revealButton.disabled =
                 true;
 
+
               resetLeaderboardButtons();
+
 
               revealInProgress =
                 false;
@@ -1054,6 +1186,7 @@
                 questions.length;
 
 
+
               if (
                 moonPowerComplete &&
                 !isLastQuestion
@@ -1088,6 +1221,7 @@
               }
 
 
+
               if (
                 moonPowerComplete &&
                 isLastQuestion
@@ -1116,6 +1250,7 @@
                 return;
 
               }
+
 
 
               if (
@@ -1152,6 +1287,7 @@
               }
 
 
+
               nextQuestionButton.disabled =
                 false;
 
@@ -1185,9 +1321,8 @@
             }
 
 
-            /* =====================
-               QUESTION OPEN
-            ===================== */
+
+            /* QUESTION OPEN */
 
             if (
               state !==
@@ -1305,9 +1440,10 @@
     }
 
 
-    /* =========================
-       REVEAL + SCORE QUESTION
-    ========================== */
+
+    /* ==========================================
+       SCORE / REVEAL
+    ========================================== */
 
     async function revealCurrentQuestion(
       roomCode
@@ -1344,6 +1480,7 @@
 
           revealInProgress =
             false;
+
 
           return;
 
@@ -1409,10 +1546,6 @@
                 "reveal"
             }
           );
-
-
-          revealButton.disabled =
-            true;
 
 
           return;
@@ -1626,10 +1759,6 @@
         );
 
 
-        revealButton.disabled =
-          true;
-
-
       } catch (
         error
       ) {
@@ -1652,9 +1781,10 @@
     }
 
 
-    /* =========================
+
+    /* ==========================================
        MANUAL REVEAL
-    ========================== */
+    ========================================== */
 
     revealButton.addEventListener(
       "click",
@@ -1687,9 +1817,10 @@
     );
 
 
-    /* =========================
+
+    /* ==========================================
        NEXT QUESTION
-    ========================== */
+    ========================================== */
 
     nextQuestionButton.addEventListener(
       "click",
@@ -1813,9 +1944,10 @@
     );
 
 
-    /* =========================
+
+    /* ==========================================
        FINISH QUIZ
-    ========================== */
+    ========================================== */
 
     finishQuizButton.addEventListener(
       "click",
@@ -1973,9 +2105,10 @@
     );
 
 
-    /* =========================
+
+    /* ==========================================
        START FINAL LEADERBOARD
-    ========================== */
+    ========================================== */
 
     startLeaderboardButton.addEventListener(
       "click",
@@ -2029,10 +2162,6 @@
             room.teams ||
             {};
 
-
-          /*
-            Build active team list.
-          */
 
           const standings =
             [];
@@ -2108,8 +2237,7 @@
 
 
           if (
-            standings.length ===
-              0
+            standings.length === 0
           ) {
 
             statusEl.textContent =
@@ -2124,16 +2252,6 @@
 
           }
 
-
-          /*
-            Highest score first.
-
-            Team number only gives us
-            deterministic display order
-            INSIDE a tied rank.
-
-            It does NOT break the tie.
-          */
 
           standings.sort(
             (
@@ -2162,16 +2280,6 @@
             }
           );
 
-
-          /*
-            Competition ranking:
-
-            Scores:
-            500, 500, 450, 400
-
-            Ranks:
-            1, 1, 3, 4
-          */
 
           let lastScore =
             null;
@@ -2211,10 +2319,6 @@
           );
 
 
-          /*
-            Convert into Firebase object.
-          */
-
           const finalStandings =
             {};
 
@@ -2246,17 +2350,6 @@
             }
           );
 
-
-          /*
-            Unique ranks, lowest rank
-            revealed first.
-
-            Example:
-            [8,7,6,5,4,3,2,1]
-
-            With ties it may be:
-            [8,7,5,4,3,2,1]
-          */
 
           const revealOrder =
             [
@@ -2297,10 +2390,6 @@
           );
 
 
-          statusEl.textContent =
-            "Final Leaderboard started. Ready to reveal the lowest rank.";
-
-
         } catch (
           error
         ) {
@@ -2324,9 +2413,10 @@
     );
 
 
-    /* =========================
+
+    /* ==========================================
        REVEAL NEXT RANK
-    ========================== */
+    ========================================== */
 
     revealRankButton.addEventListener(
       "click",
@@ -2376,12 +2466,42 @@
             snapshot.val();
 
 
-          const revealOrder =
-            Array.isArray(
-              room.leaderboardRevealOrder
-            )
-              ? room.leaderboardRevealOrder
-              : [];
+          let revealOrder =
+            room.leaderboardRevealOrder ||
+            [];
+
+
+          /*
+            Firebase may return an
+            array-like object.
+          */
+
+          if (
+            !Array.isArray(
+              revealOrder
+            ) &&
+            typeof revealOrder ===
+              "object"
+          ) {
+
+            revealOrder =
+              Object.keys(
+                revealOrder
+              )
+              .sort(
+                (
+                  a,
+                  b
+                ) =>
+                  Number(a) -
+                  Number(b)
+              )
+              .map(
+                key =>
+                  revealOrder[key]
+              );
+
+          }
 
 
           const step =
@@ -2454,9 +2574,10 @@
     );
 
 
-    /* =========================
+
+    /* ==========================================
        SHOW FULL LEADERBOARD
-    ========================== */
+    ========================================== */
 
     showFullLeaderboardButton.addEventListener(
       "click",
@@ -2518,9 +2639,83 @@
     );
 
 
-    /* =========================
+
+    /* ==========================================
+       PLAY FINALE
+    ========================================== */
+
+    playFinaleButton.addEventListener(
+      "click",
+      async () => {
+
+        if (
+          !currentRoomCode ||
+          currentGameState !==
+            "leaderboardFull"
+        ) {
+
+          return;
+
+        }
+
+
+        playFinaleButton.disabled =
+          true;
+
+
+        playFinaleButton.textContent =
+          "Starting Finale...";
+
+
+        try {
+
+          await update(
+            ref(
+              db,
+              "rooms/" +
+              currentRoomCode
+            ),
+            {
+              state:
+                "finale",
+
+              finaleStartedAt:
+                Date.now()
+            }
+          );
+
+
+        } catch (
+          error
+        ) {
+
+          console.error(
+            error
+          );
+
+
+          playFinaleButton.disabled =
+            false;
+
+
+          playFinaleButton.textContent =
+            "▶ Play Finale";
+
+
+          statusEl.textContent =
+            "Could not start finale: " +
+            error.message;
+
+        }
+
+      }
+    );
+
+
+
+    /* ==========================================
        RENDER TEAM LIST
-    ========================== */
+    ========================================== */
 
     async function renderTeams(
       teams
@@ -3012,6 +3207,7 @@
           statusEl.textContent =
             "✅ All 10 teams are ready.";
 
+
         } else {
 
           statusEl.textContent =
@@ -3025,9 +3221,10 @@
     }
 
 
-    /* =========================
-       INTRO
-    ========================== */
+
+    /* ==========================================
+       PLAY INTRO
+    ========================================== */
 
     playIntroButton.addEventListener(
       "click",
@@ -3058,9 +3255,10 @@
     );
 
 
-    /* =========================
+
+    /* ==========================================
        START QUESTIONS
-    ========================== */
+    ========================================== */
 
     startButton.addEventListener(
       "click",
@@ -3100,7 +3298,9 @@
               "questions",
 
             currentQuestion:
-              questions[0].id
+              questions[
+                0
+              ].id
           }
         );
 
@@ -3108,9 +3308,10 @@
     );
 
 
-    /* =========================
+
+    /* ==========================================
        RESET
-    ========================== */
+    ========================================== */
 
     resetRoomButton.addEventListener(
       "click",
@@ -3198,6 +3399,10 @@
 
 
           resetLeaderboardButtons();
+
+
+          playFinaleButton.textContent =
+            "▶ Play Finale";
 
 
           statusEl.textContent =
