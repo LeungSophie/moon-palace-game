@@ -27,6 +27,11 @@
       cursor: pointer;
     }
 
+    button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
     #topButtons {
       display: flex;
       gap: 12px;
@@ -105,10 +110,25 @@
 
     #controls {
       margin-top: 28px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    #playIntroButton {
+      background: #d7cbff;
+      color: #11152b;
+      font-weight: bold;
     }
 
     #startButton {
       background: #ffe89a;
+      color: #11152b;
+      font-weight: bold;
+    }
+
+    #revealButton {
+      background: #8ff0a4;
       color: #11152b;
       font-weight: bold;
     }
@@ -155,23 +175,25 @@
 
     <div id="teamList"></div>
 
+
     <div id="controls">
 
-  <button id="playIntroButton" disabled>
-    ▶ Play Intro
-  </button>
+      <button id="playIntroButton" disabled>
+        ▶ Play Intro
+      </button>
 
-  <button id="startButton" disabled>
-    Skip Intro → Start Questions
-  </button>
+      <button id="startButton" disabled>
+        Skip Intro → Start Questions
+      </button>
 
-  <button id="revealButton" disabled>
-    Reveal Answer Now
-  </button>
+      <button id="revealButton" disabled>
+        Reveal Answer Now
+      </button>
 
-</div>
+    </div>
 
   </section>
+
 
   <p id="status"></p>
 
@@ -192,69 +214,155 @@
       getTeamPhoto
     } from "./local-media.js";
 
-const photoChannel =
-  new BroadcastChannel(
-    "moon-palace-photos"
-  );
+
+    const photoChannel =
+      new BroadcastChannel(
+        "moon-palace-photos"
+      );
+
+
     const createRoomButton =
-      document.getElementById("createRoomButton");
+      document.getElementById(
+        "createRoomButton"
+      );
 
     const resetRoomButton =
-      document.getElementById("resetRoomButton");
+      document.getElementById(
+        "resetRoomButton"
+      );
 
     const roomSection =
-      document.getElementById("roomSection");
+      document.getElementById(
+        "roomSection"
+      );
 
     const roomCodeEl =
-      document.getElementById("roomCode");
+      document.getElementById(
+        "roomCode"
+      );
 
     const joinedCountEl =
-      document.getElementById("joinedCount");
+      document.getElementById(
+        "joinedCount"
+      );
 
     const teamList =
-      document.getElementById("teamList");
+      document.getElementById(
+        "teamList"
+      );
 
     const startButton =
-      document.getElementById("startButton");
+      document.getElementById(
+        "startButton"
+      );
 
-const playIntroButton =
-  document.getElementById("playIntroButton");
+    const playIntroButton =
+      document.getElementById(
+        "playIntroButton"
+      );
 
     const revealButton =
-  document.getElementById("revealButton");
-    
+      document.getElementById(
+        "revealButton"
+      );
+
     const statusEl =
-      document.getElementById("status");
+      document.getElementById(
+        "status"
+      );
 
 
-    let currentRoomCode = null;
+    let currentRoomCode =
+      null;
 
-let revealInProgress = false;
-    
+    let revealInProgress =
+      false;
+
+    let currentGameState =
+      "none";
+
+
+    /*
+      These let us stop old Firebase
+      listeners when making a new room.
+    */
+
+    let stopTeamsListener =
+      null;
+
+    let stopRoomListener =
+      null;
+
+
     function generateRoomCode() {
+
       return Math.floor(
-        1000 + Math.random() * 9000
+        1000 +
+        Math.random() * 9000
       ).toString();
+
     }
 
+
+    function stopExistingListeners() {
+
+      if (stopTeamsListener) {
+
+        stopTeamsListener();
+
+        stopTeamsListener =
+          null;
+      }
+
+
+      if (stopRoomListener) {
+
+        stopRoomListener();
+
+        stopRoomListener =
+          null;
+      }
+
+    }
+
+
+    /* =========================
+       CREATE ROOM
+    ========================== */
 
     createRoomButton.addEventListener(
       "click",
       async () => {
 
+        stopExistingListeners();
+
+
         const roomCode =
           generateRoomCode();
+
 
         currentRoomCode =
           roomCode;
 
+        currentGameState =
+          "lobby";
+
+        revealInProgress =
+          false;
+
+
         statusEl.textContent =
           "Creating room...";
+
 
         try {
 
           await set(
-            ref(db, "rooms/" + roomCode),
+            ref(
+              db,
+              "rooms/" +
+              roomCode
+            ),
             {
               state: "lobby",
               moonPower: 0,
@@ -264,173 +372,360 @@ let revealInProgress = false;
             }
           );
 
+
           await set(
-            ref(db, "currentRoom"),
+            ref(
+              db,
+              "currentRoom"
+            ),
             roomCode
           );
+
 
           roomCodeEl.textContent =
             roomCode;
 
+
           roomSection.hidden =
             false;
+
+
+          revealButton.disabled =
+            true;
+
 
           statusEl.textContent =
             "✅ Room created.";
 
-          watchTeams();
+
+          watchTeams(
+            roomCode
+          );
+
+
+          watchRoomForAnswers(
+            roomCode
+          );
+
 
         } catch (error) {
 
-          console.error(error);
+          console.error(
+            error
+          );
+
 
           statusEl.textContent =
-            "❌ Error: " + error.message;
+            "❌ Error: " +
+            error.message;
 
         }
+
       }
     );
 
 
-    function watchTeams() {
+    /* =========================
+       WATCH TEAMS
+    ========================== */
+
+    function watchTeams(
+      roomCode
+    ) {
 
       const teamsRef =
         ref(
           db,
           "rooms/" +
-          currentRoomCode +
+          roomCode +
           "/teams"
         );
 
-      onValue(
-        teamsRef,
-        (snapshot) => {
 
-          const teams =
-            snapshot.val() || {};
+      stopTeamsListener =
+        onValue(
+          teamsRef,
+          (snapshot) => {
 
-          renderTeams(teams);
+            const teams =
+              snapshot.val() || {};
 
-        }
-      );
+
+            renderTeams(
+              teams
+            );
+
+          }
+        );
+
     }
 
-    function watchRoomForAnswers() {
 
-  const roomRef =
-    ref(
-      db,
-      "rooms/" +
-      currentRoomCode
-    );
+    /* =========================
+       WATCH ROOM / ANSWERS
+    ========================== */
 
-  onValue(
-    roomRef,
-    async (snapshot) => {
+    function watchRoomForAnswers(
+      roomCode
+    ) {
 
-      const room =
-        snapshot.val();
+      const roomRef =
+        ref(
+          db,
+          "rooms/" +
+          roomCode
+        );
 
-      if (!room) {
+
+      stopRoomListener =
+        onValue(
+          roomRef,
+          async (snapshot) => {
+
+            const room =
+              snapshot.val();
+
+
+            if (!room) {
+              return;
+            }
+
+
+            const state =
+              room.state ||
+              "lobby";
+
+
+            currentGameState =
+              state;
+
+
+            /*
+              Reveal button should only
+              work while a question is open.
+            */
+
+            if (
+              state !== "questions"
+            ) {
+
+              revealButton.disabled =
+                true;
+
+
+              if (
+                state === "reveal"
+              ) {
+
+                statusEl.textContent =
+                  "Answer revealed on TV.";
+
+              }
+
+
+              revealInProgress =
+                false;
+
+              return;
+            }
+
+
+            revealButton.disabled =
+              false;
+
+
+            const teams =
+              room.teams || {};
+
+
+            const activeTeamKeys =
+              Object.keys(
+                teams
+              ).filter(
+                teamKey =>
+                  teams[teamKey] &&
+                  teams[teamKey]
+                    .joined === true
+              );
+
+
+            const activeTeamCount =
+              activeTeamKeys.length;
+
+
+            const questionNumber =
+              room.currentQuestion ||
+              1;
+
+
+            const questionKey =
+              "q" +
+              questionNumber;
+
+
+            const answers =
+              (
+                room.answers &&
+                room.answers[
+                  questionKey
+                ]
+              ) || {};
+
+
+            const answeredCount =
+              activeTeamKeys.filter(
+                teamKey =>
+                  answers[
+                    teamKey
+                  ]
+              ).length;
+
+
+            statusEl.textContent =
+              "Question " +
+              questionNumber +
+              ": " +
+              answeredCount +
+              " / " +
+              activeTeamCount +
+              " answered";
+
+
+            /*
+              AUTOMATIC REVEAL
+
+              When every active team
+              has answered, reveal.
+            */
+
+            if (
+              activeTeamCount > 0 &&
+              answeredCount >=
+                activeTeamCount &&
+              !revealInProgress
+            ) {
+
+              revealInProgress =
+                true;
+
+
+              await revealCurrentQuestion(
+                roomCode
+              );
+
+            }
+
+          }
+        );
+
+    }
+
+
+    /* =========================
+       REVEAL QUESTION
+    ========================== */
+
+    async function revealCurrentQuestion(
+      roomCode
+    ) {
+
+      if (!roomCode) {
         return;
       }
 
 
-      const state =
-        room.state || "lobby";
+      try {
 
+        await update(
+          ref(
+            db,
+            "rooms/" +
+            roomCode
+          ),
+          {
+            state: "reveal"
+          }
+        );
 
-      if (state !== "questions") {
 
         revealButton.disabled =
           true;
 
-        revealInProgress =
-          false;
 
-        return;
-      }
+        statusEl.textContent =
+          "Answer revealed on TV.";
 
 
-      revealButton.disabled =
-        false;
+      } catch (error) {
 
-
-      const teams =
-        room.teams || {};
-
-      const activeTeamKeys =
-        Object.keys(teams).filter(
-          teamKey =>
-            teams[teamKey] &&
-            teams[teamKey].joined === true
+        console.error(
+          error
         );
 
 
-      const activeTeamCount =
-        activeTeamKeys.length;
-
-
-      const questionNumber =
-        room.currentQuestion || 1;
-
-
-      const questionKey =
-        "q" + questionNumber;
-
-
-      const answers =
-        (
-          room.answers &&
-          room.answers[questionKey]
-        ) || {};
-
-
-      const answeredCount =
-        activeTeamKeys.filter(
-          teamKey =>
-            answers[teamKey]
-        ).length;
-
-
-      statusEl.textContent =
-        "Question " +
-        questionNumber +
-        ": " +
-        answeredCount +
-        " / " +
-        activeTeamCount +
-        " answered";
-
-
-      /*
-        AUTOMATIC REVEAL
-        only when every active team
-        has answered.
-      */
-
-      if (
-        activeTeamCount > 0 &&
-        answeredCount >= activeTeamCount &&
-        !revealInProgress
-      ) {
-
         revealInProgress =
-          true;
+          false;
 
-        await revealCurrentQuestion();
+
+        statusEl.textContent =
+          "Could not reveal answer: " +
+          error.message;
 
       }
 
     }
-  );
-}
 
-    async function renderTeams(teams) {
 
-      teamList.innerHTML = "";
+    /*
+      MANUAL REVEAL
 
-      let joinedCount = 0;
+      Host can reveal even if
+      not every team has answered.
+    */
+
+    revealButton.addEventListener(
+      "click",
+      async () => {
+
+        if (
+          !currentRoomCode ||
+          currentGameState !==
+            "questions"
+        ) {
+          return;
+        }
+
+
+        revealInProgress =
+          true;
+
+
+        revealButton.disabled =
+          true;
+
+
+        await revealCurrentQuestion(
+          currentRoomCode
+        );
+
+      }
+    );
+
+
+    /* =========================
+       RENDER TEAM LIST
+    ========================== */
+
+    async function renderTeams(
+      teams
+    ) {
+
+      teamList.innerHTML =
+        "";
+
+
+      let joinedCount =
+        0;
 
 
       for (
@@ -440,13 +735,18 @@ let revealInProgress = false;
       ) {
 
         const teamKey =
-          "team" + teamNumber;
+          "team" +
+          teamNumber;
+
 
         const teamData =
-          teams[teamKey] || {};
+          teams[teamKey] ||
+          {};
+
 
         const joined =
-          teamData.joined === true;
+          teamData.joined ===
+          true;
 
 
         if (joined) {
@@ -455,31 +755,45 @@ let revealInProgress = false;
 
 
         const row =
-          document.createElement("div");
+          document.createElement(
+            "div"
+          );
+
 
         row.className =
           "teamRow";
 
 
-        // TEAM NAME
+        /* TEAM NAME */
+
         const name =
-          document.createElement("div");
+          document.createElement(
+            "div"
+          );
+
 
         name.className =
           "teamName";
 
+
         name.textContent =
-          "Team " + teamNumber;
+          "Team " +
+          teamNumber;
 
 
-        // CONNECTION STATUS
+        /* CONNECTION STATUS */
+
         const connectionStatus =
-          document.createElement("div");
+          document.createElement(
+            "div"
+          );
+
 
         connectionStatus.textContent =
           joined
             ? "● Connected"
             : "○ Waiting";
+
 
         connectionStatus.className =
           joined
@@ -487,15 +801,21 @@ let revealInProgress = false;
             : "statusWaiting";
 
 
-        // PREVIOUS ACTIVITY SCORE
+        /* PREVIOUS ACTIVITY SCORE */
+
         const scoreArea =
-          document.createElement("div");
+          document.createElement(
+            "div"
+          );
 
 
         if (joined) {
 
           const input =
-            document.createElement("input");
+            document.createElement(
+              "input"
+            );
+
 
           input.type =
             "number";
@@ -510,7 +830,8 @@ let revealInProgress = false;
             "Previous score";
 
           input.value =
-            teamData.previousScore ?? 0;
+            teamData.previousScore ??
+            0;
 
 
           input.addEventListener(
@@ -520,8 +841,11 @@ let revealInProgress = false;
               const score =
                 Math.max(
                   0,
-                  Number(input.value) || 0
+                  Number(
+                    input.value
+                  ) || 0
                 );
+
 
               await update(
                 ref(
@@ -532,25 +856,35 @@ let revealInProgress = false;
                   teamKey
                 ),
                 {
-                  previousScore: score
+                  previousScore:
+                    score
                 }
               );
 
             }
           );
 
-          scoreArea.appendChild(input);
+
+          scoreArea.appendChild(
+            input
+          );
+
 
         } else {
 
-          scoreArea.textContent = "—";
+          scoreArea.textContent =
+            "—";
 
         }
 
 
-        // TEAM PHOTO
+        /* TEAM PHOTO */
+
         const photoArea =
-          document.createElement("div");
+          document.createElement(
+            "div"
+          );
+
 
         photoArea.className =
           "photoArea";
@@ -565,17 +899,30 @@ let revealInProgress = false;
 
 
           const fileInput =
-            document.createElement("input");
+            document.createElement(
+              "input"
+            );
 
-          fileInput.type = "file";
-          fileInput.accept = "image/*";
-          fileInput.hidden = true;
+
+          fileInput.type =
+            "file";
+
+          fileInput.accept =
+            "image/*";
+
+          fileInput.hidden =
+            true;
 
 
           const chooseButton =
-            document.createElement("button");
+            document.createElement(
+              "button"
+            );
 
-          chooseButton.type = "button";
+
+          chooseButton.type =
+            "button";
+
           chooseButton.className =
             "photoButton";
 
@@ -584,7 +931,10 @@ let revealInProgress = false;
 
 
           const preview =
-            document.createElement("img");
+            document.createElement(
+              "img"
+            );
+
 
           preview.className =
             "photoPreview";
@@ -594,11 +944,15 @@ let revealInProgress = false;
             teamNumber +
             " photo";
 
-          preview.hidden = true;
+          preview.hidden =
+            true;
 
 
           const photoStatus =
-            document.createElement("span");
+            document.createElement(
+              "span"
+            );
+
 
           photoStatus.className =
             "photoStatus";
@@ -620,6 +974,7 @@ let revealInProgress = false;
 
               const file =
                 fileInput.files[0];
+
 
               if (!file) {
                 return;
@@ -647,23 +1002,38 @@ let revealInProgress = false;
                   file
                 );
 
-                photoChannel.postMessage({
-  type: "photo-updated",
-  roomCode: currentRoomCode,
-  teamKey: teamKey
-});
+
+                photoChannel.postMessage(
+                  {
+                    type:
+                      "photo-updated",
+
+                    roomCode:
+                      currentRoomCode,
+
+                    teamKey:
+                      teamKey
+                  }
+                );
+
 
                 const previewURL =
-                  URL.createObjectURL(file);
+                  URL.createObjectURL(
+                    file
+                  );
+
 
                 preview.src =
                   previewURL;
 
+
                 preview.hidden =
                   false;
 
+
                 photoStatus.textContent =
                   "✓ Photo stored locally";
+
 
                 chooseButton.textContent =
                   "Change Photo";
@@ -671,7 +1041,10 @@ let revealInProgress = false;
 
               } catch (error) {
 
-                console.error(error);
+                console.error(
+                  error
+                );
+
 
                 photoStatus.textContent =
                   "Photo could not be saved.";
@@ -682,8 +1055,12 @@ let revealInProgress = false;
           );
 
 
-          // Check whether this team already
-          // has a locally stored photo.
+          /*
+            Check whether this team
+            already has a locally
+            stored photo.
+          */
+
           try {
 
             const savedPhoto =
@@ -699,19 +1076,24 @@ let revealInProgress = false;
                   savedPhoto
                 );
 
+
               preview.src =
                 savedURL;
+
 
               preview.hidden =
                 false;
 
+
               photoStatus.textContent =
                 "✓ Photo stored locally";
+
 
               chooseButton.textContent =
                 "Change Photo";
 
             }
+
 
           } catch (error) {
 
@@ -727,41 +1109,54 @@ let revealInProgress = false;
             chooseButton
           );
 
+
           photoArea.appendChild(
             fileInput
           );
+
 
           photoArea.appendChild(
             preview
           );
 
+
           photoArea.appendChild(
             photoStatus
           );
 
+
         } else {
 
-          photoArea.textContent = "—";
+          photoArea.textContent =
+            "—";
 
         }
 
 
-        row.appendChild(name);
+        row.appendChild(
+          name
+        );
+
 
         row.appendChild(
           connectionStatus
         );
 
+
         row.appendChild(
           scoreArea
         );
+
 
         row.appendChild(
           photoArea
         );
 
 
-        teamList.appendChild(row);
+        teamList.appendChild(
+          row
+        );
+
       }
 
 
@@ -771,52 +1166,51 @@ let revealInProgress = false;
 
 
       startButton.disabled =
-  joinedCount === 0;
+        joinedCount === 0;
 
-playIntroButton.disabled =
-  joinedCount === 0;
 
-      if (joinedCount === 10) {
+      playIntroButton.disabled =
+        joinedCount === 0;
 
-        statusEl.textContent =
-          "✅ All 10 teams are ready.";
 
-      } else {
+      /*
+        Don't overwrite the live
+        answer status while a
+        question is running.
+      */
 
-        statusEl.textContent =
-          joinedCount +
-          " team(s) currently connected.";
+      if (
+        currentGameState ===
+          "lobby" ||
+        currentGameState ===
+          "none"
+      ) {
+
+        if (
+          joinedCount === 10
+        ) {
+
+          statusEl.textContent =
+            "✅ All 10 teams are ready.";
+
+        } else {
+
+          statusEl.textContent =
+            joinedCount +
+            " team(s) currently connected.";
+
+        }
 
       }
 
     }
+
+
+    /* =========================
+       PLAY INTRO
+    ========================== */
 
     playIntroButton.addEventListener(
-  "click",
-  async () => {
-
-    if (!currentRoomCode) {
-      return;
-    }
-
-    await update(
-      ref(
-        db,
-        "rooms/" +
-        currentRoomCode
-      ),
-      {
-        state: "intro"
-      }
-    );
-
-    statusEl.textContent =
-      "Intro playing on TV.";
-
-  }
-);
-
-    startButton.addEventListener(
       "click",
       async () => {
 
@@ -832,10 +1226,57 @@ playIntroButton.disabled =
             currentRoomCode
           ),
           {
-            state: "questions",
-            currentQuestion: 1
+            state: "intro"
           }
         );
+
+
+        currentGameState =
+          "intro";
+
+
+        statusEl.textContent =
+          "Intro playing on TV.";
+
+      }
+    );
+
+
+    /* =========================
+       START QUESTIONS
+    ========================== */
+
+    startButton.addEventListener(
+      "click",
+      async () => {
+
+        if (!currentRoomCode) {
+          return;
+        }
+
+
+        revealInProgress =
+          false;
+
+
+        await update(
+          ref(
+            db,
+            "rooms/" +
+            currentRoomCode
+          ),
+          {
+            state:
+              "questions",
+
+            currentQuestion:
+              1
+          }
+        );
+
+
+        currentGameState =
+          "questions";
 
 
         statusEl.textContent =
@@ -844,6 +1285,10 @@ playIntroButton.disabled =
       }
     );
 
+
+    /* =========================
+       RESET / END GAME
+    ========================== */
 
     resetRoomButton.addEventListener(
       "click",
@@ -863,44 +1308,72 @@ playIntroButton.disabled =
         try {
 
           await set(
-            ref(db, "currentRoom"),
+            ref(
+              db,
+              "currentRoom"
+            ),
             null
           );
 
 
-          currentRoomCode = null;
+          stopExistingListeners();
+
+
+          currentRoomCode =
+            null;
+
+          currentGameState =
+            "none";
+
+          revealInProgress =
+            false;
+
 
           roomSection.hidden =
             true;
 
+
           roomCodeEl.textContent =
             "----";
+
 
           joinedCountEl.textContent =
             "0 / 10 teams joined";
 
+
           teamList.innerHTML =
             "";
+
 
           startButton.disabled =
             true;
 
+
           playIntroButton.disabled =
-  true;
-          
+            true;
+
+
+          revealButton.disabled =
+            true;
+
+
           statusEl.textContent =
             "Current game ended. Ready to create a new room.";
 
 
         } catch (error) {
 
-          console.error(error);
+          console.error(
+            error
+          );
+
 
           statusEl.textContent =
             "❌ Error: " +
             error.message;
 
         }
+
       }
     );
 
