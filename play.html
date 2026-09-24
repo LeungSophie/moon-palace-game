@@ -2,134 +2,260 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <title>Moon Palace Team</title>
 
   <style>
-    body {
-      margin: 0;
-      padding: 24px;
-      font-family: Arial, sans-serif;
-      background: #11152b;
-      color: white;
-      text-align: center;
-      min-height: 100vh;
+    * {
       box-sizing: border-box;
     }
 
+    body {
+      margin: 0;
+      padding: 24px;
+
+      font-family:
+        Arial,
+        sans-serif;
+
+      background:
+        #11152b;
+
+      color:
+        white;
+
+      text-align:
+        center;
+
+      min-height:
+        100vh;
+    }
+
     h1 {
-      font-size: 32px;
-      margin-bottom: 8px;
+      font-size:
+        32px;
+
+      margin-bottom:
+        8px;
     }
 
     button {
-      font-family: inherit;
-      cursor: pointer;
+      font-family:
+        inherit;
+
+      cursor:
+        pointer;
     }
 
     input {
-      width: 180px;
-      font-size: 28px;
-      text-align: center;
-      padding: 12px;
-      border-radius: 10px;
-      border: none;
-      margin: 15px 0;
-      letter-spacing: 6px;
+      width:
+        180px;
+
+      font-size:
+        28px;
+
+      text-align:
+        center;
+
+      padding:
+        12px;
+
+      border-radius:
+        10px;
+
+      border:
+        none;
+
+      margin:
+        15px 0;
+
+      letter-spacing:
+        6px;
     }
 
     .mainButton {
-      font-size: 20px;
-      padding: 14px 20px;
-      border-radius: 10px;
-      border: none;
+      font-size:
+        20px;
+
+      padding:
+        14px 20px;
+
+      border-radius:
+        10px;
+
+      border:
+        none;
     }
 
     .teamIdentity {
-      font-size: 40px;
-      font-weight: bold;
-      margin: 20px 0;
-      color: #ffe89a;
+      font-size:
+        40px;
+
+      font-weight:
+        bold;
+
+      margin:
+        20px 0;
+
+      color:
+        #ffe89a;
     }
 
     #status {
-      margin-top: 18px;
-      font-size: 18px;
-      line-height: 1.4;
+      margin-top:
+        18px;
+
+      font-size:
+        18px;
+
+      line-height:
+        1.4;
     }
+
 
     /* =========================
        TEAM SELECTION
     ========================== */
 
     #teamGrid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 20px;
+      display:
+        grid;
+
+      grid-template-columns:
+        repeat(
+          2,
+          minmax(0, 1fr)
+        );
+
+      gap:
+        12px;
+
+      margin-top:
+        20px;
     }
 
     .teamButton {
-      min-height: 70px;
-      font-size: 20px;
-      font-weight: bold;
-      border: none;
-      border-radius: 12px;
+      min-height:
+        70px;
+
+      font-size:
+        20px;
+
+      font-weight:
+        bold;
+
+      border:
+        none;
+
+      border-radius:
+        12px;
     }
 
     .available {
-      background: white;
-      color: #11152b;
+      background:
+        white;
+
+      color:
+        #11152b;
     }
 
     .taken {
-      background: #555;
-      color: #bbb;
-      cursor: not-allowed;
+      background:
+        #555;
+
+      color:
+        #bbb;
+
+      cursor:
+        not-allowed;
     }
+
 
     /* =========================
        WAITING
     ========================== */
 
     #waitingMessage {
-      font-size: 22px;
-      line-height: 1.5;
-      margin-top: 25px;
+      font-size:
+        22px;
+
+      line-height:
+        1.5;
+
+      margin-top:
+        25px;
     }
+
 
     /* =========================
        ANSWER SCREEN
     ========================== */
 
     #questionLabel {
-      font-size: 20px;
-      opacity: 0.8;
-      margin-top: 8px;
+      font-size:
+        20px;
+
+      opacity:
+        0.8;
+
+      margin-top:
+        8px;
     }
 
     #answerInstruction {
-      font-size: 22px;
-      margin: 18px 0 22px;
-      line-height: 1.5;
+      font-size:
+        22px;
+
+      margin:
+        18px 0 22px;
+
+      line-height:
+        1.5;
     }
 
     #answerGrid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-      max-width: 520px;
-      margin: 0 auto;
+      display:
+        grid;
+
+      grid-template-columns:
+        repeat(
+          2,
+          minmax(0, 1fr)
+        );
+
+      gap:
+        14px;
+
+      max-width:
+        520px;
+
+      margin:
+        0 auto;
     }
 
     .answerButton {
-      min-height: 125px;
-      border: none;
-      border-radius: 18px;
-      color: white;
-      font-size: 50px;
-      font-weight: bold;
+      min-height:
+        125px;
+
+      border:
+        none;
+
+      border-radius:
+        18px;
+
+      color:
+        white;
+
+      font-size:
+        50px;
+
+      font-weight:
+        bold;
 
       transition:
         transform 0.12s ease,
@@ -137,136 +263,410 @@
     }
 
     #answerA {
-      background: #d84a4a;
+      background:
+        #d84a4a;
     }
 
     #answerB {
-      background: #3978d4;
+      background:
+        #3978d4;
     }
 
     #answerC {
-      background: #d49a27;
+      background:
+        #d49a27;
     }
 
     #answerD {
-      background: #3a9b61;
+      background:
+        #3a9b61;
     }
 
     .answerButton:active:not(:disabled) {
-      transform: scale(0.97);
+      transform:
+        scale(0.97);
     }
 
     .answerButton:disabled {
-      cursor: default;
-      opacity: 0.32;
+      cursor:
+        default;
+
+      opacity:
+        0.32;
     }
 
     .answerButton.selected {
-      opacity: 1;
-      outline: 5px solid white;
+      opacity:
+        1;
+
+      outline:
+        5px solid white;
     }
 
     #submittedPanel {
-      margin-top: 28px;
-      font-size: 22px;
-      line-height: 1.5;
+      margin-top:
+        28px;
+
+      font-size:
+        22px;
+
+      line-height:
+        1.5;
     }
 
     #submittedAnswer {
-      font-size: 46px;
-      font-weight: bold;
-      color: #ffe89a;
-      margin: 10px 0;
+      font-size:
+        46px;
+
+      font-weight:
+        bold;
+
+      color:
+        #ffe89a;
+
+      margin:
+        10px 0;
     }
 
     #lookAtTV {
-      margin-top: 20px;
-      font-size: 28px;
-      font-weight: bold;
+      margin-top:
+        20px;
+
+      font-size:
+        28px;
+
+      font-weight:
+        bold;
     }
+
 
     /* =========================
        RESULT SCREEN
     ========================== */
 
     #resultSection {
-      padding-top: 30px;
+      padding-top:
+        30px;
     }
 
     #resultCard {
-      max-width: 500px;
-      margin: 30px auto 0;
-      padding: 32px 22px;
-      border-radius: 24px;
-      background: rgba(255,255,255,0.08);
-      border: 3px solid rgba(255,255,255,0.18);
+      max-width:
+        500px;
+
+      margin:
+        30px auto 0;
+
+      padding:
+        32px 22px;
+
+      border-radius:
+        24px;
+
+      background:
+        rgba(
+          255,
+          255,
+          255,
+          0.08
+        );
+
+      border:
+        3px solid
+        rgba(
+          255,
+          255,
+          255,
+          0.18
+        );
     }
 
     #resultIcon {
-      font-size: 68px;
-      margin-bottom: 12px;
+      font-size:
+        68px;
+
+      margin-bottom:
+        12px;
     }
 
     #resultTitle {
-      font-size: 36px;
-      font-weight: bold;
-      margin-bottom: 8px;
+      font-size:
+        36px;
+
+      font-weight:
+        bold;
+
+      margin-bottom:
+        8px;
     }
 
     #resultSubtitle {
-      font-size: 20px;
-      opacity: 0.88;
-      line-height: 1.4;
+      font-size:
+        20px;
+
+      opacity:
+        0.88;
+
+      line-height:
+        1.4;
     }
 
     #pointsAwarded {
-      font-size: 72px;
-      font-weight: bold;
-      margin: 28px 0 10px;
-      color: #ffe89a;
+      font-size:
+        72px;
+
+      font-weight:
+        bold;
+
+      margin:
+        28px 0 10px;
+
+      color:
+        #ffe89a;
     }
 
     #pointsLabel {
-      font-size: 20px;
-      opacity: 0.85;
+      font-size:
+        20px;
+
+      opacity:
+        0.85;
     }
 
     #quizScoreBox {
-      margin-top: 30px;
-      padding-top: 24px;
-      border-top: 1px solid rgba(255,255,255,0.2);
+      margin-top:
+        30px;
+
+      padding-top:
+        24px;
+
+      border-top:
+        1px solid
+        rgba(
+          255,
+          255,
+          255,
+          0.2
+        );
     }
 
     #quizScoreLabel {
-      font-size: 18px;
-      opacity: 0.8;
+      font-size:
+        18px;
+
+      opacity:
+        0.8;
     }
 
     #quizScore {
-      font-size: 52px;
-      font-weight: bold;
-      margin-top: 5px;
+      font-size:
+        52px;
+
+      font-weight:
+        bold;
+
+      margin-top:
+        5px;
     }
 
     #resultTVMessage {
-      margin-top: 28px;
-      font-size: 24px;
-      line-height: 1.45;
+      margin-top:
+        28px;
+
+      font-size:
+        24px;
+
+      line-height:
+        1.45;
     }
 
     #resultCard.correct {
-      border-color: #8ff0a4;
-      background: rgba(80,200,110,0.15);
+      border-color:
+        #8ff0a4;
+
+      background:
+        rgba(
+          80,
+          200,
+          110,
+          0.15
+        );
     }
 
     #resultCard.noPoints {
-      border-color: rgba(255,255,255,0.25);
+      border-color:
+        rgba(
+          255,
+          255,
+          255,
+          0.25
+        );
     }
+
+
+    /* =========================
+       QUIZ COMPLETE
+    ========================== */
+
+    #quizCompleteSection {
+      padding-top:
+        30px;
+    }
+
+    #completeCard {
+      max-width:
+        520px;
+
+      margin:
+        25px auto;
+
+      padding:
+        38px 24px;
+
+      border-radius:
+        28px;
+
+      background:
+        radial-gradient(
+          circle at top,
+          rgba(
+            255,
+            230,
+            140,
+            0.18
+          ),
+          rgba(
+            255,
+            255,
+            255,
+            0.06
+          )
+        );
+
+      border:
+        3px solid
+        rgba(
+          255,
+          232,
+          154,
+          0.65
+        );
+
+      box-shadow:
+        0 0 40px
+        rgba(
+          255,
+          220,
+          110,
+          0.15
+        );
+    }
+
+    #completeIcon {
+      font-size:
+        88px;
+
+      line-height:
+        1;
+
+      margin-bottom:
+        18px;
+    }
+
+    #completeTitleChinese {
+      font-size:
+        34px;
+
+      font-weight:
+        bold;
+
+      color:
+        #fff0a6;
+
+      line-height:
+        1.3;
+    }
+
+    #completeTitleEnglish {
+      margin-top:
+        8px;
+
+      font-size:
+        29px;
+
+      font-weight:
+        bold;
+    }
+
+    #completeMessage {
+      margin-top:
+        24px;
+
+      font-size:
+        21px;
+
+      line-height:
+        1.55;
+    }
+
+    #completeQuizScoreArea {
+      margin-top:
+        30px;
+
+      padding-top:
+        25px;
+
+      border-top:
+        1px solid
+        rgba(
+          255,
+          255,
+          255,
+          0.2
+        );
+    }
+
+    #completeQuizScoreLabel {
+      font-size:
+        18px;
+
+      opacity:
+        0.8;
+    }
+
+    #completeQuizScore {
+      margin-top:
+        7px;
+
+      font-size:
+        56px;
+
+      font-weight:
+        bold;
+
+      color:
+        #ffe89a;
+    }
+
+    #completeReminder {
+      margin-top:
+        28px;
+
+      font-size:
+        24px;
+
+      line-height:
+        1.5;
+
+      font-weight:
+        bold;
+    }
+
   </style>
 </head>
 
 
 <body>
+
 
   <!-- =========================
        ENTER ROOM
@@ -304,6 +704,7 @@
   </section>
 
 
+
   <!-- =========================
        CHOOSE TEAM
   ========================== -->
@@ -322,6 +723,7 @@
     <div id="teamGrid"></div>
 
   </section>
+
 
 
   <!-- =========================
@@ -349,8 +751,9 @@
   </section>
 
 
+
   <!-- =========================
-       ANSWER SCREEN
+       ANSWER
   ========================== -->
 
   <section
@@ -364,7 +767,7 @@
     ></div>
 
     <div id="questionLabel">
-      QUESTION 1 / 10
+      QUESTION
     </div>
 
     <div id="answerInstruction">
@@ -431,8 +834,9 @@
   </section>
 
 
+
   <!-- =========================
-       RESULT SCREEN
+       RESULT
   ========================== -->
 
   <section
@@ -495,6 +899,73 @@
 
 
 
+  <!-- =========================
+       QUIZ COMPLETE
+  ========================== -->
+
+  <section
+    id="quizCompleteSection"
+    hidden
+  >
+
+    <div
+      id="completeTeamName"
+      class="teamIdentity"
+    ></div>
+
+
+    <div id="completeCard">
+
+      <div id="completeIcon">
+        🌕
+      </div>
+
+
+      <div id="completeTitleChinese">
+        月宮問答完成！
+      </div>
+
+
+      <div id="completeTitleEnglish">
+        QUIZ COMPLETE!
+      </div>
+
+
+      <div id="completeMessage">
+        多謝你們一起收集月華力量！
+        <br>
+        Thank you for helping gather the Moon Power!
+      </div>
+
+
+      <div id="completeQuizScoreArea">
+
+        <div id="completeQuizScoreLabel">
+          Your Quiz Score
+          <br>
+          你的問答分數
+        </div>
+
+
+        <div id="completeQuizScore">
+          0
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div id="completeReminder">
+      🏆 請看大螢幕，最終排名即將揭曉！
+      <br>
+      Look at the TV — the Final Leaderboard is coming!
+    </div>
+
+  </section>
+
+
+
   <script type="module">
 
     import {
@@ -529,6 +1000,11 @@
     const resultSection =
       document.getElementById(
         "resultSection"
+      );
+
+    const quizCompleteSection =
+      document.getElementById(
+        "quizCompleteSection"
       );
 
 
@@ -632,6 +1108,17 @@
       );
 
 
+    const completeTeamName =
+      document.getElementById(
+        "completeTeamName"
+      );
+
+    const completeQuizScore =
+      document.getElementById(
+        "completeQuizScore"
+      );
+
+
     let currentRoomCode =
       null;
 
@@ -648,8 +1135,9 @@
       false;
 
 
+
     /* =========================
-       SHOW ONE MAIN SECTION
+       HIDE GAME SECTIONS
     ========================== */
 
     function hideGameSections() {
@@ -663,7 +1151,11 @@
       resultSection.hidden =
         true;
 
+      quizCompleteSection.hidden =
+        true;
+
     }
+
 
 
     /* =========================
@@ -688,6 +1180,7 @@
             "Please enter a valid 4-digit room code.";
 
           return;
+
         }
 
 
@@ -715,6 +1208,7 @@
               "Room not found.";
 
             return;
+
           }
 
 
@@ -724,6 +1218,7 @@
 
           joinSection.hidden =
             true;
+
 
           teamSection.hidden =
             false;
@@ -756,8 +1251,9 @@
     );
 
 
+
     /* =========================
-       WATCH TEAM AVAILABILITY
+       WATCH TEAMS
     ========================== */
 
     function startWatchingTeams() {
@@ -797,6 +1293,7 @@
       );
 
     }
+
 
 
     function renderTeams(
@@ -892,6 +1389,7 @@
     }
 
 
+
     /* =========================
        CLAIM TEAM
     ========================== */
@@ -937,30 +1435,41 @@
         if (
           snapshot.exists() &&
           snapshot.val()
-            .joined === true
+            .joined ===
+              true
         ) {
 
           alert(
             "That team has already been taken. Please choose another team."
           );
 
+
           return;
+
         }
 
 
         await set(
           teamRef,
           {
-            joined: true,
-            joinedAt: Date.now(),
-            quizScore: 0,
-            previousScore: 0
+            joined:
+              true,
+
+            joinedAt:
+              Date.now(),
+
+            quizScore:
+              0,
+
+            previousScore:
+              0
           }
         );
 
 
         selectedTeamNumber =
           teamNumber;
+
 
         selectedTeamKey =
           teamKey;
@@ -992,6 +1501,11 @@
           teamNumber;
 
 
+        completeTeamName.textContent =
+          "TEAM " +
+          teamNumber;
+
+
         startWatchingRoom();
 
 
@@ -1012,6 +1526,7 @@
       }
 
     }
+
 
 
     /* =========================
@@ -1054,13 +1569,14 @@
 
           if (
             state ===
-            "lobby"
+              "lobby"
           ) {
 
             showWaitingScreen(
               "Waiting for the host to start the adventure..."
             );
 
+
             return;
 
           }
@@ -1068,13 +1584,14 @@
 
           if (
             state ===
-            "intro"
+              "intro"
           ) {
 
             showWaitingScreen(
               "Watch the TV — the adventure is beginning! 🌙"
             );
 
+
             return;
 
           }
@@ -1082,16 +1599,18 @@
 
           if (
             state ===
-            "questions"
+              "questions"
           ) {
 
             const questionNumber =
-              room.currentQuestion ||
-              1;
+              Number(
+                room.currentQuestion
+              ) || 1;
 
 
             await showQuestion(
-              questionNumber
+              questionNumber,
+              room
             );
 
 
@@ -1102,16 +1621,32 @@
 
           if (
             state ===
-            "reveal"
+              "reveal"
           ) {
 
             const questionNumber =
-              room.currentQuestion ||
-              1;
+              Number(
+                room.currentQuestion
+              ) || 1;
 
 
             showRevealResult(
               questionNumber,
+              room
+            );
+
+
+            return;
+
+          }
+
+
+          if (
+            state ===
+              "quizComplete"
+          ) {
+
+            showQuizComplete(
               room
             );
 
@@ -1126,8 +1661,9 @@
     }
 
 
+
     /* =========================
-       WAITING SCREEN
+       WAITING
     ========================== */
 
     function showWaitingScreen(
@@ -1147,12 +1683,14 @@
     }
 
 
+
     /* =========================
        SHOW QUESTION
     ========================== */
 
     async function showQuestion(
-      questionNumber
+      questionNumber,
+      room
     ) {
 
       hideGameSections();
@@ -1162,20 +1700,28 @@
         false;
 
 
+      const totalQuestions =
+        Number(
+          room.totalQuestions
+        ) || 10;
+
+
       questionLabel.textContent =
         "QUESTION " +
         questionNumber +
-        " / 10";
+        " / " +
+        totalQuestions;
+
 
 
       /*
         New question:
-        reset buttons and submission.
+        reset this phone.
       */
 
       if (
         currentQuestionNumber !==
-        questionNumber
+          questionNumber
       ) {
 
         currentQuestionNumber =
@@ -1193,10 +1739,10 @@
           true;
 
 
+
         /*
-          Check whether this device
-          already submitted an answer
-          for this question.
+          If this device reconnects,
+          restore its submitted answer.
         */
 
         const answerSnapshot =
@@ -1233,6 +1779,7 @@
     }
 
 
+
     /* =========================
        SUBMIT ANSWER
     ========================== */
@@ -1262,11 +1809,6 @@
             const answer =
               button.dataset.answer;
 
-
-            /*
-              Lock immediately to stop
-              double tapping.
-            */
 
             submittedThisQuestion =
               true;
@@ -1333,6 +1875,7 @@
     );
 
 
+
     /* =========================
        ANSWER BUTTON STATES
     ========================== */
@@ -1352,7 +1895,7 @@
 
           if (
             button.dataset.answer ===
-            selectedAnswer
+              selectedAnswer
           ) {
 
             button.classList.add(
@@ -1365,6 +1908,7 @@
       );
 
     }
+
 
 
     function resetAnswerButtons() {
@@ -1386,6 +1930,7 @@
       );
 
     }
+
 
 
     function showSubmittedState(
@@ -1411,8 +1956,9 @@
     }
 
 
+
     /* =========================
-       SHOW REVEAL RESULT
+       REVEAL RESULT
     ========================== */
 
     function showRevealResult(
@@ -1444,22 +1990,15 @@
         ];
 
 
-      /*
-        Normally the Host writes the
-        result before state becomes
-        "reveal".
-
-        This fallback avoids a blank
-        screen if data is momentarily
-        unavailable.
-      */
 
       if (
         !result
       ) {
 
-        resultCard.className =
-          "";
+        resultCard.classList.remove(
+          "correct",
+          "noPoints"
+        );
 
 
         resultIcon.textContent =
@@ -1478,8 +2017,18 @@
           "+0";
 
 
+        const teamData =
+          room.teams &&
+          room.teams[
+            selectedTeamKey
+          ];
+
+
         quizScore.textContent =
-          "0";
+          Number(
+            teamData &&
+            teamData.quizScore
+          ) || 0;
 
 
         return;
@@ -1487,9 +2036,10 @@
       }
 
 
+
       const isCorrect =
         result.correct ===
-        true;
+          true;
 
 
       const points =
@@ -1504,10 +2054,12 @@
         ) || 0;
 
 
+
       resultCard.classList.remove(
         "correct",
         "noPoints"
       );
+
 
 
       if (
@@ -1559,6 +2111,53 @@
 
       quizScore.textContent =
         score;
+
+    }
+
+
+
+    /* =========================
+       QUIZ COMPLETE
+    ========================== */
+
+    function showQuizComplete(
+      room
+    ) {
+
+      hideGameSections();
+
+
+      quizCompleteSection.hidden =
+        false;
+
+
+
+      const teamData =
+        room.teams &&
+        room.teams[
+          selectedTeamKey
+        ];
+
+
+
+      const finalQuizScore =
+        Number(
+          teamData &&
+          teamData.quizScore
+        ) || 0;
+
+
+
+      /*
+        Only the QUIZ score is shown.
+
+        Previous activity score and
+        combined final score remain
+        secret until the TV leaderboard.
+      */
+
+      completeQuizScore.textContent =
+        finalQuizScore;
 
     }
 
