@@ -21,6 +21,11 @@
       margin-bottom: 8px;
     }
 
+    button {
+      font-family: inherit;
+      cursor: pointer;
+    }
+
     input {
       width: 180px;
       font-size: 28px;
@@ -32,12 +37,11 @@
       letter-spacing: 6px;
     }
 
-    button {
+    .mainButton {
       font-size: 20px;
-      padding: 14px 18px;
+      padding: 14px 20px;
       border-radius: 10px;
       border: none;
-      cursor: pointer;
     }
 
     #teamGrid {
@@ -51,10 +55,12 @@
       min-height: 70px;
       font-size: 20px;
       font-weight: bold;
+      border: none;
+      border-radius: 12px;
     }
 
     .available {
-      background: #ffffff;
+      background: white;
       color: #11152b;
     }
 
@@ -70,9 +76,98 @@
       line-height: 1.4;
     }
 
-    #selectedTeam {
-      font-size: 42px;
+    .teamIdentity {
+      font-size: 40px;
+      font-weight: bold;
+      margin: 20px 0;
+      color: #ffe89a;
+    }
+
+    #waitingMessage {
+      font-size: 22px;
+      line-height: 1.5;
       margin-top: 25px;
+    }
+
+    /* ANSWER SCREEN */
+
+    #questionLabel {
+      font-size: 20px;
+      opacity: 0.8;
+      margin-top: 8px;
+    }
+
+    #answerInstruction {
+      font-size: 22px;
+      margin: 18px 0 22px;
+    }
+
+    #answerGrid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    .answerButton {
+      min-height: 125px;
+      border: none;
+      border-radius: 18px;
+      color: white;
+      font-size: 50px;
+      font-weight: bold;
+      transition:
+        transform 0.12s ease,
+        opacity 0.2s ease;
+    }
+
+    #answerA {
+      background: #d84a4a;
+    }
+
+    #answerB {
+      background: #3978d4;
+    }
+
+    #answerC {
+      background: #d49a27;
+    }
+
+    #answerD {
+      background: #3a9b61;
+    }
+
+    .answerButton:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+
+    .answerButton:disabled {
+      cursor: default;
+      opacity: 0.35;
+    }
+
+    .answerButton.selected {
+      opacity: 1;
+      outline: 5px solid white;
+    }
+
+    #submittedPanel {
+      margin-top: 28px;
+      font-size: 22px;
+      line-height: 1.5;
+    }
+
+    #submittedAnswer {
+      font-size: 46px;
+      font-weight: bold;
+      color: #ffe89a;
+      margin: 10px 0;
+    }
+
+    #lookAtTV {
+      margin-top: 20px;
+      font-size: 28px;
       font-weight: bold;
     }
   </style>
@@ -80,8 +175,14 @@
 
 <body>
 
+  <!-- =========================
+       ENTER ROOM
+  ========================== -->
+
   <section id="joinSection">
+
     <h1>🌙 Moon Palace Adventure</h1>
+
     <p>Enter Room Code</p>
 
     <input
@@ -94,32 +195,143 @@
 
     <br>
 
-    <button id="joinRoomButton">
+    <button
+      id="joinRoomButton"
+      class="mainButton"
+    >
       Join Room
     </button>
 
     <p id="status"></p>
+
   </section>
 
 
-  <section id="teamSection" hidden>
+  <!-- =========================
+       CHOOSE TEAM
+  ========================== -->
+
+  <section
+    id="teamSection"
+    hidden
+  >
+
     <h1>Choose Your Team</h1>
+
     <p id="roomDisplay"></p>
 
     <div id="teamGrid"></div>
+
   </section>
 
 
-  <section id="waitingSection" hidden>
+  <!-- =========================
+       WAITING / INTRO
+  ========================== -->
+
+  <section
+    id="waitingSection"
+    hidden
+  >
+
     <h1>🌙 Connected</h1>
 
-    <div id="selectedTeam"></div>
+    <div
+      id="waitingTeamName"
+      class="teamIdentity"
+    ></div>
 
-    <p>Waiting for the host to start the adventure...</p>
+    <div id="waitingMessage">
+      Waiting for the host to start the adventure...
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       ANSWER SCREEN
+  ========================== -->
+
+  <section
+    id="answerSection"
+    hidden
+  >
+
+    <div
+      id="answerTeamName"
+      class="teamIdentity"
+    ></div>
+
+    <div id="questionLabel">
+      QUESTION 1
+    </div>
+
+    <div id="answerInstruction">
+      Look at the TV and choose your answer
+      <br>
+      請看大螢幕並選擇答案
+    </div>
+
+
+    <div id="answerGrid">
+
+      <button
+        class="answerButton"
+        id="answerA"
+        data-answer="A"
+      >
+        A
+      </button>
+
+      <button
+        class="answerButton"
+        id="answerB"
+        data-answer="B"
+      >
+        B
+      </button>
+
+      <button
+        class="answerButton"
+        id="answerC"
+        data-answer="C"
+      >
+        C
+      </button>
+
+      <button
+        class="answerButton"
+        id="answerD"
+        data-answer="D"
+      >
+        D
+      </button>
+
+    </div>
+
+
+    <div
+      id="submittedPanel"
+      hidden
+    >
+
+      Answer submitted
+
+      <div id="submittedAnswer"></div>
+
+      <div id="lookAtTV">
+        👆 Look at the TV
+        <br>
+        請看大螢幕
+      </div>
+
+    </div>
+
   </section>
 
 
   <script type="module">
+
     import {
       db,
       ref,
@@ -130,36 +342,109 @@
 
 
     const joinSection =
-      document.getElementById("joinSection");
+      document.getElementById(
+        "joinSection"
+      );
 
     const teamSection =
-      document.getElementById("teamSection");
+      document.getElementById(
+        "teamSection"
+      );
 
     const waitingSection =
-      document.getElementById("waitingSection");
+      document.getElementById(
+        "waitingSection"
+      );
+
+    const answerSection =
+      document.getElementById(
+        "answerSection"
+      );
+
 
     const roomCodeInput =
-      document.getElementById("roomCodeInput");
+      document.getElementById(
+        "roomCodeInput"
+      );
 
     const joinRoomButton =
-      document.getElementById("joinRoomButton");
+      document.getElementById(
+        "joinRoomButton"
+      );
 
     const statusEl =
-      document.getElementById("status");
+      document.getElementById(
+        "status"
+      );
 
     const roomDisplay =
-      document.getElementById("roomDisplay");
+      document.getElementById(
+        "roomDisplay"
+      );
 
     const teamGrid =
-      document.getElementById("teamGrid");
+      document.getElementById(
+        "teamGrid"
+      );
 
-    const selectedTeamEl =
-      document.getElementById("selectedTeam");
+
+    const waitingTeamName =
+      document.getElementById(
+        "waitingTeamName"
+      );
+
+    const waitingMessage =
+      document.getElementById(
+        "waitingMessage"
+      );
 
 
-    let currentRoomCode = null;
-    let selectedTeamNumber = null;
+    const answerTeamName =
+      document.getElementById(
+        "answerTeamName"
+      );
 
+    const questionLabel =
+      document.getElementById(
+        "questionLabel"
+      );
+
+    const submittedPanel =
+      document.getElementById(
+        "submittedPanel"
+      );
+
+    const submittedAnswer =
+      document.getElementById(
+        "submittedAnswer"
+      );
+
+
+    const answerButtons =
+      document.querySelectorAll(
+        ".answerButton"
+      );
+
+
+    let currentRoomCode =
+      null;
+
+    let selectedTeamNumber =
+      null;
+
+    let selectedTeamKey =
+      null;
+
+    let currentQuestionNumber =
+      0;
+
+    let submittedThisQuestion =
+      false;
+
+
+    /* =========================
+       JOIN ROOM
+    ========================== */
 
     joinRoomButton.addEventListener(
       "click",
@@ -168,23 +453,39 @@
         const roomCode =
           roomCodeInput.value.trim();
 
-        if (!/^\d{4}$/.test(roomCode)) {
+
+        if (
+          !/^\d{4}$/.test(
+            roomCode
+          )
+        ) {
+
           statusEl.textContent =
             "Please enter a valid 4-digit room code.";
+
           return;
         }
 
+
         statusEl.textContent =
           "Checking room...";
+
 
         try {
 
           const roomSnapshot =
             await get(
-              ref(db, "rooms/" + roomCode)
+              ref(
+                db,
+                "rooms/" +
+                roomCode
+              )
             );
 
-          if (!roomSnapshot.exists()) {
+
+          if (
+            !roomSnapshot.exists()
+          ) {
 
             statusEl.textContent =
               "Room not found.";
@@ -192,8 +493,10 @@
             return;
           }
 
+
           currentRoomCode =
             roomCode;
+
 
           joinSection.hidden =
             true;
@@ -201,22 +504,33 @@
           teamSection.hidden =
             false;
 
+
           roomDisplay.textContent =
-            "Room " + roomCode;
+            "Room " +
+            roomCode;
+
 
           startWatchingTeams();
+
 
         } catch (error) {
 
           console.error(error);
 
+
           statusEl.textContent =
-            "Error: " + error.message;
+            "Error: " +
+            error.message;
 
         }
+
       }
     );
 
+
+    /* =========================
+       TEAM AVAILABILITY
+    ========================== */
 
     function startWatchingTeams() {
 
@@ -228,6 +542,7 @@
           "/teams"
         );
 
+
       onValue(
         teamsRef,
         (snapshot) => {
@@ -235,16 +550,29 @@
           const teams =
             snapshot.val() || {};
 
-          renderTeams(teams);
+
+          if (
+            selectedTeamNumber === null
+          ) {
+
+            renderTeams(
+              teams
+            );
+
+          }
 
         }
       );
     }
 
 
-    function renderTeams(teams) {
+    function renderTeams(
+      teams
+    ) {
 
-      teamGrid.innerHTML = "";
+      teamGrid.innerHTML =
+        "";
+
 
       for (
         let teamNumber = 1;
@@ -252,18 +580,25 @@
         teamNumber++
       ) {
 
-        const button =
-          document.createElement("button");
-
-        button.className =
-          "teamButton";
-
         const teamKey =
-          "team" + teamNumber;
+          "team" +
+          teamNumber;
+
 
         const isTaken =
           teams[teamKey] &&
-          teams[teamKey].joined === true;
+          teams[teamKey]
+            .joined === true;
+
+
+        const button =
+          document.createElement(
+            "button"
+          );
+
+
+        button.className =
+          "teamButton";
 
 
         if (isTaken) {
@@ -273,9 +608,11 @@
             teamNumber +
             " — Taken";
 
+
           button.classList.add(
             "taken"
           );
+
 
           button.disabled =
             true;
@@ -283,27 +620,39 @@
         } else {
 
           button.textContent =
-            "Team " + teamNumber;
+            "Team " +
+            teamNumber;
+
 
           button.classList.add(
             "available"
           );
 
+
           button.addEventListener(
             "click",
-            () =>
+            () => {
               claimTeam(
                 teamNumber
-              )
+              );
+            }
           );
+
         }
+
 
         teamGrid.appendChild(
           button
         );
+
       }
+
     }
 
+
+    /* =========================
+       CLAIM TEAM
+    ========================== */
 
     async function claimTeam(
       teamNumber
@@ -311,24 +660,34 @@
 
       if (
         !currentRoomCode ||
-        selectedTeamNumber
+        selectedTeamNumber !== null
       ) {
         return;
       }
+
+
+      const teamKey =
+        "team" +
+        teamNumber;
+
 
       const teamRef =
         ref(
           db,
           "rooms/" +
           currentRoomCode +
-          "/teams/team" +
-          teamNumber
+          "/teams/" +
+          teamKey
         );
+
 
       try {
 
         const snapshot =
-          await get(teamRef);
+          await get(
+            teamRef
+          );
+
 
         if (
           snapshot.exists() &&
@@ -342,6 +701,7 @@
           return;
         }
 
+
         await set(
           teamRef,
           {
@@ -352,8 +712,13 @@
           }
         );
 
+
         selectedTeamNumber =
           teamNumber;
+
+        selectedTeamKey =
+          teamKey;
+
 
         teamSection.hidden =
           true;
@@ -361,18 +726,380 @@
         waitingSection.hidden =
           false;
 
-        selectedTeamEl.textContent =
-          "TEAM " + teamNumber;
+
+        waitingTeamName.textContent =
+          "TEAM " +
+          teamNumber;
+
+
+        answerTeamName.textContent =
+          "TEAM " +
+          teamNumber;
+
+
+        startWatchingRoom();
+
 
       } catch (error) {
 
         console.error(error);
 
+
         alert(
           "Unable to claim team: " +
           error.message
         );
+
       }
+
+    }
+
+
+    /* =========================
+       WATCH GAME STATE
+    ========================== */
+
+    function startWatchingRoom() {
+
+      const roomRef =
+        ref(
+          db,
+          "rooms/" +
+          currentRoomCode
+        );
+
+
+      onValue(
+        roomRef,
+        async (snapshot) => {
+
+          const room =
+            snapshot.val();
+
+
+          if (!room) {
+            return;
+          }
+
+
+          const state =
+            room.state ||
+            "lobby";
+
+
+          if (
+            state === "lobby"
+          ) {
+
+            showWaitingScreen(
+              "Waiting for the host to start the adventure..."
+            );
+
+            return;
+          }
+
+
+          if (
+            state === "intro"
+          ) {
+
+            showWaitingScreen(
+              "Watch the TV — the adventure is beginning! 🌙"
+            );
+
+            return;
+          }
+
+
+          if (
+            state === "questions"
+          ) {
+
+            const questionNumber =
+              room.currentQuestion || 1;
+
+
+            await showQuestion(
+              questionNumber
+            );
+
+          }
+
+        }
+      );
+
+    }
+
+
+    /* =========================
+       WAITING SCREEN
+    ========================== */
+
+    function showWaitingScreen(
+      message
+    ) {
+
+      answerSection.hidden =
+        true;
+
+      waitingSection.hidden =
+        false;
+
+
+      waitingMessage.textContent =
+        message;
+
+    }
+
+
+    /* =========================
+       SHOW QUESTION
+    ========================== */
+
+    async function showQuestion(
+      questionNumber
+    ) {
+
+      waitingSection.hidden =
+        true;
+
+      answerSection.hidden =
+        false;
+
+
+      questionLabel.textContent =
+        "QUESTION " +
+        questionNumber +
+        " / 10";
+
+
+      /*
+        If this is a different
+        question, reset the phone.
+      */
+
+      if (
+        currentQuestionNumber !==
+        questionNumber
+      ) {
+
+        currentQuestionNumber =
+          questionNumber;
+
+        submittedThisQuestion =
+          false;
+
+
+        resetAnswerButtons();
+
+
+        submittedPanel.hidden =
+          true;
+
+
+        /*
+          Check whether this team
+          already submitted an answer
+          for this question.
+          This also helps if the page
+          briefly reconnects.
+        */
+
+        const answerSnapshot =
+          await get(
+            ref(
+              db,
+              "rooms/" +
+              currentRoomCode +
+              "/answers/q" +
+              questionNumber +
+              "/" +
+              selectedTeamKey
+            )
+          );
+
+
+        if (
+          answerSnapshot.exists()
+        ) {
+
+          const previousAnswer =
+            answerSnapshot.val()
+              .answer;
+
+
+          showSubmittedState(
+            previousAnswer
+          );
+
+        }
+
+      }
+
+    }
+
+
+    /* =========================
+       ANSWER BUTTONS
+    ========================== */
+
+    answerButtons.forEach(
+      (button) => {
+
+        button.addEventListener(
+          "click",
+          async () => {
+
+            if (
+              submittedThisQuestion ||
+              !currentRoomCode ||
+              !selectedTeamKey ||
+              currentQuestionNumber <= 0
+            ) {
+              return;
+            }
+
+
+            const answer =
+              button.dataset.answer;
+
+
+            /*
+              Lock immediately so
+              double tapping cannot
+              submit twice.
+            */
+
+            submittedThisQuestion =
+              true;
+
+
+            lockAnswerButtons(
+              answer
+            );
+
+
+            try {
+
+              await set(
+                ref(
+                  db,
+                  "rooms/" +
+                  currentRoomCode +
+                  "/answers/q" +
+                  currentQuestionNumber +
+                  "/" +
+                  selectedTeamKey
+                ),
+                {
+                  answer: answer,
+                  submittedAt:
+                    Date.now()
+                }
+              );
+
+
+              showSubmittedState(
+                answer
+              );
+
+
+            } catch (error) {
+
+              console.error(error);
+
+
+              submittedThisQuestion =
+                false;
+
+
+              resetAnswerButtons();
+
+
+              alert(
+                "Your answer could not be submitted. Please try again."
+              );
+
+            }
+
+          }
+        );
+
+      }
+    );
+
+
+    /* =========================
+       BUTTON STATES
+    ========================== */
+
+    function lockAnswerButtons(
+      selectedAnswer
+    ) {
+
+      answerButtons.forEach(
+        (button) => {
+
+          button.disabled =
+            true;
+
+
+          if (
+            button.dataset.answer ===
+            selectedAnswer
+          ) {
+
+            button.classList.add(
+              "selected"
+            );
+
+          }
+
+        }
+      );
+
+    }
+
+
+    function resetAnswerButtons() {
+
+      answerButtons.forEach(
+        (button) => {
+
+          button.disabled =
+            false;
+
+
+          button.classList.remove(
+            "selected"
+          );
+
+        }
+      );
+
+    }
+
+
+    function showSubmittedState(
+      answer
+    ) {
+
+      submittedThisQuestion =
+        true;
+
+
+      lockAnswerButtons(
+        answer
+      );
+
+
+      submittedAnswer.textContent =
+        answer;
+
+
+      submittedPanel.hidden =
+        false;
+
     }
 
   </script>
