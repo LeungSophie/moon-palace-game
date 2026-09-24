@@ -14,6 +14,8 @@
       text-align: center;
       background: radial-gradient(circle at top, #313974, #101426 65%);
       color: white;
+      min-height: 100vh;
+      box-sizing: border-box;
     }
 
     h1 {
@@ -25,6 +27,18 @@
       font-size: 34px;
       margin-top: 0;
     }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    /* -------------------------
+       LOBBY
+    ------------------------- */
 
     #roomCode {
       font-size: 92px;
@@ -70,6 +84,10 @@
       margin-top: 30px;
     }
 
+    /* -------------------------
+       PHOTO TEST
+    ------------------------- */
+
     #photoTestSection {
       margin-top: 40px;
       padding-top: 30px;
@@ -94,40 +112,158 @@
       margin-top: 12px;
       font-size: 20px;
     }
+
+    /* -------------------------
+       INTRO
+    ------------------------- */
+
+    #introScreen {
+      padding-top: 60px;
+    }
+
+    #introTitle {
+      font-size: 70px;
+      margin-bottom: 30px;
+    }
+
+    #introPlaceholder {
+      max-width: 1100px;
+      min-height: 470px;
+      margin: 0 auto;
+      border: 3px dashed rgba(255,255,255,0.35);
+      border-radius: 24px;
+      background: rgba(255,255,255,0.05);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 36px;
+      line-height: 1.5;
+    }
+
+    /* -------------------------
+       QUESTION
+    ------------------------- */
+
+    #questionScreen {
+      padding-top: 40px;
+    }
+
+    #questionNumber {
+      font-size: 34px;
+      opacity: 0.85;
+      margin-bottom: 50px;
+    }
+
+    #questionPlaceholder {
+      font-size: 60px;
+      line-height: 1.35;
+      max-width: 1200px;
+      margin: 0 auto 40px;
+    }
+
+    #questionNote {
+      font-size: 28px;
+      opacity: 0.75;
+    }
   </style>
 </head>
 
 <body>
 
-  <h1>🌙 Moon Palace Adventure</h1>
-  <h2>月宮大冒險</h2>
+  <!-- =========================
+       LOBBY SCREEN
+  ========================== -->
 
-  <div id="roomCode">----</div>
+  <section
+    id="lobbyScreen"
+    class="screen active"
+  >
 
-  <div id="joinedCount">
-    Waiting for teams...
-  </div>
+    <h1>🌙 Moon Palace Adventure</h1>
+    <h2>月宮大冒險</h2>
 
-  <div id="teamGrid"></div>
-
-  <div id="status">
-    Waiting for host to create a room...
-  </div>
-
-  <section id="photoTestSection">
-    <div id="photoTestTitle">
-      Local Team Photo Test
+    <div id="roomCode">
+      ----
     </div>
 
-    <img
-      id="photoTest"
-      alt="Local team photo test"
-      hidden
-    >
-
-    <div id="photoMessage">
-      Waiting for a locally stored team photo...
+    <div id="joinedCount">
+      Waiting for teams...
     </div>
+
+    <div id="teamGrid"></div>
+
+    <div id="status">
+      Waiting for host to create a room...
+    </div>
+
+    <section id="photoTestSection">
+
+      <div id="photoTestTitle">
+        Local Team Photo Test
+      </div>
+
+      <img
+        id="photoTest"
+        alt="Local team photo test"
+        hidden
+      >
+
+      <div id="photoMessage">
+        Waiting for a locally stored team photo...
+      </div>
+
+    </section>
+
+  </section>
+
+
+  <!-- =========================
+       INTRO SCREEN
+  ========================== -->
+
+  <section
+    id="introScreen"
+    class="screen"
+  >
+
+    <div id="introTitle">
+      🌙 Moon Palace Adventure
+    </div>
+
+    <div id="introPlaceholder">
+      INTRO VIDEO / SLIDESHOW
+      <br><br>
+      Placeholder
+    </div>
+
+  </section>
+
+
+  <!-- =========================
+       QUESTION SCREEN
+  ========================== -->
+
+  <section
+    id="questionScreen"
+    class="screen"
+  >
+
+    <div id="questionNumber">
+      QUESTION 1 / 10
+    </div>
+
+    <div id="questionPlaceholder">
+      第一題即將開始
+      <br>
+      Question 1 is about to begin
+    </div>
+
+    <div id="questionNote">
+      Question layout will be added next.
+    </div>
+
   </section>
 
 
@@ -143,35 +279,106 @@
       getTeamPhoto
     } from "./local-media.js";
 
+
     const photoChannel =
-  new BroadcastChannel(
-    "moon-palace-photos"
-  );
+      new BroadcastChannel(
+        "moon-palace-photos"
+      );
+
+
+    const lobbyScreen =
+      document.getElementById(
+        "lobbyScreen"
+      );
+
+    const introScreen =
+      document.getElementById(
+        "introScreen"
+      );
+
+    const questionScreen =
+      document.getElementById(
+        "questionScreen"
+      );
+
 
     const roomCodeEl =
-      document.getElementById("roomCode");
+      document.getElementById(
+        "roomCode"
+      );
 
     const joinedCountEl =
-      document.getElementById("joinedCount");
+      document.getElementById(
+        "joinedCount"
+      );
 
     const teamGrid =
-      document.getElementById("teamGrid");
+      document.getElementById(
+        "teamGrid"
+      );
 
     const statusEl =
-      document.getElementById("status");
+      document.getElementById(
+        "status"
+      );
 
     const photoTest =
-      document.getElementById("photoTest");
+      document.getElementById(
+        "photoTest"
+      );
 
     const photoMessage =
-      document.getElementById("photoMessage");
+      document.getElementById(
+        "photoMessage"
+      );
 
 
-    let activeRoomCode = null;
+    let activeRoomCode =
+      null;
+
+
+    function showScreen(
+      screenName
+    ) {
+
+      lobbyScreen.classList.remove(
+        "active"
+      );
+
+      introScreen.classList.remove(
+        "active"
+      );
+
+      questionScreen.classList.remove(
+        "active"
+      );
+
+
+      if (screenName === "lobby") {
+        lobbyScreen.classList.add(
+          "active"
+        );
+      }
+
+      if (screenName === "intro") {
+        introScreen.classList.add(
+          "active"
+        );
+      }
+
+      if (screenName === "questions") {
+        questionScreen.classList.add(
+          "active"
+        );
+      }
+    }
 
 
     const currentRoomRef =
-      ref(db, "currentRoom");
+      ref(
+        db,
+        "currentRoom"
+      );
 
 
     onValue(
@@ -186,6 +393,10 @@
 
 
         if (!roomCode) {
+
+          showScreen(
+            "lobby"
+          );
 
           roomCodeEl.textContent =
             "----";
@@ -215,6 +426,11 @@
         statusEl.textContent =
           "Join using the room code above";
 
+
+        watchRoom(
+          roomCode
+        );
+
         watchTeams(
           roomCode
         );
@@ -223,7 +439,60 @@
     );
 
 
-    function watchTeams(roomCode) {
+    function watchRoom(
+      roomCode
+    ) {
+
+      const roomRef =
+        ref(
+          db,
+          "rooms/" +
+          roomCode
+        );
+
+
+      onValue(
+        roomRef,
+        (snapshot) => {
+
+          const room =
+            snapshot.val();
+
+          if (!room) {
+            return;
+          }
+
+
+          const state =
+            room.state || "lobby";
+
+
+          if (state === "lobby") {
+            showScreen(
+              "lobby"
+            );
+          }
+
+          if (state === "intro") {
+            showScreen(
+              "intro"
+            );
+          }
+
+          if (state === "questions") {
+            showScreen(
+              "questions"
+            );
+          }
+
+        }
+      );
+    }
+
+
+    function watchTeams(
+      roomCode
+    ) {
 
       const teamsRef =
         ref(
@@ -257,6 +526,7 @@
             const teamKey =
               "team" + teamNumber;
 
+
             const joined =
               teams[teamKey] &&
               teams[teamKey].joined === true;
@@ -268,7 +538,10 @@
 
 
             const card =
-              document.createElement("div");
+              document.createElement(
+                "div"
+              );
+
 
             card.className =
               "teamCard " +
@@ -305,6 +578,11 @@
             statusEl.textContent =
               "All teams are ready ✓";
 
+          } else {
+
+            statusEl.textContent =
+              "Waiting for teams to join...";
+
           }
 
 
@@ -315,7 +593,6 @@
 
         }
       );
-
     }
 
 
@@ -379,12 +656,13 @@
             photoTest.hidden =
               false;
 
+
             photoMessage.textContent =
               "Loaded local photo for Team " +
               teamNumber;
 
-            return;
 
+            return;
           }
 
         } catch (error) {
@@ -403,77 +681,91 @@
         "No local team photo found yet.";
 
     }
-photoChannel.addEventListener(
-  "message",
-  async (event) => {
 
-    const data =
-      event.data;
 
-    if (
-      !data ||
-      data.type !== "photo-updated"
-    ) {
-      return;
-    }
+    photoChannel.addEventListener(
+      "message",
+      async (event) => {
 
-    if (
-      data.roomCode !==
-      activeRoomCode
-    ) {
-      return;
-    }
+        const data =
+          event.data;
 
-    const teamNumber =
-      Number(
-        data.teamKey.replace(
-          "team",
-          ""
-        )
-      );
 
-    const photoStorageKey =
-      data.roomCode +
-      "-" +
-      data.teamKey;
+        if (
+          !data ||
+          data.type !==
+            "photo-updated"
+        ) {
+          return;
+        }
 
-    try {
 
-      const photo =
-        await getTeamPhoto(
-          photoStorageKey
-        );
+        if (
+          data.roomCode !==
+          activeRoomCode
+        ) {
+          return;
+        }
 
-      if (!photo) {
-        return;
+
+        const teamNumber =
+          Number(
+            data.teamKey.replace(
+              "team",
+              ""
+            )
+          );
+
+
+        const photoStorageKey =
+          data.roomCode +
+          "-" +
+          data.teamKey;
+
+
+        try {
+
+          const photo =
+            await getTeamPhoto(
+              photoStorageKey
+            );
+
+
+          if (!photo) {
+            return;
+          }
+
+
+          const photoURL =
+            URL.createObjectURL(
+              photo
+            );
+
+
+          photoTest.src =
+            photoURL;
+
+          photoTest.hidden =
+            false;
+
+
+          photoMessage.textContent =
+            "Loaded local photo for Team " +
+            teamNumber;
+
+
+        } catch (error) {
+
+          console.error(
+            "Could not update TV photo:",
+            error
+          );
+
+        }
+
       }
+    );
 
-      const photoURL =
-        URL.createObjectURL(
-          photo
-        );
-
-      photoTest.src =
-        photoURL;
-
-      photoTest.hidden =
-        false;
-
-      photoMessage.textContent =
-        "Loaded local photo for Team " +
-        teamNumber;
-
-    } catch (error) {
-
-      console.error(
-        "Could not update TV photo:",
-        error
-      );
-
-    }
-  }
-);
-    
   </script>
 
 </body>
