@@ -8,6 +8,38 @@
 
 <body>
   <h1>Moon Palace Host</h1>
-  <p>Host control page working.</p>
+
+  <p>Firebase connection test</p>
+
+  <button id="testButton">Send Test Message</button>
+
+  <p id="status">Not sent yet.</p>
+
+  <script type="module">
+    import {
+      db,
+      ref,
+      set
+    } from "./firebase.js";
+
+    const testButton = document.getElementById("testButton");
+    const status = document.getElementById("status");
+
+    testButton.addEventListener("click", async () => {
+      status.textContent = "Sending...";
+
+      try {
+        await set(ref(db, "test/message"), {
+          text: "Hello from Moon Palace Host!",
+          time: Date.now()
+        });
+
+        status.textContent = "✅ Message sent to Firebase!";
+      } catch (error) {
+        console.error(error);
+        status.textContent = "❌ Error: " + error.message;
+      }
+    });
+  </script>
 </body>
 </html>
