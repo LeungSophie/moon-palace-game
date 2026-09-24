@@ -167,7 +167,9 @@
 
     <p>Room Code</p>
 
-    <div id="roomCode">----</div>
+    <div id="roomCode">
+      ----
+    </div>
 
     <p id="joinedCount">
       0 / 10 teams joined
@@ -205,6 +207,7 @@
       ref,
       set,
       update,
+      get,
       onValue
     } from "./firebase.js";
 
@@ -213,6 +216,11 @@
       saveTeamPhoto,
       getTeamPhoto
     } from "./local-media.js";
+
+
+    import {
+      questions
+    } from "./questions.js";
 
 
     const photoChannel =
@@ -283,8 +291,7 @@
 
 
     /*
-      These let us stop old Firebase
-      listeners when making a new room.
+      Firebase listener cleanup.
     */
 
     let stopTeamsListener =
@@ -293,6 +300,10 @@
     let stopRoomListener =
       null;
 
+
+    /* =========================
+       ROOM CODE
+    ========================== */
 
     function generateRoomCode() {
 
@@ -306,21 +317,27 @@
 
     function stopExistingListeners() {
 
-      if (stopTeamsListener) {
+      if (
+        stopTeamsListener
+      ) {
 
         stopTeamsListener();
 
         stopTeamsListener =
           null;
+
       }
 
 
-      if (stopRoomListener) {
+      if (
+        stopRoomListener
+      ) {
 
         stopRoomListener();
 
         stopRoomListener =
           null;
+
       }
 
     }
@@ -408,7 +425,9 @@
           );
 
 
-        } catch (error) {
+        } catch (
+          error
+        ) {
 
           console.error(
             error
@@ -445,10 +464,13 @@
       stopTeamsListener =
         onValue(
           teamsRef,
-          (snapshot) => {
+          (
+            snapshot
+          ) => {
 
             const teams =
-              snapshot.val() || {};
+              snapshot.val() ||
+              {};
 
 
             renderTeams(
@@ -480,14 +502,20 @@
       stopRoomListener =
         onValue(
           roomRef,
-          async (snapshot) => {
+          async (
+            snapshot
+          ) => {
 
             const room =
               snapshot.val();
 
 
-            if (!room) {
+            if (
+              !room
+            ) {
+
               return;
+
             }
 
 
@@ -501,12 +529,13 @@
 
 
             /*
-              Reveal button should only
-              work while a question is open.
+              Reveal button only works
+              while a question is open.
             */
 
             if (
-              state !== "questions"
+              state !==
+              "questions"
             ) {
 
               revealButton.disabled =
@@ -514,11 +543,20 @@
 
 
               if (
-                state === "reveal"
+                state ===
+                "reveal"
               ) {
 
+                const gain =
+                  Number(
+                    room.lastQuestionGain
+                  ) || 0;
+
+
                 statusEl.textContent =
-                  "Answer revealed on TV.";
+                  "Answer revealed on TV. Moon Power +" +
+                  gain +
+                  ".";
 
               }
 
@@ -526,7 +564,9 @@
               revealInProgress =
                 false;
 
+
               return;
+
             }
 
 
@@ -535,7 +575,8 @@
 
 
             const teams =
-              room.teams || {};
+              room.teams ||
+              {};
 
 
             const activeTeamKeys =
@@ -543,9 +584,13 @@
                 teams
               ).filter(
                 teamKey =>
-                  teams[teamKey] &&
-                  teams[teamKey]
-                    .joined === true
+                  teams[
+                    teamKey
+                  ] &&
+                  teams[
+                    teamKey
+                  ].joined ===
+                    true
               );
 
 
@@ -595,7 +640,8 @@
               AUTOMATIC REVEAL
 
               When every active team
-              has answered, reveal.
+              has submitted an answer,
+              reveal and score.
             */
 
             if (
@@ -622,29 +668,326 @@
 
 
     /* =========================
-       REVEAL QUESTION
+       REVEAL + SCORE QUESTION
     ========================== */
 
     async function revealCurrentQuestion(
       roomCode
     ) {
 
-      if (!roomCode) {
+      if (
+        !roomCode
+      ) {
+
         return;
+
       }
 
 
       try {
 
-        await update(
+        const roomRef =
           ref(
             db,
             "rooms/" +
             roomCode
-          ),
-          {
-            state: "reveal"
+          );
+
+
+        /*
+          Read the latest room data
+          before calculating scores.
+        */
+
+        const snapshot =
+          await get(
+            roomRef
+          );
+
+
+        if (
+          !snapshot.exists()
+        ) {
+
+          revealInProgress =
+            false;
+
+          return;
+
+        }
+
+
+        const room =
+          snapshot.val();
+
+
+        const questionNumber =
+          room.currentQuestion ||
+          1;
+
+
+        const questionKey =
+          "q" +
+          questionNumber;
+
+
+        const question =
+          questions.find(
+            q =>
+              q.id ===
+              questionNumber
+          );
+
+
+        if (
+          !question
+        ) {
+
+          revealInProgress =
+            false;
+
+
+          statusEl.textContent =
+            "Question data not found.";
+
+
+          return;
+
+        }
+
+
+        /*
+          IMPORTANT PROTECTION
+
+          If this question was already
+          scored, do not award points
+          again.
+        */
+
+        const alreadyScored =
+          room.scoredQuestions &&
+          room.scoredQuestions[
+            questionKey
+          ] === true;
+
+
+        if (
+          alreadyScored
+        ) {
+
+          await update(
+            roomRef,
+            {
+              state:
+                "reveal"
+            }
+          );
+
+
+          revealButton.disabled =
+            true;
+
+
+          return;
+
+        }
+
+
+        const teams =
+          room.teams ||
+          {};
+
+
+        const answers =
+          (
+            room.answers &&
+            room.answers[
+              questionKey
+            ]
+          ) || {};
+
+
+        const correctAnswer =
+          question.correctAnswer;
+
+
+        let moonPowerGain =
+          0;
+
+
+        const updates =
+          {};
+
+
+        /*
+          SCORE EACH ACTIVE TEAM
+        */
+
+        for (
+          const [
+            teamKey,
+            teamData
+          ]
+          of Object.entries(
+            teams
+          )
+        ) {
+
+          if (
+            !teamData ||
+            teamData.joined !==
+              true
+          ) {
+
+            continue;
+
           }
+
+
+          const teamAnswer =
+            answers[
+              teamKey
+            ]
+              ? answers[
+                  teamKey
+                ].answer
+              : "";
+
+
+          const isCorrect =
+            teamAnswer ===
+            correctAnswer;
+
+
+          const points =
+            isCorrect
+              ? 50
+              : 0;
+
+
+          const oldQuizScore =
+            Number(
+              teamData.quizScore
+            ) || 0;
+
+
+          const newQuizScore =
+            oldQuizScore +
+            points;
+
+
+          moonPowerGain +=
+            points;
+
+
+          /*
+            Update accumulated
+            quiz score.
+          */
+
+          updates[
+            "teams/" +
+            teamKey +
+            "/quizScore"
+          ] =
+            newQuizScore;
+
+
+          /*
+            Save detailed result for
+            this question.
+
+            Later play.html can use
+            this to show +50 / +0.
+          */
+
+          updates[
+            "results/" +
+            questionKey +
+            "/" +
+            teamKey
+          ] = {
+
+            answer:
+              teamAnswer,
+
+            correct:
+              isCorrect,
+
+            points:
+              points,
+
+            quizScore:
+              newQuizScore
+
+          };
+
+        }
+
+
+        const currentMoonPower =
+          Number(
+            room.moonPower
+          ) || 0;
+
+
+        const newMoonPower =
+          currentMoonPower +
+          moonPowerGain;
+
+
+        /*
+          Mark question as scored.
+        */
+
+        updates[
+          "scoredQuestions/" +
+          questionKey
+        ] =
+          true;
+
+
+        /*
+          Store how much Moon Power
+          this question added.
+        */
+
+        updates[
+          "lastQuestionGain"
+        ] =
+          moonPowerGain;
+
+
+        /*
+          Update total Moon Power.
+        */
+
+        updates[
+          "moonPower"
+        ] =
+          newMoonPower;
+
+
+        /*
+          Finally change game state
+          to reveal.
+        */
+
+        updates[
+          "state"
+        ] =
+          "reveal";
+
+
+        /*
+          Apply score updates,
+          Moon Power and reveal
+          together.
+        */
+
+        await update(
+          roomRef,
+          updates
         );
 
 
@@ -653,10 +996,14 @@
 
 
         statusEl.textContent =
-          "Answer revealed on TV.";
+          "Answer revealed. Moon Power +" +
+          moonPowerGain +
+          ".";
 
 
-      } catch (error) {
+      } catch (
+        error
+      ) {
 
         console.error(
           error
@@ -676,12 +1023,9 @@
     }
 
 
-    /*
-      MANUAL REVEAL
-
-      Host can reveal even if
-      not every team has answered.
-    */
+    /* =========================
+       MANUAL REVEAL
+    ========================== */
 
     revealButton.addEventListener(
       "click",
@@ -692,7 +1036,9 @@
           currentGameState !==
             "questions"
         ) {
+
           return;
+
         }
 
 
@@ -740,8 +1086,9 @@
 
 
         const teamData =
-          teams[teamKey] ||
-          {};
+          teams[
+            teamKey
+          ] || {};
 
 
         const joined =
@@ -749,8 +1096,12 @@
           true;
 
 
-        if (joined) {
+        if (
+          joined
+        ) {
+
           joinedCount++;
+
         }
 
 
@@ -764,7 +1115,9 @@
           "teamRow";
 
 
-        /* TEAM NAME */
+        /*
+          TEAM NAME
+        */
 
         const name =
           document.createElement(
@@ -781,7 +1134,9 @@
           teamNumber;
 
 
-        /* CONNECTION STATUS */
+        /*
+          CONNECTION STATUS
+        */
 
         const connectionStatus =
           document.createElement(
@@ -801,7 +1156,9 @@
             : "statusWaiting";
 
 
-        /* PREVIOUS ACTIVITY SCORE */
+        /*
+          PREVIOUS ACTIVITY SCORE
+        */
 
         const scoreArea =
           document.createElement(
@@ -809,7 +1166,9 @@
           );
 
 
-        if (joined) {
+        if (
+          joined
+        ) {
 
           const input =
             document.createElement(
@@ -878,7 +1237,9 @@
         }
 
 
-        /* TEAM PHOTO */
+        /*
+          TEAM PHOTO
+        */
 
         const photoArea =
           document.createElement(
@@ -890,7 +1251,9 @@
           "photoArea";
 
 
-        if (joined) {
+        if (
+          joined
+        ) {
 
           const photoStorageKey =
             currentRoomCode +
@@ -973,11 +1336,17 @@
             async () => {
 
               const file =
-                fileInput.files[0];
+                fileInput.files[
+                  0
+                ];
 
 
-              if (!file) {
+              if (
+                !file
+              ) {
+
                 return;
+
               }
 
 
@@ -991,7 +1360,9 @@
                   "Please choose an image file."
                 );
 
+
                 return;
+
               }
 
 
@@ -1039,7 +1410,9 @@
                   "Change Photo";
 
 
-              } catch (error) {
+              } catch (
+                error
+              ) {
 
                 console.error(
                   error
@@ -1056,9 +1429,7 @@
 
 
           /*
-            Check whether this team
-            already has a locally
-            stored photo.
+            Check existing local photo.
           */
 
           try {
@@ -1069,7 +1440,9 @@
               );
 
 
-            if (savedPhoto) {
+            if (
+              savedPhoto
+            ) {
 
               const savedURL =
                 URL.createObjectURL(
@@ -1095,7 +1468,9 @@
             }
 
 
-          } catch (error) {
+          } catch (
+            error
+          ) {
 
             console.error(
               "Could not load stored photo:",
@@ -1166,17 +1541,21 @@
 
 
       startButton.disabled =
-        joinedCount === 0;
+        joinedCount ===
+        0;
 
 
       playIntroButton.disabled =
-        joinedCount === 0;
+        joinedCount ===
+        0;
 
 
       /*
-        Don't overwrite the live
-        answer status while a
-        question is running.
+        Only show lobby team count
+        while actually in lobby.
+
+        Do not overwrite question /
+        scoring status.
       */
 
       if (
@@ -1187,11 +1566,13 @@
       ) {
 
         if (
-          joinedCount === 10
+          joinedCount ===
+          10
         ) {
 
           statusEl.textContent =
             "✅ All 10 teams are ready.";
+
 
         } else {
 
@@ -1214,8 +1595,12 @@
       "click",
       async () => {
 
-        if (!currentRoomCode) {
+        if (
+          !currentRoomCode
+        ) {
+
           return;
+
         }
 
 
@@ -1226,7 +1611,8 @@
             currentRoomCode
           ),
           {
-            state: "intro"
+            state:
+              "intro"
           }
         );
 
@@ -1250,8 +1636,12 @@
       "click",
       async () => {
 
-        if (!currentRoomCode) {
+        if (
+          !currentRoomCode
+        ) {
+
           return;
+
         }
 
 
@@ -1300,8 +1690,12 @@
           );
 
 
-        if (!confirmed) {
+        if (
+          !confirmed
+        ) {
+
           return;
+
         }
 
 
@@ -1361,7 +1755,9 @@
             "Current game ended. Ready to create a new room.";
 
 
-        } catch (error) {
+        } catch (
+          error
+        ) {
 
           console.error(
             error
