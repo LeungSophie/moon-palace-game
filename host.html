@@ -11,6 +11,7 @@
   <title>Moon Palace Host</title>
 
   <style>
+
     body {
       margin: 0;
       padding: 28px;
@@ -36,7 +37,9 @@
       cursor: not-allowed;
     }
 
-    #topButtons {
+    #topButtons,
+    #controls,
+    #leaderboardControls {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
@@ -129,10 +132,10 @@
 
     #controls {
       margin-top: 28px;
+    }
 
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
+    #leaderboardControls {
+      margin-top: 16px;
     }
 
     #playIntroButton {
@@ -165,6 +168,24 @@
       font-weight: bold;
     }
 
+    #startLeaderboardButton {
+      background: #e1b7ff;
+      color: #11152b;
+      font-weight: bold;
+    }
+
+    #revealRankButton {
+      background: #ff9fd0;
+      color: #11152b;
+      font-weight: bold;
+    }
+
+    #showFullLeaderboardButton {
+      background: #ffd76e;
+      color: #11152b;
+      font-weight: bold;
+    }
+
     #status {
       margin-top: 18px;
       font-size: 18px;
@@ -172,10 +193,13 @@
     }
 
     @media (max-width: 800px) {
+
       .teamRow {
         grid-template-columns: 1fr;
       }
+
     }
+
   </style>
 </head>
 
@@ -200,7 +224,6 @@
   </div>
 
 
-
   <section
     id="roomSection"
     hidden
@@ -222,7 +245,6 @@
 
 
     <div id="teamList"></div>
-
 
 
     <div id="controls">
@@ -268,18 +290,41 @@
 
     </div>
 
+
+    <div id="leaderboardControls">
+
+      <button
+        id="startLeaderboardButton"
+        disabled
+      >
+        🏆 Start Final Leaderboard
+      </button>
+
+
+      <button
+        id="revealRankButton"
+        disabled
+      >
+        Reveal Next Rank
+      </button>
+
+
+      <button
+        id="showFullLeaderboardButton"
+        disabled
+      >
+        Show Full Leaderboard
+      </button>
+
+    </div>
+
   </section>
 
 
   <p id="status"></p>
 
 
-
   <script type="module">
-
-    /* =========================
-       FIREBASE
-    ========================== */
 
     import {
       db,
@@ -291,24 +336,15 @@
     } from "./firebase.js";
 
 
-    /* =========================
-       LOCAL TEAM PHOTOS
-    ========================== */
-
     import {
       saveTeamPhoto,
       getTeamPhoto
     } from "./local-media.js";
 
 
-    /* =========================
-       QUESTIONS
-    ========================== */
-
     import {
       questions
     } from "./questions.js";
-
 
 
     const photoChannel =
@@ -317,76 +353,75 @@
       );
 
 
-
-    /* =========================
-       ELEMENTS
-    ========================== */
-
     const createRoomButton =
       document.getElementById(
         "createRoomButton"
       );
-
 
     const resetRoomButton =
       document.getElementById(
         "resetRoomButton"
       );
 
-
     const roomSection =
       document.getElementById(
         "roomSection"
       );
-
 
     const roomCodeEl =
       document.getElementById(
         "roomCode"
       );
 
-
     const joinedCountEl =
       document.getElementById(
         "joinedCount"
       );
-
 
     const teamList =
       document.getElementById(
         "teamList"
       );
 
-
     const playIntroButton =
       document.getElementById(
         "playIntroButton"
       );
-
 
     const startButton =
       document.getElementById(
         "startButton"
       );
 
-
     const revealButton =
       document.getElementById(
         "revealButton"
       );
-
 
     const nextQuestionButton =
       document.getElementById(
         "nextQuestionButton"
       );
 
-
     const finishQuizButton =
       document.getElementById(
         "finishQuizButton"
       );
 
+    const startLeaderboardButton =
+      document.getElementById(
+        "startLeaderboardButton"
+      );
+
+    const revealRankButton =
+      document.getElementById(
+        "revealRankButton"
+      );
+
+    const showFullLeaderboardButton =
+      document.getElementById(
+        "showFullLeaderboardButton"
+      );
 
     const statusEl =
       document.getElementById(
@@ -394,39 +429,24 @@
       );
 
 
-
-    /* =========================
-       GAME VARIABLES
-    ========================== */
-
     let currentRoomCode =
       null;
-
 
     let currentGameState =
       "none";
 
-
     let currentJoinedCount =
       0;
-
 
     let revealInProgress =
       false;
 
-
     let stopTeamsListener =
       null;
-
 
     let stopRoomListener =
       null;
 
-
-
-    /* =========================
-       HELPERS
-    ========================== */
 
     function generateRoomCode() {
 
@@ -436,7 +456,6 @@
       ).toString();
 
     }
-
 
 
     function stopExistingListeners() {
@@ -449,7 +468,6 @@
 
         stopTeamsListener =
           null;
-
       }
 
 
@@ -461,11 +479,9 @@
 
         stopRoomListener =
           null;
-
       }
 
     }
-
 
 
     function updatePrimaryButtons() {
@@ -474,10 +490,6 @@
         currentJoinedCount > 0;
 
 
-      /*
-        Intro only from lobby.
-      */
-
       playIntroButton.disabled =
         !(
           hasTeams &&
@@ -485,11 +497,6 @@
             "lobby"
         );
 
-
-      /*
-        Questions may start directly
-        from lobby or after intro.
-      */
 
       startButton.disabled =
         !(
@@ -505,6 +512,22 @@
 
     }
 
+
+    function resetLeaderboardButtons() {
+
+      startLeaderboardButton.disabled =
+        true;
+
+      revealRankButton.disabled =
+        true;
+
+      showFullLeaderboardButton.disabled =
+        true;
+
+      revealRankButton.textContent =
+        "Reveal Next Rank";
+
+    }
 
 
     /* =========================
@@ -525,14 +548,11 @@
         currentRoomCode =
           roomCode;
 
-
         currentGameState =
           "lobby";
 
-
         currentJoinedCount =
           0;
-
 
         revealInProgress =
           false;
@@ -601,13 +621,14 @@
           revealButton.disabled =
             true;
 
-
           nextQuestionButton.disabled =
             true;
 
-
           finishQuizButton.disabled =
             true;
+
+
+          resetLeaderboardButtons();
 
 
           nextQuestionButton.textContent =
@@ -654,7 +675,6 @@
     );
 
 
-
     /* =========================
        WATCH TEAMS
     ========================== */
@@ -694,9 +714,8 @@
     }
 
 
-
     /* =========================
-       WATCH ROOM / ANSWERS
+       WATCH ROOM
     ========================== */
 
     function watchRoomForAnswers(
@@ -743,7 +762,6 @@
             updatePrimaryButtons();
 
 
-
             /* =====================
                LOBBY
             ===================== */
@@ -756,23 +774,20 @@
               revealButton.disabled =
                 true;
 
-
               nextQuestionButton.disabled =
                 true;
-
 
               finishQuizButton.disabled =
                 true;
 
+              resetLeaderboardButtons();
 
               revealInProgress =
                 false;
 
-
               return;
 
             }
-
 
 
             /* =====================
@@ -787,14 +802,13 @@
               revealButton.disabled =
                 true;
 
-
               nextQuestionButton.disabled =
                 true;
-
 
               finishQuizButton.disabled =
                 true;
 
+              resetLeaderboardButtons();
 
               revealInProgress =
                 false;
@@ -809,7 +823,6 @@
             }
 
 
-
             /* =====================
                QUIZ COMPLETE
             ===================== */
@@ -822,51 +835,169 @@
               revealButton.disabled =
                 true;
 
-
               nextQuestionButton.disabled =
                 true;
-
 
               finishQuizButton.disabled =
                 true;
 
 
-              nextQuestionButton.textContent =
-                "Quiz Complete ✓";
+              startLeaderboardButton.disabled =
+                false;
 
+              revealRankButton.disabled =
+                true;
 
-              finishQuizButton.textContent =
-                "Quiz Complete ✓";
+              showFullLeaderboardButton.disabled =
+                true;
 
 
               revealInProgress =
                 false;
 
 
-              const rawMoonPower =
-                Number(
-                  room.moonPower
-                ) || 0;
-
-
-              const target =
-                Number(
-                  room.targetMoonPower
-                ) || 1500;
-
-
               statusEl.textContent =
-                "🌕 Quiz complete. Moon Power " +
-                rawMoonPower +
-                " / " +
-                target +
-                ". TV is ready for the completion scene.";
+                "🌕 Quiz complete. Ready to start the Final Leaderboard.";
 
 
               return;
 
             }
 
+
+            /* =====================
+               LEADERBOARD
+            ===================== */
+
+            if (
+              state ===
+              "leaderboard"
+            ) {
+
+              revealButton.disabled =
+                true;
+
+              nextQuestionButton.disabled =
+                true;
+
+              finishQuizButton.disabled =
+                true;
+
+              startLeaderboardButton.disabled =
+                true;
+
+
+              const revealOrder =
+                Array.isArray(
+                  room.leaderboardRevealOrder
+                )
+                  ? room.leaderboardRevealOrder
+                  : [];
+
+
+              const step =
+                Number(
+                  room.leaderboardStep
+                ) || 0;
+
+
+              const totalSteps =
+                revealOrder.length;
+
+
+              if (
+                step <
+                totalSteps
+              ) {
+
+                revealRankButton.disabled =
+                  false;
+
+
+                showFullLeaderboardButton.disabled =
+                  true;
+
+
+                const nextRank =
+                  revealOrder[
+                    step
+                  ];
+
+
+                revealRankButton.textContent =
+                  "Reveal Rank " +
+                  nextRank;
+
+
+                statusEl.textContent =
+                  step +
+                  " / " +
+                  totalSteps +
+                  " rank groups revealed. Next: Rank " +
+                  nextRank +
+                  ".";
+
+
+              } else {
+
+                revealRankButton.disabled =
+                  true;
+
+
+                revealRankButton.textContent =
+                  "Champion Revealed ✓";
+
+
+                showFullLeaderboardButton.disabled =
+                  false;
+
+
+                statusEl.textContent =
+                  "🏆 Champion revealed. Ready to show the full leaderboard.";
+
+              }
+
+
+              return;
+
+            }
+
+
+            /* =====================
+               FULL LEADERBOARD
+            ===================== */
+
+            if (
+              state ===
+              "leaderboardFull"
+            ) {
+
+              revealButton.disabled =
+                true;
+
+              nextQuestionButton.disabled =
+                true;
+
+              finishQuizButton.disabled =
+                true;
+
+              startLeaderboardButton.disabled =
+                true;
+
+              revealRankButton.disabled =
+                true;
+
+              showFullLeaderboardButton.disabled =
+                true;
+
+
+              statusEl.textContent =
+                "🏆 Full Final Leaderboard is displayed on TV.";
+
+
+              return;
+
+            }
 
 
             /* =====================
@@ -881,6 +1012,7 @@
               revealButton.disabled =
                 true;
 
+              resetLeaderboardButtons();
 
               revealInProgress =
                 false;
@@ -922,12 +1054,6 @@
                 questions.length;
 
 
-
-              /*
-                CASE 1:
-                Moon Power reached early.
-              */
-
               if (
                 moonPowerComplete &&
                 !isLastQuestion
@@ -954,10 +1080,6 @@
                   rawMoonPower +
                   " / " +
                   target +
-                  ". Question " +
-                  questionNumber +
-                  " gained +" +
-                  gain +
                   ". Continue the quiz or finish now.";
 
 
@@ -965,13 +1087,6 @@
 
               }
 
-
-
-              /*
-                CASE 2:
-                Last question and
-                target reached.
-              */
 
               if (
                 moonPowerComplete &&
@@ -995,29 +1110,13 @@
 
 
                 statusEl.textContent =
-                  "🌕 All questions complete. Moon Power target achieved: " +
-                  rawMoonPower +
-                  " / " +
-                  target +
-                  ". Press Finish Quiz.";
+                  "🌕 All questions complete. Moon Power target achieved. Press Finish Quiz.";
 
 
                 return;
 
               }
 
-
-
-              /*
-                CASE 3:
-                Last question but
-                below target.
-
-                Individual scores remain
-                untouched. Host can mark
-                collective Moon Power as
-                successfully completed.
-              */
 
               if (
                 !moonPowerComplete &&
@@ -1041,26 +1140,17 @@
 
 
                 statusEl.textContent =
-                  "All " +
-                  questions.length +
-                  " questions are complete. Moon Power: " +
+                  "All questions complete. Moon Power: " +
                   rawMoonPower +
                   " / " +
                   target +
-                  ". You can complete the Moon Power without changing team scores.";
+                  ". Complete the Moon Power without changing team scores.";
 
 
                 return;
 
               }
 
-
-
-              /*
-                CASE 4:
-                Normal reveal and target
-                not reached yet.
-              */
 
               nextQuestionButton.disabled =
                 false;
@@ -1095,7 +1185,6 @@
             }
 
 
-
             /* =====================
                QUESTION OPEN
             ===================== */
@@ -1122,13 +1211,7 @@
               true;
 
 
-            nextQuestionButton.textContent =
-              "Next Question →";
-
-
-            finishQuizButton.textContent =
-              "Finish Quiz →";
-
+            resetLeaderboardButtons();
 
 
             const teams =
@@ -1155,18 +1238,15 @@
               activeTeamKeys.length;
 
 
-
             const questionNumber =
               Number(
                 room.currentQuestion
               ) || 1;
 
 
-
             const questionKey =
               "q" +
               questionNumber;
-
 
 
             const answers =
@@ -1178,7 +1258,6 @@
               ) || {};
 
 
-
             const answeredCount =
               activeTeamKeys.filter(
                 teamKey =>
@@ -1186,7 +1265,6 @@
                     teamKey
                   ]
               ).length;
-
 
 
             statusEl.textContent =
@@ -1200,11 +1278,6 @@
               activeTeamCount +
               " answered";
 
-
-
-            /* =====================
-               AUTOMATIC REVEAL
-            ===================== */
 
             if (
               activeTeamCount >
@@ -1230,7 +1303,6 @@
         );
 
     }
-
 
 
     /* =========================
@@ -1282,18 +1354,15 @@
           snapshot.val();
 
 
-
         const questionNumber =
           Number(
             room.currentQuestion
           ) || 1;
 
 
-
         const questionKey =
           "q" +
           questionNumber;
-
 
 
         const question =
@@ -1302,7 +1371,6 @@
               q.id ===
               questionNumber
           );
-
 
 
         if (
@@ -1314,9 +1382,7 @@
 
 
           statusEl.textContent =
-            "Question " +
-            questionNumber +
-            " was not found in questions.js.";
+            "Question not found.";
 
 
           return;
@@ -1324,18 +1390,12 @@
         }
 
 
-
-        /* =====================
-           PREVENT DOUBLE SCORING
-        ===================== */
-
         const alreadyScored =
           room.scoredQuestions &&
           room.scoredQuestions[
             questionKey
           ] ===
             true;
-
 
 
         if (
@@ -1360,11 +1420,9 @@
         }
 
 
-
         const teams =
           room.teams ||
           {};
-
 
 
         const answers =
@@ -1376,25 +1434,17 @@
           ) || {};
 
 
-
         const correctAnswer =
           question.correctAnswer;
-
 
 
         let moonPowerGain =
           0;
 
 
-
         const updates =
           {};
 
-
-
-        /* =====================
-           SCORE EACH ACTIVE TEAM
-        ===================== */
 
         for (
           const [
@@ -1417,7 +1467,6 @@
           }
 
 
-
           const teamAnswer =
             answers[
               teamKey
@@ -1428,11 +1477,9 @@
               : "";
 
 
-
           const isCorrect =
             teamAnswer ===
             correctAnswer;
-
 
 
           const points =
@@ -1441,12 +1488,10 @@
               : 0;
 
 
-
           const oldQuizScore =
             Number(
               teamData.quizScore
             ) || 0;
-
 
 
           const newQuizScore =
@@ -1454,13 +1499,9 @@
             points;
 
 
-
           moonPowerGain +=
             points;
 
-
-
-          /* TEAM QUIZ SCORE */
 
           updates[
             "teams/" +
@@ -1469,9 +1510,6 @@
           ] =
             newQuizScore;
 
-
-
-          /* QUESTION RESULT */
 
           updates[
             "results/" +
@@ -1497,16 +1535,10 @@
         }
 
 
-
-        /* =====================
-           MOON POWER
-        ===================== */
-
         const currentMoonPower =
           Number(
             room.moonPower
           ) || 0;
-
 
 
         const targetMoonPower =
@@ -1515,11 +1547,9 @@
           ) || 1500;
 
 
-
         const newMoonPower =
           currentMoonPower +
           moonPowerGain;
-
 
 
         const wasAlreadyComplete =
@@ -1529,12 +1559,10 @@
             targetMoonPower;
 
 
-
         const isNowComplete =
           wasAlreadyComplete ||
           newMoonPower >=
             targetMoonPower;
-
 
 
         const justReachedTarget =
@@ -1543,12 +1571,10 @@
             targetMoonPower;
 
 
-
         updates[
           "moonPower"
         ] =
           newMoonPower;
-
 
 
         updates[
@@ -1557,23 +1583,11 @@
           moonPowerGain;
 
 
-
         updates[
           "moonPowerComplete"
         ] =
           isNowComplete;
 
-
-
-        /*
-          Record the exact question
-          where the Moon Power target
-          was first reached.
-
-          screen.html can later use
-          this for the large one-time
-          celebration.
-        */
 
         if (
           justReachedTarget
@@ -1593,11 +1607,6 @@
         }
 
 
-
-        /* =====================
-           MARK QUESTION SCORED
-        ===================== */
-
         updates[
           "scoredQuestions/" +
           questionKey
@@ -1605,22 +1614,11 @@
           true;
 
 
-
-        /* =====================
-           REVEAL
-        ===================== */
-
         updates[
           "state"
         ] =
           "reveal";
 
-
-
-        /*
-          Apply all scoring and reveal
-          changes together.
-        */
 
         await update(
           roomRef,
@@ -1628,28 +1626,8 @@
         );
 
 
-
         revealButton.disabled =
           true;
-
-
-
-        if (
-          justReachedTarget
-        ) {
-
-          statusEl.textContent =
-            "🌕 Moon Power target reached!";
-
-        } else {
-
-          statusEl.textContent =
-            "Answer revealed. Moon Power +" +
-            moonPowerGain +
-            ".";
-
-        }
-
 
 
       } catch (
@@ -1672,7 +1650,6 @@
       }
 
     }
-
 
 
     /* =========================
@@ -1710,9 +1687,8 @@
     );
 
 
-
     /* =========================
-       NEXT / CONTINUE QUESTION
+       NEXT QUESTION
     ========================== */
 
     nextQuestionButton.addEventListener(
@@ -1767,18 +1743,15 @@
             snapshot.val();
 
 
-
           const currentQuestion =
             Number(
               room.currentQuestion
             ) || 1;
 
 
-
           const nextQuestion =
             currentQuestion +
             1;
-
 
 
           const nextQuestionExists =
@@ -1789,25 +1762,12 @@
             );
 
 
-
           if (
             !nextQuestionExists
           ) {
 
-            nextQuestionButton.disabled =
-              true;
-
-
-            nextQuestionButton.textContent =
-              "No More Questions";
-
-
             finishQuizButton.disabled =
               false;
-
-
-            statusEl.textContent =
-              "No more questions. Press Finish Quiz.";
 
 
             return;
@@ -1815,10 +1775,8 @@
           }
 
 
-
           revealInProgress =
             false;
-
 
 
           await update(
@@ -1836,18 +1794,6 @@
           );
 
 
-
-          currentGameState =
-            "questions";
-
-
-          statusEl.textContent =
-            "Question " +
-            nextQuestion +
-            " started.";
-
-
-
         } catch (
           error
         ) {
@@ -1855,10 +1801,6 @@
           console.error(
             error
           );
-
-
-          nextQuestionButton.disabled =
-            false;
 
 
           statusEl.textContent =
@@ -1869,7 +1811,6 @@
 
       }
     );
-
 
 
     /* =========================
@@ -1928,12 +1869,10 @@
             snapshot.val();
 
 
-
           const rawMoonPower =
             Number(
               room.moonPower
             ) || 0;
-
 
 
           const targetMoonPower =
@@ -1942,18 +1881,15 @@
             ) || 1500;
 
 
-
           const questionNumber =
             Number(
               room.currentQuestion
             ) || 1;
 
 
-
           const isLastQuestion =
             questionNumber >=
             questions.length;
-
 
 
           const naturallyComplete =
@@ -1963,23 +1899,10 @@
               targetMoonPower;
 
 
-
-          /*
-            Do not allow an early finish
-            below the Moon Power target.
-
-            The exception is after the
-            final question.
-          */
-
           if (
             !naturallyComplete &&
             !isLastQuestion
           ) {
-
-            finishQuizButton.disabled =
-              true;
-
 
             statusEl.textContent =
               "Moon Power has not reached the target yet.";
@@ -1990,27 +1913,14 @@
           }
 
 
-
-          /*
-            If all 10 questions are done
-            but Moon Power is below 1500,
-            we mark the collective mission
-            as completed WITHOUT modifying:
-
-            - individual quiz scores
-            - raw Moon Power earned
-          */
-
           const completedByHost =
             !naturallyComplete;
-
 
 
           const completionReason =
             naturallyComplete
               ? "targetReached"
               : "allQuestionsFinished";
-
 
 
           await update(
@@ -2040,47 +1950,6 @@
           );
 
 
-
-          currentGameState =
-            "quizComplete";
-
-
-          revealButton.disabled =
-            true;
-
-
-          nextQuestionButton.disabled =
-            true;
-
-
-          finishQuizButton.disabled =
-            true;
-
-
-          nextQuestionButton.textContent =
-            "Quiz Complete ✓";
-
-
-          finishQuizButton.textContent =
-            "Quiz Complete ✓";
-
-
-          if (
-            completedByHost
-          ) {
-
-            statusEl.textContent =
-              "🌕 Quiz complete. Moon Power mission completed by Host. Individual team scores were not changed.";
-
-          } else {
-
-            statusEl.textContent =
-              "🌕 Quiz complete. Moon Power target achieved!";
-
-          }
-
-
-
         } catch (
           error
         ) {
@@ -2104,6 +1973,550 @@
     );
 
 
+    /* =========================
+       START FINAL LEADERBOARD
+    ========================== */
+
+    startLeaderboardButton.addEventListener(
+      "click",
+      async () => {
+
+        if (
+          !currentRoomCode ||
+          currentGameState !==
+            "quizComplete"
+        ) {
+
+          return;
+
+        }
+
+
+        startLeaderboardButton.disabled =
+          true;
+
+
+        try {
+
+          const roomRef =
+            ref(
+              db,
+              "rooms/" +
+              currentRoomCode
+            );
+
+
+          const snapshot =
+            await get(
+              roomRef
+            );
+
+
+          if (
+            !snapshot.exists()
+          ) {
+
+            return;
+
+          }
+
+
+          const room =
+            snapshot.val();
+
+
+          const teams =
+            room.teams ||
+            {};
+
+
+          /*
+            Build active team list.
+          */
+
+          const standings =
+            [];
+
+
+          for (
+            const [
+              teamKey,
+              teamData
+            ]
+            of Object.entries(
+              teams
+            )
+          ) {
+
+            if (
+              !teamData ||
+              teamData.joined !==
+                true
+            ) {
+
+              continue;
+
+            }
+
+
+            const teamNumber =
+              Number(
+                teamKey.replace(
+                  "team",
+                  ""
+                )
+              );
+
+
+            const previousScore =
+              Number(
+                teamData.previousScore
+              ) || 0;
+
+
+            const quizScore =
+              Number(
+                teamData.quizScore
+              ) || 0;
+
+
+            const totalScore =
+              previousScore +
+              quizScore;
+
+
+            standings.push(
+              {
+                teamKey:
+                  teamKey,
+
+                teamNumber:
+                  teamNumber,
+
+                previousScore:
+                  previousScore,
+
+                quizScore:
+                  quizScore,
+
+                totalScore:
+                  totalScore
+              }
+            );
+
+          }
+
+
+          if (
+            standings.length ===
+              0
+          ) {
+
+            statusEl.textContent =
+              "No active teams found.";
+
+
+            startLeaderboardButton.disabled =
+              false;
+
+
+            return;
+
+          }
+
+
+          /*
+            Highest score first.
+
+            Team number only gives us
+            deterministic display order
+            INSIDE a tied rank.
+
+            It does NOT break the tie.
+          */
+
+          standings.sort(
+            (
+              a,
+              b
+            ) => {
+
+              if (
+                b.totalScore !==
+                a.totalScore
+              ) {
+
+                return (
+                  b.totalScore -
+                  a.totalScore
+                );
+
+              }
+
+
+              return (
+                a.teamNumber -
+                b.teamNumber
+              );
+
+            }
+          );
+
+
+          /*
+            Competition ranking:
+
+            Scores:
+            500, 500, 450, 400
+
+            Ranks:
+            1, 1, 3, 4
+          */
+
+          let lastScore =
+            null;
+
+
+          let lastRank =
+            0;
+
+
+          standings.forEach(
+            (
+              team,
+              index
+            ) => {
+
+              if (
+                lastScore ===
+                  null ||
+                team.totalScore !==
+                  lastScore
+              ) {
+
+                lastRank =
+                  index + 1;
+
+
+                lastScore =
+                  team.totalScore;
+
+              }
+
+
+              team.rank =
+                lastRank;
+
+            }
+          );
+
+
+          /*
+            Convert into Firebase object.
+          */
+
+          const finalStandings =
+            {};
+
+
+          standings.forEach(
+            team => {
+
+              finalStandings[
+                team.teamKey
+              ] = {
+
+                teamNumber:
+                  team.teamNumber,
+
+                previousScore:
+                  team.previousScore,
+
+                quizScore:
+                  team.quizScore,
+
+                totalScore:
+                  team.totalScore,
+
+                rank:
+                  team.rank
+
+              };
+
+            }
+          );
+
+
+          /*
+            Unique ranks, lowest rank
+            revealed first.
+
+            Example:
+            [8,7,6,5,4,3,2,1]
+
+            With ties it may be:
+            [8,7,5,4,3,2,1]
+          */
+
+          const revealOrder =
+            [
+              ...new Set(
+                standings.map(
+                  team =>
+                    team.rank
+                )
+              )
+            ]
+            .sort(
+              (
+                a,
+                b
+              ) =>
+                b - a
+            );
+
+
+          await update(
+            roomRef,
+            {
+              state:
+                "leaderboard",
+
+              finalStandings:
+                finalStandings,
+
+              leaderboardRevealOrder:
+                revealOrder,
+
+              leaderboardStep:
+                0,
+
+              leaderboardStartedAt:
+                Date.now()
+            }
+          );
+
+
+          statusEl.textContent =
+            "Final Leaderboard started. Ready to reveal the lowest rank.";
+
+
+        } catch (
+          error
+        ) {
+
+          console.error(
+            error
+          );
+
+
+          startLeaderboardButton.disabled =
+            false;
+
+
+          statusEl.textContent =
+            "Could not start leaderboard: " +
+            error.message;
+
+        }
+
+      }
+    );
+
+
+    /* =========================
+       REVEAL NEXT RANK
+    ========================== */
+
+    revealRankButton.addEventListener(
+      "click",
+      async () => {
+
+        if (
+          !currentRoomCode ||
+          currentGameState !==
+            "leaderboard"
+        ) {
+
+          return;
+
+        }
+
+
+        revealRankButton.disabled =
+          true;
+
+
+        try {
+
+          const roomRef =
+            ref(
+              db,
+              "rooms/" +
+              currentRoomCode
+            );
+
+
+          const snapshot =
+            await get(
+              roomRef
+            );
+
+
+          if (
+            !snapshot.exists()
+          ) {
+
+            return;
+
+          }
+
+
+          const room =
+            snapshot.val();
+
+
+          const revealOrder =
+            Array.isArray(
+              room.leaderboardRevealOrder
+            )
+              ? room.leaderboardRevealOrder
+              : [];
+
+
+          const step =
+            Number(
+              room.leaderboardStep
+            ) || 0;
+
+
+          if (
+            step >=
+            revealOrder.length
+          ) {
+
+            revealRankButton.disabled =
+              true;
+
+
+            showFullLeaderboardButton.disabled =
+              false;
+
+
+            return;
+
+          }
+
+
+          const rankToReveal =
+            Number(
+              revealOrder[
+                step
+              ]
+            );
+
+
+          await update(
+            roomRef,
+            {
+              leaderboardStep:
+                step + 1,
+
+              leaderboardCurrentRank:
+                rankToReveal,
+
+              leaderboardLastRevealAt:
+                Date.now()
+            }
+          );
+
+
+        } catch (
+          error
+        ) {
+
+          console.error(
+            error
+          );
+
+
+          revealRankButton.disabled =
+            false;
+
+
+          statusEl.textContent =
+            "Could not reveal next rank: " +
+            error.message;
+
+        }
+
+      }
+    );
+
+
+    /* =========================
+       SHOW FULL LEADERBOARD
+    ========================== */
+
+    showFullLeaderboardButton.addEventListener(
+      "click",
+      async () => {
+
+        if (
+          !currentRoomCode ||
+          currentGameState !==
+            "leaderboard"
+        ) {
+
+          return;
+
+        }
+
+
+        showFullLeaderboardButton.disabled =
+          true;
+
+
+        try {
+
+          await update(
+            ref(
+              db,
+              "rooms/" +
+              currentRoomCode
+            ),
+            {
+              state:
+                "leaderboardFull",
+
+              leaderboardCompletedAt:
+                Date.now()
+            }
+          );
+
+
+        } catch (
+          error
+        ) {
+
+          console.error(
+            error
+          );
+
+
+          showFullLeaderboardButton.disabled =
+            false;
+
+
+          statusEl.textContent =
+            "Could not show full leaderboard: " +
+            error.message;
+
+        }
+
+      }
+    );
+
 
     /* =========================
        RENDER TEAM LIST
@@ -2121,7 +2534,6 @@
         0;
 
 
-
       for (
         let teamNumber = 1;
         teamNumber <= 10;
@@ -2133,18 +2545,15 @@
           teamNumber;
 
 
-
         const teamData =
           teams[
             teamKey
           ] || {};
 
 
-
         const joined =
           teamData.joined ===
             true;
-
 
 
         if (
@@ -2156,7 +2565,6 @@
         }
 
 
-
         const row =
           document.createElement(
             "div"
@@ -2166,9 +2574,6 @@
         row.className =
           "teamRow";
 
-
-
-        /* TEAM NAME */
 
         const name =
           document.createElement(
@@ -2184,9 +2589,6 @@
           "Team " +
           teamNumber;
 
-
-
-        /* CONNECTION STATUS */
 
         const connectionStatus =
           document.createElement(
@@ -2206,14 +2608,10 @@
             : "statusWaiting";
 
 
-
-        /* PREVIOUS ACTIVITY SCORE */
-
         const scoreArea =
           document.createElement(
             "div"
           );
-
 
 
         if (
@@ -2245,7 +2643,6 @@
           input.value =
             teamData.previousScore ??
             0;
-
 
 
           input.addEventListener(
@@ -2292,9 +2689,6 @@
         }
 
 
-
-        /* TEAM PHOTO */
-
         const photoArea =
           document.createElement(
             "div"
@@ -2305,7 +2699,6 @@
           "photoArea";
 
 
-
         if (
           joined
         ) {
@@ -2314,7 +2707,6 @@
             currentRoomCode +
             "-" +
             teamKey;
-
 
 
           const fileInput =
@@ -2335,7 +2727,6 @@
             true;
 
 
-
           const chooseButton =
             document.createElement(
               "button"
@@ -2352,7 +2743,6 @@
 
           chooseButton.textContent =
             "Choose Photo";
-
 
 
           const preview =
@@ -2375,7 +2765,6 @@
             true;
 
 
-
           const photoStatus =
             document.createElement(
               "span"
@@ -2386,7 +2775,6 @@
             "photoStatus";
 
 
-
           chooseButton.addEventListener(
             "click",
             () => {
@@ -2395,7 +2783,6 @@
 
             }
           );
-
 
 
           fileInput.addEventListener(
@@ -2495,9 +2882,6 @@
           );
 
 
-
-          /* EXISTING LOCAL PHOTO */
-
           try {
 
             const savedPhoto =
@@ -2546,7 +2930,6 @@
           }
 
 
-
           photoArea.appendChild(
             chooseButton
           );
@@ -2573,7 +2956,6 @@
             "—";
 
         }
-
 
 
         row.appendChild(
@@ -2603,10 +2985,8 @@
       }
 
 
-
       currentJoinedCount =
         joinedCount;
-
 
 
       joinedCountEl.textContent =
@@ -2614,15 +2994,8 @@
         " / 10 teams joined";
 
 
-
       updatePrimaryButtons();
 
-
-
-      /*
-        Don't overwrite live
-        quiz/reveal/completion status.
-      */
 
       if (
         currentGameState ===
@@ -2652,9 +3025,8 @@
     }
 
 
-
     /* =========================
-       PLAY INTRO
+       INTRO
     ========================== */
 
     playIntroButton.addEventListener(
@@ -2682,36 +3054,12 @@
           }
         );
 
-
-        currentGameState =
-          "intro";
-
-
-        updatePrimaryButtons();
-
-
-        revealButton.disabled =
-          true;
-
-
-        nextQuestionButton.disabled =
-          true;
-
-
-        finishQuizButton.disabled =
-          true;
-
-
-        statusEl.textContent =
-          "Intro playing on TV.";
-
       }
     );
 
 
-
     /* =========================
-       START QUESTION 1
+       START QUESTIONS
     ========================== */
 
     startButton.addEventListener(
@@ -2732,10 +3080,6 @@
             0
         ) {
 
-          statusEl.textContent =
-            "No questions found in questions.js.";
-
-
           return;
 
         }
@@ -2743,14 +3087,6 @@
 
         revealInProgress =
           false;
-
-
-
-        const firstQuestionId =
-          questions[
-            0
-          ].id;
-
 
 
         await update(
@@ -2764,38 +3100,16 @@
               "questions",
 
             currentQuestion:
-              firstQuestionId
+              questions[0].id
           }
         );
-
-
-        currentGameState =
-          "questions";
-
-
-        updatePrimaryButtons();
-
-
-        nextQuestionButton.disabled =
-          true;
-
-
-        finishQuizButton.disabled =
-          true;
-
-
-        statusEl.textContent =
-          "Question " +
-          firstQuestionId +
-          " started.";
 
       }
     );
 
 
-
     /* =========================
-       RESET / END GAME
+       RESET
     ========================== */
 
     resetRoomButton.addEventListener(
@@ -2883,12 +3197,7 @@
             true;
 
 
-          nextQuestionButton.textContent =
-            "Next Question →";
-
-
-          finishQuizButton.textContent =
-            "Finish Quiz →";
+          resetLeaderboardButtons();
 
 
           statusEl.textContent =
@@ -2912,7 +3221,6 @@
 
       }
     );
-
 
   </script>
 
