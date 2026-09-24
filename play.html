@@ -14,6 +14,8 @@
       background: #11152b;
       color: white;
       text-align: center;
+      min-height: 100vh;
+      box-sizing: border-box;
     }
 
     h1 {
@@ -44,6 +46,23 @@
       border: none;
     }
 
+    .teamIdentity {
+      font-size: 40px;
+      font-weight: bold;
+      margin: 20px 0;
+      color: #ffe89a;
+    }
+
+    #status {
+      margin-top: 18px;
+      font-size: 18px;
+      line-height: 1.4;
+    }
+
+    /* =========================
+       TEAM SELECTION
+    ========================== */
+
     #teamGrid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -70,18 +89,9 @@
       cursor: not-allowed;
     }
 
-    #status {
-      margin-top: 18px;
-      font-size: 18px;
-      line-height: 1.4;
-    }
-
-    .teamIdentity {
-      font-size: 40px;
-      font-weight: bold;
-      margin: 20px 0;
-      color: #ffe89a;
-    }
+    /* =========================
+       WAITING
+    ========================== */
 
     #waitingMessage {
       font-size: 22px;
@@ -89,7 +99,9 @@
       margin-top: 25px;
     }
 
-    /* ANSWER SCREEN */
+    /* =========================
+       ANSWER SCREEN
+    ========================== */
 
     #questionLabel {
       font-size: 20px;
@@ -100,6 +112,7 @@
     #answerInstruction {
       font-size: 22px;
       margin: 18px 0 22px;
+      line-height: 1.5;
     }
 
     #answerGrid {
@@ -117,6 +130,7 @@
       color: white;
       font-size: 50px;
       font-weight: bold;
+
       transition:
         transform 0.12s ease,
         opacity 0.2s ease;
@@ -144,7 +158,7 @@
 
     .answerButton:disabled {
       cursor: default;
-      opacity: 0.35;
+      opacity: 0.32;
     }
 
     .answerButton.selected {
@@ -170,8 +184,87 @@
       font-size: 28px;
       font-weight: bold;
     }
+
+    /* =========================
+       RESULT SCREEN
+    ========================== */
+
+    #resultSection {
+      padding-top: 30px;
+    }
+
+    #resultCard {
+      max-width: 500px;
+      margin: 30px auto 0;
+      padding: 32px 22px;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.08);
+      border: 3px solid rgba(255,255,255,0.18);
+    }
+
+    #resultIcon {
+      font-size: 68px;
+      margin-bottom: 12px;
+    }
+
+    #resultTitle {
+      font-size: 36px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    #resultSubtitle {
+      font-size: 20px;
+      opacity: 0.88;
+      line-height: 1.4;
+    }
+
+    #pointsAwarded {
+      font-size: 72px;
+      font-weight: bold;
+      margin: 28px 0 10px;
+      color: #ffe89a;
+    }
+
+    #pointsLabel {
+      font-size: 20px;
+      opacity: 0.85;
+    }
+
+    #quizScoreBox {
+      margin-top: 30px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.2);
+    }
+
+    #quizScoreLabel {
+      font-size: 18px;
+      opacity: 0.8;
+    }
+
+    #quizScore {
+      font-size: 52px;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    #resultTVMessage {
+      margin-top: 28px;
+      font-size: 24px;
+      line-height: 1.45;
+    }
+
+    #resultCard.correct {
+      border-color: #8ff0a4;
+      background: rgba(80,200,110,0.15);
+    }
+
+    #resultCard.noPoints {
+      border-color: rgba(255,255,255,0.25);
+    }
   </style>
 </head>
+
 
 <body>
 
@@ -181,9 +274,13 @@
 
   <section id="joinSection">
 
-    <h1>🌙 Moon Palace Adventure</h1>
+    <h1>
+      🌙 Moon Palace Adventure
+    </h1>
 
-    <p>Enter Room Code</p>
+    <p>
+      Enter Room Code
+    </p>
 
     <input
       id="roomCodeInput"
@@ -216,7 +313,9 @@
     hidden
   >
 
-    <h1>Choose Your Team</h1>
+    <h1>
+      Choose Your Team
+    </h1>
 
     <p id="roomDisplay"></p>
 
@@ -234,7 +333,9 @@
     hidden
   >
 
-    <h1>🌙 Connected</h1>
+    <h1>
+      🌙 Connected
+    </h1>
 
     <div
       id="waitingTeamName"
@@ -263,7 +364,7 @@
     ></div>
 
     <div id="questionLabel">
-      QUESTION 1
+      QUESTION 1 / 10
     </div>
 
     <div id="answerInstruction">
@@ -330,6 +431,70 @@
   </section>
 
 
+  <!-- =========================
+       RESULT SCREEN
+  ========================== -->
+
+  <section
+    id="resultSection"
+    hidden
+  >
+
+    <div
+      id="resultTeamName"
+      class="teamIdentity"
+    ></div>
+
+
+    <div id="resultCard">
+
+      <div id="resultIcon">
+        🌙
+      </div>
+
+      <div id="resultTitle">
+        Result
+      </div>
+
+      <div id="resultSubtitle"></div>
+
+
+      <div id="pointsAwarded">
+        +0
+      </div>
+
+      <div id="pointsLabel">
+        Moon Power
+      </div>
+
+
+      <div id="quizScoreBox">
+
+        <div id="quizScoreLabel">
+          Your Quiz Score
+          <br>
+          你的問答分數
+        </div>
+
+        <div id="quizScore">
+          0
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div id="resultTVMessage">
+      👀 Keep watching the TV
+      <br>
+      請繼續留意大螢幕
+    </div>
+
+  </section>
+
+
+
   <script type="module">
 
     import {
@@ -359,6 +524,11 @@
     const answerSection =
       document.getElementById(
         "answerSection"
+      );
+
+    const resultSection =
+      document.getElementById(
+        "resultSection"
       );
 
 
@@ -426,6 +596,42 @@
       );
 
 
+    const resultTeamName =
+      document.getElementById(
+        "resultTeamName"
+      );
+
+    const resultCard =
+      document.getElementById(
+        "resultCard"
+      );
+
+    const resultIcon =
+      document.getElementById(
+        "resultIcon"
+      );
+
+    const resultTitle =
+      document.getElementById(
+        "resultTitle"
+      );
+
+    const resultSubtitle =
+      document.getElementById(
+        "resultSubtitle"
+      );
+
+    const pointsAwarded =
+      document.getElementById(
+        "pointsAwarded"
+      );
+
+    const quizScore =
+      document.getElementById(
+        "quizScore"
+      );
+
+
     let currentRoomCode =
       null;
 
@@ -440,6 +646,24 @@
 
     let submittedThisQuestion =
       false;
+
+
+    /* =========================
+       SHOW ONE MAIN SECTION
+    ========================== */
+
+    function hideGameSections() {
+
+      waitingSection.hidden =
+        true;
+
+      answerSection.hidden =
+        true;
+
+      resultSection.hidden =
+        true;
+
+    }
 
 
     /* =========================
@@ -513,9 +737,13 @@
           startWatchingTeams();
 
 
-        } catch (error) {
+        } catch (
+          error
+        ) {
 
-          console.error(error);
+          console.error(
+            error
+          );
 
 
           statusEl.textContent =
@@ -529,7 +757,7 @@
 
 
     /* =========================
-       TEAM AVAILABILITY
+       WATCH TEAM AVAILABILITY
     ========================== */
 
     function startWatchingTeams() {
@@ -545,14 +773,18 @@
 
       onValue(
         teamsRef,
-        (snapshot) => {
+        (
+          snapshot
+        ) => {
 
           const teams =
-            snapshot.val() || {};
+            snapshot.val() ||
+            {};
 
 
           if (
-            selectedTeamNumber === null
+            selectedTeamNumber ===
+            null
           ) {
 
             renderTeams(
@@ -563,6 +795,7 @@
 
         }
       );
+
     }
 
 
@@ -586,9 +819,13 @@
 
 
         const isTaken =
-          teams[teamKey] &&
-          teams[teamKey]
-            .joined === true;
+          teams[
+            teamKey
+          ] &&
+          teams[
+            teamKey
+          ].joined ===
+            true;
 
 
         const button =
@@ -601,7 +838,9 @@
           "teamButton";
 
 
-        if (isTaken) {
+        if (
+          isTaken
+        ) {
 
           button.textContent =
             "Team " +
@@ -616,6 +855,7 @@
 
           button.disabled =
             true;
+
 
         } else {
 
@@ -632,9 +872,11 @@
           button.addEventListener(
             "click",
             () => {
+
               claimTeam(
                 teamNumber
               );
+
             }
           );
 
@@ -660,9 +902,12 @@
 
       if (
         !currentRoomCode ||
-        selectedTeamNumber !== null
+        selectedTeamNumber !==
+          null
       ) {
+
         return;
+
       }
 
 
@@ -691,7 +936,8 @@
 
         if (
           snapshot.exists() &&
-          snapshot.val().joined === true
+          snapshot.val()
+            .joined === true
         ) {
 
           alert(
@@ -723,6 +969,10 @@
         teamSection.hidden =
           true;
 
+
+        hideGameSections();
+
+
         waitingSection.hidden =
           false;
 
@@ -737,12 +987,21 @@
           teamNumber;
 
 
+        resultTeamName.textContent =
+          "TEAM " +
+          teamNumber;
+
+
         startWatchingRoom();
 
 
-      } catch (error) {
+      } catch (
+        error
+      ) {
 
-        console.error(error);
+        console.error(
+          error
+        );
 
 
         alert(
@@ -771,14 +1030,20 @@
 
       onValue(
         roomRef,
-        async (snapshot) => {
+        async (
+          snapshot
+        ) => {
 
           const room =
             snapshot.val();
 
 
-          if (!room) {
+          if (
+            !room
+          ) {
+
             return;
+
           }
 
 
@@ -788,7 +1053,8 @@
 
 
           if (
-            state === "lobby"
+            state ===
+            "lobby"
           ) {
 
             showWaitingScreen(
@@ -796,11 +1062,13 @@
             );
 
             return;
+
           }
 
 
           if (
-            state === "intro"
+            state ===
+            "intro"
           ) {
 
             showWaitingScreen(
@@ -808,20 +1076,47 @@
             );
 
             return;
+
           }
 
 
           if (
-            state === "questions"
+            state ===
+            "questions"
           ) {
 
             const questionNumber =
-              room.currentQuestion || 1;
+              room.currentQuestion ||
+              1;
 
 
             await showQuestion(
               questionNumber
             );
+
+
+            return;
+
+          }
+
+
+          if (
+            state ===
+            "reveal"
+          ) {
+
+            const questionNumber =
+              room.currentQuestion ||
+              1;
+
+
+            showRevealResult(
+              questionNumber,
+              room
+            );
+
+
+            return;
 
           }
 
@@ -839,8 +1134,8 @@
       message
     ) {
 
-      answerSection.hidden =
-        true;
+      hideGameSections();
+
 
       waitingSection.hidden =
         false;
@@ -860,8 +1155,8 @@
       questionNumber
     ) {
 
-      waitingSection.hidden =
-        true;
+      hideGameSections();
+
 
       answerSection.hidden =
         false;
@@ -874,8 +1169,8 @@
 
 
       /*
-        If this is a different
-        question, reset the phone.
+        New question:
+        reset buttons and submission.
       */
 
       if (
@@ -885,6 +1180,7 @@
 
         currentQuestionNumber =
           questionNumber;
+
 
         submittedThisQuestion =
           false;
@@ -898,11 +1194,9 @@
 
 
         /*
-          Check whether this team
+          Check whether this device
           already submitted an answer
           for this question.
-          This also helps if the page
-          briefly reconnects.
         */
 
         const answerSnapshot =
@@ -940,11 +1234,13 @@
 
 
     /* =========================
-       ANSWER BUTTONS
+       SUBMIT ANSWER
     ========================== */
 
     answerButtons.forEach(
-      (button) => {
+      (
+        button
+      ) => {
 
         button.addEventListener(
           "click",
@@ -954,9 +1250,12 @@
               submittedThisQuestion ||
               !currentRoomCode ||
               !selectedTeamKey ||
-              currentQuestionNumber <= 0
+              currentQuestionNumber <=
+                0
             ) {
+
               return;
+
             }
 
 
@@ -965,9 +1264,8 @@
 
 
             /*
-              Lock immediately so
-              double tapping cannot
-              submit twice.
+              Lock immediately to stop
+              double tapping.
             */
 
             submittedThisQuestion =
@@ -992,7 +1290,9 @@
                   selectedTeamKey
                 ),
                 {
-                  answer: answer,
+                  answer:
+                    answer,
+
                   submittedAt:
                     Date.now()
                 }
@@ -1004,9 +1304,13 @@
               );
 
 
-            } catch (error) {
+            } catch (
+              error
+            ) {
 
-              console.error(error);
+              console.error(
+                error
+              );
 
 
               submittedThisQuestion =
@@ -1030,7 +1334,7 @@
 
 
     /* =========================
-       BUTTON STATES
+       ANSWER BUTTON STATES
     ========================== */
 
     function lockAnswerButtons(
@@ -1038,7 +1342,9 @@
     ) {
 
       answerButtons.forEach(
-        (button) => {
+        (
+          button
+        ) => {
 
           button.disabled =
             true;
@@ -1064,7 +1370,9 @@
     function resetAnswerButtons() {
 
       answerButtons.forEach(
-        (button) => {
+        (
+          button
+        ) => {
 
           button.disabled =
             false;
@@ -1099,6 +1407,158 @@
 
       submittedPanel.hidden =
         false;
+
+    }
+
+
+    /* =========================
+       SHOW REVEAL RESULT
+    ========================== */
+
+    function showRevealResult(
+      questionNumber,
+      room
+    ) {
+
+      hideGameSections();
+
+
+      resultSection.hidden =
+        false;
+
+
+      const questionKey =
+        "q" +
+        questionNumber;
+
+
+      const result =
+        room.results &&
+        room.results[
+          questionKey
+        ] &&
+        room.results[
+          questionKey
+        ][
+          selectedTeamKey
+        ];
+
+
+      /*
+        Normally the Host writes the
+        result before state becomes
+        "reveal".
+
+        This fallback avoids a blank
+        screen if data is momentarily
+        unavailable.
+      */
+
+      if (
+        !result
+      ) {
+
+        resultCard.className =
+          "";
+
+
+        resultIcon.textContent =
+          "🌙";
+
+
+        resultTitle.textContent =
+          "Result";
+
+
+        resultSubtitle.textContent =
+          "Please look at the TV";
+
+
+        pointsAwarded.textContent =
+          "+0";
+
+
+        quizScore.textContent =
+          "0";
+
+
+        return;
+
+      }
+
+
+      const isCorrect =
+        result.correct ===
+        true;
+
+
+      const points =
+        Number(
+          result.points
+        ) || 0;
+
+
+      const score =
+        Number(
+          result.quizScore
+        ) || 0;
+
+
+      resultCard.classList.remove(
+        "correct",
+        "noPoints"
+      );
+
+
+      if (
+        isCorrect
+      ) {
+
+        resultCard.classList.add(
+          "correct"
+        );
+
+
+        resultIcon.textContent =
+          "✨";
+
+
+        resultTitle.textContent =
+          "Correct!";
+
+
+        resultSubtitle.textContent =
+          "答對了！月華力量增加！";
+
+
+      } else {
+
+        resultCard.classList.add(
+          "noPoints"
+        );
+
+
+        resultIcon.textContent =
+          "🌙";
+
+
+        resultTitle.textContent =
+          "No Moon Power this time";
+
+
+        resultSubtitle.textContent =
+          "今次未有增加月華力量";
+
+      }
+
+
+      pointsAwarded.textContent =
+        "+" +
+        points;
+
+
+      quizScore.textContent =
+        score;
 
     }
 
