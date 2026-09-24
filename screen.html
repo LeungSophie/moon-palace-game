@@ -36,6 +36,111 @@
       display: block;
     }
 
+    #questionNumber {
+  font-size: 32px;
+  opacity: 0.85;
+  margin-bottom: 24px;
+}
+
+#questionChinese {
+  font-size: 58px;
+  font-weight: bold;
+  line-height: 1.25;
+  max-width: 1400px;
+  margin: 0 auto 10px;
+}
+
+#questionEnglish {
+  font-size: 38px;
+  line-height: 1.3;
+  max-width: 1400px;
+  margin: 0 auto 28px;
+  opacity: 0.92;
+}
+
+#questionImageArea {
+  margin: 15px auto 28px;
+}
+
+#questionImage {
+  max-width: 900px;
+  max-height: 420px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 18px;
+}
+
+#answerGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.answerCard {
+  min-height: 130px;
+  padding: 18px 22px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.09);
+  border: 2px solid rgba(255,255,255,0.18);
+  text-align: left;
+}
+
+.answerLetter {
+  font-size: 34px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.answerChinese {
+  font-size: 34px;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.answerEnglish {
+  font-size: 24px;
+  line-height: 1.25;
+  opacity: 0.9;
+  margin-top: 5px;
+}
+
+#answeredStatus {
+  font-size: 28px;
+  margin-top: 24px;
+}
+
+#moonPowerArea {
+  margin: 24px auto 0;
+  max-width: 900px;
+}
+
+#moonPowerLabel {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+#moonPowerTrack {
+  width: 100%;
+  height: 28px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+#moonPowerFill {
+  width: 0%;
+  height: 100%;
+  background: #ffe89a;
+  transition: width 0.5s ease;
+}
+
+#moonPowerText {
+  margin-top: 8px;
+  font-size: 24px;
+}
     /* -------------------------
        LOBBY
     ------------------------- */
@@ -251,18 +356,65 @@
   >
 
     <div id="questionNumber">
-      QUESTION 1 / 10
-    </div>
+  QUESTION 1 / 10
+</div>
 
-    <div id="questionPlaceholder">
-      第一題即將開始
-      <br>
-      Question 1 is about to begin
-    </div>
+<div id="questionChinese"></div>
 
-    <div id="questionNote">
-      Question layout will be added next.
-    </div>
+<div id="questionEnglish"></div>
+
+<div id="questionImageArea" hidden>
+  <img
+    id="questionImage"
+    alt="Question diagram"
+  >
+</div>
+
+<div id="answerGrid">
+
+  <div class="answerCard" id="answerA">
+    <div class="answerLetter">A</div>
+    <div class="answerChinese"></div>
+    <div class="answerEnglish"></div>
+  </div>
+
+  <div class="answerCard" id="answerB">
+    <div class="answerLetter">B</div>
+    <div class="answerChinese"></div>
+    <div class="answerEnglish"></div>
+  </div>
+
+  <div class="answerCard" id="answerC">
+    <div class="answerLetter">C</div>
+    <div class="answerChinese"></div>
+    <div class="answerEnglish"></div>
+  </div>
+
+  <div class="answerCard" id="answerD">
+    <div class="answerLetter">D</div>
+    <div class="answerChinese"></div>
+    <div class="answerEnglish"></div>
+  </div>
+
+</div>
+
+<div id="answeredStatus">
+  0 / 0 teams answered
+</div>
+
+<div id="moonPowerArea">
+  <div id="moonPowerLabel">
+    🌕 Moon Power
+  </div>
+
+  <div id="moonPowerTrack">
+    <div id="moonPowerFill"></div>
+  </div>
+
+  <div id="moonPowerText">
+    0 / 1500
+  </div>
+</div>
 
   </section>
 
@@ -279,6 +431,9 @@
       getTeamPhoto
     } from "./local-media.js";
 
+    import {
+  questions
+} from "./questions.js";
 
     const photoChannel =
       new BroadcastChannel(
@@ -332,6 +487,29 @@
         "photoMessage"
       );
 
+    const questionNumberEl =
+  document.getElementById("questionNumber");
+
+const questionChineseEl =
+  document.getElementById("questionChinese");
+
+const questionEnglishEl =
+  document.getElementById("questionEnglish");
+
+const questionImageArea =
+  document.getElementById("questionImageArea");
+
+const questionImage =
+  document.getElementById("questionImage");
+
+const answeredStatus =
+  document.getElementById("answeredStatus");
+
+const moonPowerFill =
+  document.getElementById("moonPowerFill");
+
+const moonPowerText =
+  document.getElementById("moonPowerText");
 
     let activeRoomCode =
       null;
@@ -426,7 +604,83 @@
         statusEl.textContent =
           "Join using the room code above";
 
+function renderQuestion(questionNumber, roomData) {
 
+  const question =
+    questions.find(
+      q => q.id === questionNumber
+    );
+
+  if (!question) {
+    return;
+  }
+
+  questionNumberEl.textContent =
+    "QUESTION " +
+    questionNumber +
+    " / 10";
+
+  questionChineseEl.textContent =
+    question.chinese;
+
+  questionEnglishEl.textContent =
+    question.english;
+
+  const letters = ["A", "B", "C", "D"];
+
+  for (const letter of letters) {
+
+    const card =
+      document.getElementById(
+        "answer" + letter
+      );
+
+    card.querySelector(
+      ".answerChinese"
+    ).textContent =
+      question.options[letter].chinese;
+
+    card.querySelector(
+      ".answerEnglish"
+    ).textContent =
+      question.options[letter].english;
+  }
+
+  if (question.image) {
+
+    questionImage.src =
+      question.image;
+
+    questionImageArea.hidden =
+      false;
+
+  } else {
+
+    questionImageArea.hidden =
+      true;
+  }
+
+  const moonPower =
+    roomData.moonPower || 0;
+
+  const target =
+    roomData.targetMoonPower || 1500;
+
+  const percent =
+    Math.min(
+      100,
+      (moonPower / target) * 100
+    );
+
+  moonPowerFill.style.width =
+    percent + "%";
+
+  moonPowerText.textContent =
+    moonPower +
+    " / " +
+    target;
+}
+        
         watchRoom(
           roomCode
         );
@@ -480,10 +734,16 @@
           }
 
           if (state === "questions") {
-            showScreen(
-              "questions"
-            );
-          }
+
+  showScreen(
+    "questions"
+  );
+
+  renderQuestion(
+    room.currentQuestion || 1,
+    room
+  );
+}
 
         }
       );
