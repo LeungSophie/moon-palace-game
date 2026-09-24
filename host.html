@@ -477,6 +477,7 @@
       null;
 
 
+
     function generateRoomCode() {
 
       return Math.floor(
@@ -485,6 +486,7 @@
       ).toString();
 
     }
+
 
 
     function stopExistingListeners() {
@@ -515,6 +517,7 @@
     }
 
 
+
     function updatePrimaryButtons() {
 
       const hasTeams =
@@ -542,6 +545,7 @@
         );
 
     }
+
 
 
     function resetLeaderboardButtons() {
@@ -813,8 +817,6 @@
 
 
 
-            /* LOBBY */
-
             if (
               state ===
               "lobby"
@@ -823,29 +825,22 @@
               revealButton.disabled =
                 true;
 
-
               nextQuestionButton.disabled =
                 true;
-
 
               finishQuizButton.disabled =
                 true;
 
-
               resetLeaderboardButtons();
-
 
               revealInProgress =
                 false;
-
 
               return;
 
             }
 
 
-
-            /* INTRO */
 
             if (
               state ===
@@ -855,17 +850,13 @@
               revealButton.disabled =
                 true;
 
-
               nextQuestionButton.disabled =
                 true;
-
 
               finishQuizButton.disabled =
                 true;
 
-
               resetLeaderboardButtons();
-
 
               revealInProgress =
                 false;
@@ -881,8 +872,6 @@
 
 
 
-            /* QUIZ COMPLETE */
-
             if (
               state ===
               "quizComplete"
@@ -891,10 +880,8 @@
               revealButton.disabled =
                 true;
 
-
               nextQuestionButton.disabled =
                 true;
-
 
               finishQuizButton.disabled =
                 true;
@@ -903,14 +890,11 @@
               startLeaderboardButton.disabled =
                 false;
 
-
               revealRankButton.disabled =
                 true;
 
-
               showFullLeaderboardButton.disabled =
                 true;
-
 
               playFinaleButton.disabled =
                 true;
@@ -930,8 +914,6 @@
 
 
 
-            /* PROGRESSIVE LEADERBOARD */
-
             if (
               state ===
               "leaderboard"
@@ -940,33 +922,55 @@
               revealButton.disabled =
                 true;
 
-
               nextQuestionButton.disabled =
                 true;
-
 
               finishQuizButton.disabled =
                 true;
 
-
               startLeaderboardButton.disabled =
                 true;
 
-
               showFullLeaderboardButton.disabled =
                 true;
-
 
               playFinaleButton.disabled =
                 true;
 
 
-              const revealOrder =
-                Array.isArray(
-                  room.leaderboardRevealOrder
-                )
-                  ? room.leaderboardRevealOrder
-                  : [];
+              let revealOrder =
+                room.leaderboardRevealOrder ||
+                [];
+
+
+              if (
+                !Array.isArray(
+                  revealOrder
+                ) &&
+                typeof revealOrder ===
+                  "object"
+              ) {
+
+                revealOrder =
+                  Object.keys(
+                    revealOrder
+                  )
+                  .sort(
+                    (
+                      a,
+                      b
+                    ) =>
+                      Number(a) -
+                      Number(b)
+                  )
+                  .map(
+                    key =>
+                      revealOrder[
+                        key
+                      ]
+                  );
+
+              }
 
 
               const step =
@@ -1034,8 +1038,6 @@
 
 
 
-            /* FULL LEADERBOARD */
-
             if (
               state ===
               "leaderboardFull"
@@ -1044,22 +1046,17 @@
               revealButton.disabled =
                 true;
 
-
               nextQuestionButton.disabled =
                 true;
-
 
               finishQuizButton.disabled =
                 true;
 
-
               startLeaderboardButton.disabled =
                 true;
 
-
               revealRankButton.disabled =
                 true;
-
 
               showFullLeaderboardButton.disabled =
                 true;
@@ -1083,8 +1080,6 @@
 
 
 
-            /* FINALE */
-
             if (
               state ===
               "finale"
@@ -1093,26 +1088,20 @@
               revealButton.disabled =
                 true;
 
-
               nextQuestionButton.disabled =
                 true;
-
 
               finishQuizButton.disabled =
                 true;
 
-
               startLeaderboardButton.disabled =
                 true;
-
 
               revealRankButton.disabled =
                 true;
 
-
               showFullLeaderboardButton.disabled =
                 true;
-
 
               playFinaleButton.disabled =
                 true;
@@ -1131,8 +1120,6 @@
             }
 
 
-
-            /* ANSWER REVEAL */
 
             if (
               state ===
@@ -1186,7 +1173,6 @@
                 questions.length;
 
 
-
               if (
                 moonPowerComplete &&
                 !isLastQuestion
@@ -1221,7 +1207,6 @@
               }
 
 
-
               if (
                 moonPowerComplete &&
                 isLastQuestion
@@ -1250,7 +1235,6 @@
                 return;
 
               }
-
 
 
               if (
@@ -1287,7 +1271,6 @@
               }
 
 
-
               nextQuestionButton.disabled =
                 false;
 
@@ -1321,8 +1304,6 @@
             }
 
 
-
-            /* QUESTION OPEN */
 
             if (
               state !==
@@ -1480,7 +1461,6 @@
 
           revealInProgress =
             false;
-
 
           return;
 
@@ -1782,10 +1762,6 @@
 
 
 
-    /* ==========================================
-       MANUAL REVEAL
-    ========================================== */
-
     revealButton.addEventListener(
       "click",
       async () => {
@@ -1899,7 +1875,6 @@
 
             finishQuizButton.disabled =
               false;
-
 
             return;
 
@@ -2038,7 +2013,6 @@
 
             statusEl.textContent =
               "Moon Power has not reached the target yet.";
-
 
             return;
 
@@ -2237,7 +2211,8 @@
 
 
           if (
-            standings.length === 0
+            standings.length ===
+              0
           ) {
 
             statusEl.textContent =
@@ -2471,11 +2446,6 @@
             [];
 
 
-          /*
-            Firebase may return an
-            array-like object.
-          */
-
           if (
             !Array.isArray(
               revealOrder
@@ -2498,7 +2468,9 @@
               )
               .map(
                 key =>
-                  revealOrder[key]
+                  revealOrder[
+                    key
+                  ]
               );
 
           }
@@ -3310,7 +3282,7 @@
 
 
     /* ==========================================
-       RESET
+       RESET / END
     ========================================== */
 
     resetRoomButton.addEventListener(
@@ -3426,6 +3398,213 @@
 
       }
     );
+
+
+
+    /* ==========================================
+       RECOVER ACTIVE ROOM AFTER REFRESH
+    ========================================== */
+
+    async function recoverCurrentRoom() {
+
+      statusEl.textContent =
+        "Checking for an active game...";
+
+
+      try {
+
+        /*
+          Step 1:
+          Ask Firebase which room is
+          currently active.
+        */
+
+        const currentRoomSnapshot =
+          await get(
+            ref(
+              db,
+              "currentRoom"
+            )
+          );
+
+
+        if (
+          !currentRoomSnapshot.exists() ||
+          !currentRoomSnapshot.val()
+        ) {
+
+          statusEl.textContent =
+            "No active game. Ready to create a new room.";
+
+
+          return;
+
+        }
+
+
+        const roomCode =
+          String(
+            currentRoomSnapshot.val()
+          );
+
+
+        /*
+          Step 2:
+          Make sure that room still
+          actually exists.
+        */
+
+        const roomSnapshot =
+          await get(
+            ref(
+              db,
+              "rooms/" +
+              roomCode
+            )
+          );
+
+
+        if (
+          !roomSnapshot.exists()
+        ) {
+
+          statusEl.textContent =
+            "An active room reference was found, but the room data no longer exists.";
+
+
+          return;
+
+        }
+
+
+        const room =
+          roomSnapshot.val();
+
+
+        /*
+          Step 3:
+          Restore Host variables.
+        */
+
+        stopExistingListeners();
+
+
+        currentRoomCode =
+          roomCode;
+
+
+        currentGameState =
+          room.state ||
+          "lobby";
+
+
+        revealInProgress =
+          false;
+
+
+        const teams =
+          room.teams ||
+          {};
+
+
+        currentJoinedCount =
+          Object.values(
+            teams
+          ).filter(
+            team =>
+              team &&
+              team.joined ===
+                true
+          ).length;
+
+
+        /*
+          Step 4:
+          Restore visible Host room.
+        */
+
+        roomCodeEl.textContent =
+          roomCode;
+
+
+        roomSection.hidden =
+          false;
+
+
+        joinedCountEl.textContent =
+          currentJoinedCount +
+          " / 10 teams joined";
+
+
+        nextQuestionButton.textContent =
+          "Next Question →";
+
+
+        finishQuizButton.textContent =
+          "Finish Quiz →";
+
+
+        playFinaleButton.textContent =
+          "▶ Play Finale";
+
+
+        statusEl.textContent =
+          "Reconnecting to Room " +
+          roomCode +
+          "...";
+
+
+        /*
+          Step 5:
+          Reconnect exactly the same
+          live Firebase listeners used
+          before the refresh.
+
+          The room listener will then
+          restore the correct buttons
+          for whichever state the game
+          is currently in.
+        */
+
+        updatePrimaryButtons();
+
+
+        watchTeams(
+          roomCode
+        );
+
+
+        watchRoomForAnswers(
+          roomCode
+        );
+
+
+      } catch (
+        error
+      ) {
+
+        console.error(
+          "Host recovery failed:",
+          error
+        );
+
+
+        statusEl.textContent =
+          "Could not recover the active game: " +
+          error.message;
+
+      }
+
+    }
+
+
+
+    /* ==========================================
+       RUN RECOVERY WHEN HOST PAGE OPENS
+    ========================================== */
+
+    recoverCurrentRoom();
+
 
   </script>
 
