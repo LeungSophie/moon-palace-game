@@ -3,11 +3,379 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Moon Palace Team</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: Arial, sans-serif;
+      background: #11152b;
+      color: white;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    input {
+      width: 180px;
+      font-size: 28px;
+      text-align: center;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      margin: 15px 0;
+      letter-spacing: 6px;
+    }
+
+    button {
+      font-size: 20px;
+      padding: 14px 18px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+    }
+
+    #teamGrid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .teamButton {
+      min-height: 70px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .available {
+      background: #ffffff;
+      color: #11152b;
+    }
+
+    .taken {
+      background: #555;
+      color: #bbb;
+      cursor: not-allowed;
+    }
+
+    #status {
+      margin-top: 18px;
+      font-size: 18px;
+      line-height: 1.4;
+    }
+
+    #selectedTeam {
+      font-size: 42px;
+      margin-top: 25px;
+      font-weight: bold;
+    }
+  </style>
 </head>
 
 <body>
-  <h1>🐰 Moon Palace Team</h1>
-  <p>Team phone page working.</p>
+
+  <section id="joinSection">
+    <h1>🌙 Moon Palace Adventure</h1>
+    <p>Enter Room Code</p>
+
+    <input
+      id="roomCodeInput"
+      type="text"
+      inputmode="numeric"
+      maxlength="4"
+      placeholder="0000"
+    >
+
+    <br>
+
+    <button id="joinRoomButton">
+      Join Room
+    </button>
+
+    <p id="status"></p>
+  </section>
+
+
+  <section id="teamSection" hidden>
+    <h1>Choose Your Team</h1>
+    <p id="roomDisplay"></p>
+
+    <div id="teamGrid"></div>
+  </section>
+
+
+  <section id="waitingSection" hidden>
+    <h1>🌙 Connected</h1>
+
+    <div id="selectedTeam"></div>
+
+    <p>Waiting for the host to start the adventure...</p>
+  </section>
+
+
+  <script type="module">
+    import {
+      db,
+      ref,
+      get,
+      set,
+      onValue
+    } from "./firebase.js";
+
+
+    const joinSection =
+      document.getElementById("joinSection");
+
+    const teamSection =
+      document.getElementById("teamSection");
+
+    const waitingSection =
+      document.getElementById("waitingSection");
+
+    const roomCodeInput =
+      document.getElementById("roomCodeInput");
+
+    const joinRoomButton =
+      document.getElementById("joinRoomButton");
+
+    const statusEl =
+      document.getElementById("status");
+
+    const roomDisplay =
+      document.getElementById("roomDisplay");
+
+    const teamGrid =
+      document.getElementById("teamGrid");
+
+    const selectedTeamEl =
+      document.getElementById("selectedTeam");
+
+
+    let currentRoomCode = null;
+    let selectedTeamNumber = null;
+
+
+    joinRoomButton.addEventListener(
+      "click",
+      async () => {
+
+        const roomCode =
+          roomCodeInput.value.trim();
+
+        if (!/^\d{4}$/.test(roomCode)) {
+          statusEl.textContent =
+            "Please enter a valid 4-digit room code.";
+          return;
+        }
+
+        statusEl.textContent =
+          "Checking room...";
+
+        try {
+
+          const roomSnapshot =
+            await get(
+              ref(db, "rooms/" + roomCode)
+            );
+
+          if (!roomSnapshot.exists()) {
+
+            statusEl.textContent =
+              "Room not found.";
+
+            return;
+          }
+
+          currentRoomCode =
+            roomCode;
+
+          joinSection.hidden =
+            true;
+
+          teamSection.hidden =
+            false;
+
+          roomDisplay.textContent =
+            "Room " + roomCode;
+
+          startWatchingTeams();
+
+        } catch (error) {
+
+          console.error(error);
+
+          statusEl.textContent =
+            "Error: " + error.message;
+
+        }
+      }
+    );
+
+
+    function startWatchingTeams() {
+
+      const teamsRef =
+        ref(
+          db,
+          "rooms/" +
+          currentRoomCode +
+          "/teams"
+        );
+
+      onValue(
+        teamsRef,
+        (snapshot) => {
+
+          const teams =
+            snapshot.val() || {};
+
+          renderTeams(teams);
+
+        }
+      );
+    }
+
+
+    function renderTeams(teams) {
+
+      teamGrid.innerHTML = "";
+
+      for (
+        let teamNumber = 1;
+        teamNumber <= 10;
+        teamNumber++
+      ) {
+
+        const button =
+          document.createElement("button");
+
+        button.className =
+          "teamButton";
+
+        const teamKey =
+          "team" + teamNumber;
+
+        const isTaken =
+          teams[teamKey] &&
+          teams[teamKey].joined === true;
+
+
+        if (isTaken) {
+
+          button.textContent =
+            "Team " +
+            teamNumber +
+            " — Taken";
+
+          button.classList.add(
+            "taken"
+          );
+
+          button.disabled =
+            true;
+
+        } else {
+
+          button.textContent =
+            "Team " + teamNumber;
+
+          button.classList.add(
+            "available"
+          );
+
+          button.addEventListener(
+            "click",
+            () =>
+              claimTeam(
+                teamNumber
+              )
+          );
+        }
+
+        teamGrid.appendChild(
+          button
+        );
+      }
+    }
+
+
+    async function claimTeam(
+      teamNumber
+    ) {
+
+      if (
+        !currentRoomCode ||
+        selectedTeamNumber
+      ) {
+        return;
+      }
+
+      const teamRef =
+        ref(
+          db,
+          "rooms/" +
+          currentRoomCode +
+          "/teams/team" +
+          teamNumber
+        );
+
+      try {
+
+        const snapshot =
+          await get(teamRef);
+
+        if (
+          snapshot.exists() &&
+          snapshot.val().joined === true
+        ) {
+
+          alert(
+            "That team has already been taken. Please choose another team."
+          );
+
+          return;
+        }
+
+        await set(
+          teamRef,
+          {
+            joined: true,
+            joinedAt: Date.now(),
+            quizScore: 0,
+            previousScore: 0
+          }
+        );
+
+        selectedTeamNumber =
+          teamNumber;
+
+        teamSection.hidden =
+          true;
+
+        waitingSection.hidden =
+          false;
+
+        selectedTeamEl.textContent =
+          "TEAM " + teamNumber;
+
+      } catch (error) {
+
+        console.error(error);
+
+        alert(
+          "Unable to claim team: " +
+          error.message
+        );
+      }
+    }
+
+  </script>
+
 </body>
 </html>
