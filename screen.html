@@ -36,7 +36,10 @@
       display: block;
     }
 
-    /* LOBBY */
+
+    /* =========================
+       LOBBY
+    ========================== */
 
     #roomCode {
       font-size: 92px;
@@ -82,7 +85,10 @@
       margin-top: 30px;
     }
 
-    /* PHOTO TEST */
+
+    /* =========================
+       PHOTO TEST
+    ========================== */
 
     #photoTestSection {
       margin-top: 40px;
@@ -109,7 +115,10 @@
       font-size: 20px;
     }
 
-    /* INTRO */
+
+    /* =========================
+       INTRO
+    ========================== */
 
     #introScreen {
       padding-top: 60px;
@@ -136,7 +145,10 @@
       line-height: 1.5;
     }
 
-    /* QUESTIONS */
+
+    /* =========================
+       QUESTION
+    ========================== */
 
     #questionScreen {
       padding-top: 20px;
@@ -192,6 +204,12 @@
       background: rgba(255,255,255,0.09);
       border: 2px solid rgba(255,255,255,0.18);
       text-align: left;
+
+      transition:
+        opacity 0.35s ease,
+        transform 0.35s ease,
+        background 0.35s ease,
+        border 0.35s ease;
     }
 
     .answerLetter {
@@ -213,10 +231,30 @@
       margin-top: 5px;
     }
 
+
+    /* CORRECT ANSWER REVEAL */
+
+    .answerCard.correctAnswer {
+      border: 5px solid #8ff0a4;
+      background: rgba(90,210,120,0.30);
+      transform: scale(1.025);
+      opacity: 1;
+    }
+
+    .answerCard.dimmedAnswer {
+      opacity: 0.28;
+    }
+
+
     #answeredStatus {
       font-size: 28px;
       margin-top: 24px;
     }
+
+
+    /* =========================
+       MOON POWER
+    ========================== */
 
     #moonPowerArea {
       margin: 24px auto 0;
@@ -247,28 +285,66 @@
       margin-top: 8px;
       font-size: 24px;
     }
+
+
+    /* =========================
+       REVEAL MESSAGE
+    ========================== */
+
+    #revealMessage {
+      display: none;
+      margin-top: 18px;
+      font-size: 32px;
+      font-weight: bold;
+      color: #8ff0a4;
+    }
+
+    #revealMessage.visible {
+      display: block;
+    }
+
   </style>
 </head>
 
+
 <body>
 
-  <!-- LOBBY -->
-  <section id="lobbyScreen" class="screen active">
 
-    <h1>🌙 Moon Palace Adventure</h1>
-    <h2>月宮大冒險</h2>
+  <!-- =========================
+       LOBBY SCREEN
+  ========================== -->
 
-    <div id="roomCode">----</div>
+  <section
+    id="lobbyScreen"
+    class="screen active"
+  >
+
+    <h1>
+      🌙 Moon Palace Adventure
+    </h1>
+
+    <h2>
+      月宮大冒險
+    </h2>
+
+
+    <div id="roomCode">
+      ----
+    </div>
+
 
     <div id="joinedCount">
       Waiting for teams...
     </div>
 
+
     <div id="teamGrid"></div>
+
 
     <div id="status">
       Waiting for host to create a room...
     </div>
+
 
     <section id="photoTestSection">
 
@@ -276,11 +352,13 @@
         Local Team Photo Test
       </div>
 
+
       <img
         id="photoTest"
         alt="Local team photo test"
         hidden
       >
+
 
       <div id="photoMessage">
         Waiting for a locally stored team photo...
@@ -291,12 +369,20 @@
   </section>
 
 
-  <!-- INTRO -->
-  <section id="introScreen" class="screen">
+
+  <!-- =========================
+       INTRO SCREEN
+  ========================== -->
+
+  <section
+    id="introScreen"
+    class="screen"
+  >
 
     <div id="introTitle">
       🌙 Moon Palace Adventure
     </div>
+
 
     <div id="introPlaceholder">
       INTRO VIDEO / SLIDESHOW
@@ -307,55 +393,122 @@
   </section>
 
 
-  <!-- QUESTIONS -->
-  <section id="questionScreen" class="screen">
+
+  <!-- =========================
+       QUESTION SCREEN
+  ========================== -->
+
+  <section
+    id="questionScreen"
+    class="screen"
+  >
 
     <div id="questionNumber">
       QUESTION 1 / 10
     </div>
 
+
     <div id="questionChinese"></div>
+
 
     <div id="questionEnglish"></div>
 
-    <div id="questionImageArea" hidden>
+
+    <div
+      id="questionImageArea"
+      hidden
+    >
+
       <img
         id="questionImage"
         alt="Question diagram"
       >
+
     </div>
+
 
     <div id="answerGrid">
 
-      <div class="answerCard" id="answerA">
-        <div class="answerLetter">A</div>
+
+      <div
+        class="answerCard"
+        id="answerA"
+      >
+
+        <div class="answerLetter">
+          A
+        </div>
+
         <div class="answerChinese"></div>
+
         <div class="answerEnglish"></div>
+
       </div>
 
-      <div class="answerCard" id="answerB">
-        <div class="answerLetter">B</div>
+
+
+      <div
+        class="answerCard"
+        id="answerB"
+      >
+
+        <div class="answerLetter">
+          B
+        </div>
+
         <div class="answerChinese"></div>
+
         <div class="answerEnglish"></div>
+
       </div>
 
-      <div class="answerCard" id="answerC">
-        <div class="answerLetter">C</div>
+
+
+      <div
+        class="answerCard"
+        id="answerC"
+      >
+
+        <div class="answerLetter">
+          C
+        </div>
+
         <div class="answerChinese"></div>
+
         <div class="answerEnglish"></div>
+
       </div>
 
-      <div class="answerCard" id="answerD">
-        <div class="answerLetter">D</div>
+
+
+      <div
+        class="answerCard"
+        id="answerD"
+      >
+
+        <div class="answerLetter">
+          D
+        </div>
+
         <div class="answerChinese"></div>
+
         <div class="answerEnglish"></div>
+
       </div>
+
 
     </div>
+
+
+    <div id="revealMessage">
+      ✓ Correct Answer Revealed
+    </div>
+
 
     <div id="answeredStatus">
       0 / 0 teams answered
     </div>
+
 
     <div id="moonPowerArea">
 
@@ -363,9 +516,13 @@
         🌕 Moon Power
       </div>
 
+
       <div id="moonPowerTrack">
+
         <div id="moonPowerFill"></div>
+
       </div>
+
 
       <div id="moonPowerText">
         0 / 1500
@@ -376,6 +533,7 @@
   </section>
 
 
+
   <script type="module">
 
     import {
@@ -384,13 +542,16 @@
       onValue
     } from "./firebase.js";
 
+
     import {
       getTeamPhoto
     } from "./local-media.js";
 
+
     import {
       questions
     } from "./questions.js";
+
 
 
     const photoChannel =
@@ -400,97 +561,256 @@
 
 
     const lobbyScreen =
-      document.getElementById("lobbyScreen");
+      document.getElementById(
+        "lobbyScreen"
+      );
+
 
     const introScreen =
-      document.getElementById("introScreen");
+      document.getElementById(
+        "introScreen"
+      );
+
 
     const questionScreen =
-      document.getElementById("questionScreen");
+      document.getElementById(
+        "questionScreen"
+      );
 
 
     const roomCodeEl =
-      document.getElementById("roomCode");
+      document.getElementById(
+        "roomCode"
+      );
+
 
     const joinedCountEl =
-      document.getElementById("joinedCount");
+      document.getElementById(
+        "joinedCount"
+      );
+
 
     const teamGrid =
-      document.getElementById("teamGrid");
+      document.getElementById(
+        "teamGrid"
+      );
+
 
     const statusEl =
-      document.getElementById("status");
+      document.getElementById(
+        "status"
+      );
+
 
     const photoTest =
-      document.getElementById("photoTest");
+      document.getElementById(
+        "photoTest"
+      );
+
 
     const photoMessage =
-      document.getElementById("photoMessage");
+      document.getElementById(
+        "photoMessage"
+      );
 
 
     const questionNumberEl =
-      document.getElementById("questionNumber");
+      document.getElementById(
+        "questionNumber"
+      );
+
 
     const questionChineseEl =
-      document.getElementById("questionChinese");
+      document.getElementById(
+        "questionChinese"
+      );
+
 
     const questionEnglishEl =
-      document.getElementById("questionEnglish");
+      document.getElementById(
+        "questionEnglish"
+      );
+
 
     const questionImageArea =
-      document.getElementById("questionImageArea");
+      document.getElementById(
+        "questionImageArea"
+      );
+
 
     const questionImage =
-      document.getElementById("questionImage");
+      document.getElementById(
+        "questionImage"
+      );
+
 
     const answeredStatus =
-      document.getElementById("answeredStatus");
+      document.getElementById(
+        "answeredStatus"
+      );
+
 
     const moonPowerFill =
-      document.getElementById("moonPowerFill");
+      document.getElementById(
+        "moonPowerFill"
+      );
+
 
     const moonPowerText =
-      document.getElementById("moonPowerText");
+      document.getElementById(
+        "moonPowerText"
+      );
 
 
-    let activeRoomCode = null;
+    const revealMessage =
+      document.getElementById(
+        "revealMessage"
+      );
 
 
-    function showScreen(screenName) {
+    let activeRoomCode =
+      null;
 
-      lobbyScreen.classList.remove("active");
-      introScreen.classList.remove("active");
-      questionScreen.classList.remove("active");
 
-      if (screenName === "lobby") {
-        lobbyScreen.classList.add("active");
+    let stopRoomListener =
+      null;
+
+
+    let stopTeamsListener =
+      null;
+
+
+
+    /* =========================
+       SCREEN SWITCHING
+    ========================== */
+
+    function showScreen(
+      screenName
+    ) {
+
+      lobbyScreen.classList.remove(
+        "active"
+      );
+
+      introScreen.classList.remove(
+        "active"
+      );
+
+      questionScreen.classList.remove(
+        "active"
+      );
+
+
+      if (
+        screenName === "lobby"
+      ) {
+
+        lobbyScreen.classList.add(
+          "active"
+        );
+
       }
 
-      if (screenName === "intro") {
-        introScreen.classList.add("active");
+
+      if (
+        screenName === "intro"
+      ) {
+
+        introScreen.classList.add(
+          "active"
+        );
+
       }
 
-      if (screenName === "questions") {
-        questionScreen.classList.add("active");
+
+      if (
+        screenName === "questions"
+      ) {
+
+        questionScreen.classList.add(
+          "active"
+        );
+
       }
+
     }
 
 
-    function renderQuestion(questionNumber, roomData) {
+
+    /* =========================
+       CLEAR REVEAL STYLES
+    ========================== */
+
+    function clearAnswerRevealStyles() {
+
+      const letters =
+        ["A", "B", "C", "D"];
+
+
+      for (
+        const letter of letters
+      ) {
+
+        const card =
+          document.getElementById(
+            "answer" +
+            letter
+          );
+
+
+        card.classList.remove(
+          "correctAnswer"
+        );
+
+
+        card.classList.remove(
+          "dimmedAnswer"
+        );
+
+      }
+
+
+      revealMessage.classList.remove(
+        "visible"
+      );
+
+    }
+
+
+
+    /* =========================
+       NORMAL QUESTION
+    ========================== */
+
+    function renderQuestion(
+      questionNumber,
+      roomData
+    ) {
+
+      clearAnswerRevealStyles();
+
 
       const question =
         questions.find(
-          q => q.id === questionNumber
+          q =>
+            q.id ===
+            questionNumber
         );
 
+
       if (!question) {
+
         questionChineseEl.textContent =
           "Question not found";
+
 
         questionEnglishEl.textContent =
           "";
 
+
         return;
+
       }
 
 
@@ -508,61 +828,85 @@
         question.english;
 
 
+
       const letters =
         ["A", "B", "C", "D"];
 
 
-      for (const letter of letters) {
+      for (
+        const letter of letters
+      ) {
 
         const card =
           document.getElementById(
-            "answer" + letter
+            "answer" +
+            letter
           );
+
 
         card.querySelector(
           ".answerChinese"
         ).textContent =
-          question.options[letter].chinese;
+          question.options[
+            letter
+          ].chinese;
+
 
         card.querySelector(
           ".answerEnglish"
         ).textContent =
-          question.options[letter].english;
+          question.options[
+            letter
+          ].english;
+
       }
 
 
-      if (question.image) {
+
+      if (
+        question.image
+      ) {
 
         questionImage.src =
           question.image;
 
+
         questionImageArea.hidden =
           false;
+
 
       } else {
 
         questionImageArea.hidden =
           true;
+
       }
 
 
+
       const moonPower =
-        roomData.moonPower || 0;
+        roomData.moonPower ||
+        0;
 
 
       const target =
-        roomData.targetMoonPower || 1500;
+        roomData.targetMoonPower ||
+        1500;
 
 
       const percent =
         Math.min(
           100,
-          (moonPower / target) * 100
+          (
+            moonPower /
+            target
+          ) * 100
         );
 
 
       moonPowerFill.style.width =
-        percent + "%";
+        percent +
+        "%";
 
 
       moonPowerText.textContent =
@@ -571,44 +915,203 @@
         target;
 
 
+
+      /*
+        LIVE ANSWER COUNTER
+      */
+
       const teams =
-  roomData.teams || {};
-
-const activeTeamKeys =
-  Object.keys(teams).filter(
-    teamKey =>
-      teams[teamKey] &&
-      teams[teamKey].joined === true
-  );
-
-const activeTeamCount =
-  activeTeamKeys.length;
+        roomData.teams ||
+        {};
 
 
-const questionKey =
-  "q" + questionNumber;
-
-const questionAnswers =
-  (
-    roomData.answers &&
-    roomData.answers[questionKey]
-  ) || {};
-
-
-const answeredCount =
-  activeTeamKeys.filter(
-    teamKey =>
-      questionAnswers[teamKey]
-  ).length;
+      const activeTeamKeys =
+        Object.keys(
+          teams
+        ).filter(
+          teamKey =>
+            teams[teamKey] &&
+            teams[teamKey]
+              .joined === true
+        );
 
 
-answeredStatus.textContent =
-  answeredCount +
-  " / " +
-  activeTeamCount +
-  " teams answered";
+      const questionKey =
+        "q" +
+        questionNumber;
+
+
+      const questionAnswers =
+        (
+          roomData.answers &&
+          roomData.answers[
+            questionKey
+          ]
+        ) || {};
+
+
+      const answeredCount =
+        activeTeamKeys.filter(
+          teamKey =>
+            questionAnswers[
+              teamKey
+            ]
+        ).length;
+
+
+      answeredStatus.textContent =
+        answeredCount +
+        " / " +
+        activeTeamKeys.length +
+        " teams answered";
+
     }
 
+
+
+    /* =========================
+       ANSWER REVEAL
+    ========================== */
+
+    function renderAnswerReveal(
+      questionNumber,
+      roomData
+    ) {
+
+      /*
+        First draw the normal question.
+      */
+
+      renderQuestion(
+        questionNumber,
+        roomData
+      );
+
+
+      const question =
+        questions.find(
+          q =>
+            q.id ===
+            questionNumber
+        );
+
+
+      if (!question) {
+        return;
+      }
+
+
+      const correctAnswer =
+        question.correctAnswer;
+
+
+      const letters =
+        ["A", "B", "C", "D"];
+
+
+      /*
+        Highlight correct answer
+        and dim the others.
+      */
+
+      for (
+        const letter of letters
+      ) {
+
+        const card =
+          document.getElementById(
+            "answer" +
+            letter
+          );
+
+
+        if (
+          letter ===
+          correctAnswer
+        ) {
+
+          card.classList.add(
+            "correctAnswer"
+          );
+
+
+        } else {
+
+          card.classList.add(
+            "dimmedAnswer"
+          );
+
+        }
+
+      }
+
+
+      revealMessage.classList.add(
+        "visible"
+      );
+
+
+
+      /*
+        COUNT CORRECT TEAMS
+      */
+
+      const teams =
+        roomData.teams ||
+        {};
+
+
+      const activeTeamKeys =
+        Object.keys(
+          teams
+        ).filter(
+          teamKey =>
+            teams[teamKey] &&
+            teams[teamKey]
+              .joined === true
+        );
+
+
+      const questionKey =
+        "q" +
+        questionNumber;
+
+
+      const answers =
+        (
+          roomData.answers &&
+          roomData.answers[
+            questionKey
+          ]
+        ) || {};
+
+
+      const correctCount =
+        activeTeamKeys.filter(
+          teamKey =>
+            answers[
+              teamKey
+            ] &&
+            answers[
+              teamKey
+            ].answer ===
+              correctAnswer
+        ).length;
+
+
+      answeredStatus.textContent =
+        correctCount +
+        " / " +
+        activeTeamKeys.length +
+        " teams correct";
+
+    }
+
+
+
+    /* =========================
+       WATCH CURRENT ROOM
+    ========================== */
 
     const currentRoomRef =
       ref(
@@ -625,34 +1128,78 @@ answeredStatus.textContent =
           snapshot.val();
 
 
+        /*
+          Stop listeners from any
+          previous room.
+        */
+
+        if (
+          stopRoomListener
+        ) {
+
+          stopRoomListener();
+
+          stopRoomListener =
+            null;
+
+        }
+
+
+        if (
+          stopTeamsListener
+        ) {
+
+          stopTeamsListener();
+
+          stopTeamsListener =
+            null;
+
+        }
+
+
         activeRoomCode =
-          roomCode || null;
+          roomCode ||
+          null;
 
 
-        if (!roomCode) {
 
-          showScreen("lobby");
+        if (
+          !roomCode
+        ) {
+
+          showScreen(
+            "lobby"
+          );
+
 
           roomCodeEl.textContent =
             "----";
 
+
           joinedCountEl.textContent =
             "Waiting for teams...";
+
 
           statusEl.textContent =
             "Waiting for host to create a room...";
 
+
           teamGrid.innerHTML =
             "";
+
 
           photoTest.hidden =
             true;
 
+
           photoMessage.textContent =
             "Waiting for a locally stored team photo...";
 
+
           return;
+
         }
+
 
 
         roomCodeEl.textContent =
@@ -676,7 +1223,14 @@ answeredStatus.textContent =
     );
 
 
-    function watchRoom(roomCode) {
+
+    /* =========================
+       WATCH GAME STATE
+    ========================== */
+
+    function watchRoom(
+      roomCode
+    ) {
 
       const roomRef =
         ref(
@@ -686,61 +1240,100 @@ answeredStatus.textContent =
         );
 
 
-      onValue(
-        roomRef,
-        (snapshot) => {
+      stopRoomListener =
+        onValue(
+          roomRef,
+          (snapshot) => {
 
-          const room =
-            snapshot.val();
-
-
-          if (!room) {
-            return;
-          }
+            const room =
+              snapshot.val();
 
 
-          const state =
-            room.state || "lobby";
+            if (!room) {
+              return;
+            }
 
 
-          if (state === "lobby") {
+            const state =
+              room.state ||
+              "lobby";
 
-            showScreen(
+
+            if (
+              state ===
               "lobby"
-            );
+            ) {
 
-          }
+              showScreen(
+                "lobby"
+              );
+
+            }
 
 
-          if (state === "intro") {
-
-            showScreen(
+            if (
+              state ===
               "intro"
-            );
+            ) {
 
-          }
+              showScreen(
+                "intro"
+              );
+
+            }
 
 
-          if (state === "questions") {
-
-            showScreen(
+            if (
+              state ===
               "questions"
-            );
+            ) {
+
+              showScreen(
+                "questions"
+              );
 
 
-            renderQuestion(
-              room.currentQuestion || 1,
-              room
-            );
+              renderQuestion(
+                room.currentQuestion ||
+                1,
+                room
+              );
+
+            }
+
+
+            if (
+              state ===
+              "reveal"
+            ) {
+
+              showScreen(
+                "questions"
+              );
+
+
+              renderAnswerReveal(
+                room.currentQuestion ||
+                1,
+                room
+              );
+
+            }
 
           }
+        );
 
-        }
-      );
     }
 
 
-    function watchTeams(roomCode) {
+
+    /* =========================
+       WATCH TEAMS
+    ========================== */
+
+    function watchTeams(
+      roomCode
+    ) {
 
       const teamsRef =
         ref(
@@ -751,100 +1344,121 @@ answeredStatus.textContent =
         );
 
 
-      onValue(
-        teamsRef,
-        async (snapshot) => {
+      stopTeamsListener =
+        onValue(
+          teamsRef,
+          async (
+            snapshot
+          ) => {
 
-          const teams =
-            snapshot.val() || {};
-
-
-          teamGrid.innerHTML =
-            "";
-
-
-          let joinedCount =
-            0;
+            const teams =
+              snapshot.val() ||
+              {};
 
 
-          for (
-            let teamNumber = 1;
-            teamNumber <= 10;
-            teamNumber++
-          ) {
-
-            const teamKey =
-              "team" + teamNumber;
+            teamGrid.innerHTML =
+              "";
 
 
-            const joined =
-              teams[teamKey] &&
-              teams[teamKey].joined === true;
+            let joinedCount =
+              0;
 
 
-            if (joined) {
-              joinedCount++;
+            for (
+              let teamNumber = 1;
+              teamNumber <= 10;
+              teamNumber++
+            ) {
+
+              const teamKey =
+                "team" +
+                teamNumber;
+
+
+              const joined =
+                teams[
+                  teamKey
+                ] &&
+                teams[
+                  teamKey
+                ].joined === true;
+
+
+              if (
+                joined
+              ) {
+
+                joinedCount++;
+
+              }
+
+
+              const card =
+                document.createElement(
+                  "div"
+                );
+
+
+              card.className =
+                "teamCard " +
+                (
+                  joined
+                    ? "joined"
+                    : "waiting"
+                );
+
+
+              card.textContent =
+                joined
+                  ? "Team " +
+                    teamNumber +
+                    " ✓"
+                  : "Team " +
+                    teamNumber;
+
+
+              teamGrid.appendChild(
+                card
+              );
+
             }
 
 
-            const card =
-              document.createElement(
-                "div"
-              );
+            joinedCountEl.textContent =
+              joinedCount +
+              " / 10 teams joined";
 
 
-            card.className =
-              "teamCard " +
-              (
-                joined
-                  ? "joined"
-                  : "waiting"
-              );
+            if (
+              joinedCount === 10
+            ) {
+
+              statusEl.textContent =
+                "All teams are ready ✓";
+
+            } else {
+
+              statusEl.textContent =
+                "Waiting for teams to join...";
+
+            }
 
 
-            card.textContent =
-              joined
-                ? "Team " +
-                  teamNumber +
-                  " ✓"
-                : "Team " +
-                  teamNumber;
-
-
-            teamGrid.appendChild(
-              card
+            await loadFirstAvailableTeamPhoto(
+              roomCode,
+              teams
             );
 
           }
+        );
 
-
-          joinedCountEl.textContent =
-            joinedCount +
-            " / 10 teams joined";
-
-
-          if (joinedCount === 10) {
-
-            statusEl.textContent =
-              "All teams are ready ✓";
-
-          } else {
-
-            statusEl.textContent =
-              "Waiting for teams to join...";
-
-          }
-
-
-          await loadFirstAvailableTeamPhoto(
-            roomCode,
-            teams
-          );
-
-        }
-      );
     }
 
+
+
+    /* =========================
+       LOCAL PHOTO
+    ========================== */
 
     async function loadFirstAvailableTeamPhoto(
       roomCode,
@@ -866,16 +1480,25 @@ answeredStatus.textContent =
       ) {
 
         const teamKey =
-          "team" + teamNumber;
+          "team" +
+          teamNumber;
 
 
         const joined =
-          teams[teamKey] &&
-          teams[teamKey].joined === true;
+          teams[
+            teamKey
+          ] &&
+          teams[
+            teamKey
+          ].joined === true;
 
 
-        if (!joined) {
+        if (
+          !joined
+        ) {
+
           continue;
+
         }
 
 
@@ -893,7 +1516,9 @@ answeredStatus.textContent =
             );
 
 
-          if (photo) {
+          if (
+            photo
+          ) {
 
             const photoURL =
               URL.createObjectURL(
@@ -918,7 +1543,10 @@ answeredStatus.textContent =
 
           }
 
-        } catch (error) {
+
+        } catch (
+          error
+        ) {
 
           console.error(
             "Could not load local team photo:",
@@ -936,9 +1564,16 @@ answeredStatus.textContent =
     }
 
 
+
+    /* =========================
+       PHOTO BROADCAST
+    ========================== */
+
     photoChannel.addEventListener(
       "message",
-      async (event) => {
+      async (
+        event
+      ) => {
 
         const data =
           event.data;
@@ -946,9 +1581,12 @@ answeredStatus.textContent =
 
         if (
           !data ||
-          data.type !== "photo-updated"
+          data.type !==
+            "photo-updated"
         ) {
+
           return;
+
         }
 
 
@@ -956,7 +1594,9 @@ answeredStatus.textContent =
           data.roomCode !==
           activeRoomCode
         ) {
+
           return;
+
         }
 
 
@@ -983,8 +1623,12 @@ answeredStatus.textContent =
             );
 
 
-          if (!photo) {
+          if (
+            !photo
+          ) {
+
             return;
+
           }
 
 
@@ -1007,7 +1651,9 @@ answeredStatus.textContent =
             teamNumber;
 
 
-        } catch (error) {
+        } catch (
+          error
+        ) {
 
           console.error(
             "Could not update TV photo:",
