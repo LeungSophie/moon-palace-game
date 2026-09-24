@@ -143,6 +143,10 @@
       getTeamPhoto
     } from "./local-media.js";
 
+    const photoChannel =
+  new BroadcastChannel(
+    "moon-palace-photos"
+  );
 
     const roomCodeEl =
       document.getElementById("roomCode");
@@ -399,7 +403,77 @@
         "No local team photo found yet.";
 
     }
+photoChannel.addEventListener(
+  "message",
+  async (event) => {
 
+    const data =
+      event.data;
+
+    if (
+      !data ||
+      data.type !== "photo-updated"
+    ) {
+      return;
+    }
+
+    if (
+      data.roomCode !==
+      activeRoomCode
+    ) {
+      return;
+    }
+
+    const teamNumber =
+      Number(
+        data.teamKey.replace(
+          "team",
+          ""
+        )
+      );
+
+    const photoStorageKey =
+      data.roomCode +
+      "-" +
+      data.teamKey;
+
+    try {
+
+      const photo =
+        await getTeamPhoto(
+          photoStorageKey
+        );
+
+      if (!photo) {
+        return;
+      }
+
+      const photoURL =
+        URL.createObjectURL(
+          photo
+        );
+
+      photoTest.src =
+        photoURL;
+
+      photoTest.hidden =
+        false;
+
+      photoMessage.textContent =
+        "Loaded local photo for Team " +
+        teamNumber;
+
+    } catch (error) {
+
+      console.error(
+        "Could not update TV photo:",
+        error
+      );
+
+    }
+  }
+);
+    
   </script>
 
 </body>
