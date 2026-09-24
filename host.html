@@ -165,6 +165,10 @@
     Skip Intro → Start Questions
   </button>
 
+  <button id="revealButton" disabled>
+    Reveal Answer Now
+  </button>
+
 </div>
 
   </section>
@@ -215,6 +219,9 @@ const photoChannel =
 
 const playIntroButton =
   document.getElementById("playIntroButton");
+
+    const revealButton =
+  document.getElementById("revealButton");
     
     const statusEl =
       document.getElementById("status");
@@ -222,7 +229,8 @@ const playIntroButton =
 
     let currentRoomCode = null;
 
-
+let revealInProgress = false;
+    
     function generateRoomCode() {
       return Math.floor(
         1000 + Math.random() * 9000
@@ -307,6 +315,116 @@ const playIntroButton =
       );
     }
 
+    function watchRoomForAnswers() {
+
+  const roomRef =
+    ref(
+      db,
+      "rooms/" +
+      currentRoomCode
+    );
+
+  onValue(
+    roomRef,
+    async (snapshot) => {
+
+      const room =
+        snapshot.val();
+
+      if (!room) {
+        return;
+      }
+
+
+      const state =
+        room.state || "lobby";
+
+
+      if (state !== "questions") {
+
+        revealButton.disabled =
+          true;
+
+        revealInProgress =
+          false;
+
+        return;
+      }
+
+
+      revealButton.disabled =
+        false;
+
+
+      const teams =
+        room.teams || {};
+
+      const activeTeamKeys =
+        Object.keys(teams).filter(
+          teamKey =>
+            teams[teamKey] &&
+            teams[teamKey].joined === true
+        );
+
+
+      const activeTeamCount =
+        activeTeamKeys.length;
+
+
+      const questionNumber =
+        room.currentQuestion || 1;
+
+
+      const questionKey =
+        "q" + questionNumber;
+
+
+      const answers =
+        (
+          room.answers &&
+          room.answers[questionKey]
+        ) || {};
+
+
+      const answeredCount =
+        activeTeamKeys.filter(
+          teamKey =>
+            answers[teamKey]
+        ).length;
+
+
+      statusEl.textContent =
+        "Question " +
+        questionNumber +
+        ": " +
+        answeredCount +
+        " / " +
+        activeTeamCount +
+        " answered";
+
+
+      /*
+        AUTOMATIC REVEAL
+        only when every active team
+        has answered.
+      */
+
+      if (
+        activeTeamCount > 0 &&
+        answeredCount >= activeTeamCount &&
+        !revealInProgress
+      ) {
+
+        revealInProgress =
+          true;
+
+        await revealCurrentQuestion();
+
+      }
+
+    }
+  );
+}
 
     async function renderTeams(teams) {
 
