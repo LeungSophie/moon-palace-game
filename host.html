@@ -92,9 +92,15 @@
 
   <h1>🌙 Moon Palace Host</h1>
 
+  <div style="display:flex; gap:12px; flex-wrap:wrap;">
   <button id="createRoomButton">
     Create New Game Room
   </button>
+
+  <button id="resetRoomButton">
+    Reset / End Current Game
+  </button>
+</div>
 
   <section id="roomSection" hidden>
 
@@ -131,6 +137,9 @@
 
     const createRoomButton =
       document.getElementById("createRoomButton");
+
+    const resetRoomButton =
+  document.getElementById("resetRoomButton");
 
     const roomSection =
       document.getElementById("roomSection");
@@ -429,7 +438,58 @@
 
       }
     );
+resetRoomButton.addEventListener(
+  "click",
+  async () => {
 
+    const confirmed =
+      confirm(
+        "End the current game and return the TV to the waiting screen?"
+      );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+
+      await set(
+        ref(db, "currentRoom"),
+        null
+      );
+
+      currentRoomCode = null;
+
+      roomSection.hidden =
+        true;
+
+      roomCodeEl.textContent =
+        "----";
+
+      joinedCountEl.textContent =
+        "0 / 10 teams joined";
+
+      teamList.innerHTML =
+        "";
+
+      startButton.disabled =
+        true;
+
+      statusEl.textContent =
+        "Current game ended. Ready to create a new room.";
+
+    } catch (error) {
+
+      console.error(error);
+
+      statusEl.textContent =
+        "❌ Error: " + error.message;
+
+    }
+  }
+);
+
+    
   </script>
 
 </body>
