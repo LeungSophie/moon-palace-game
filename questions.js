@@ -17,23 +17,23 @@ export const questions = [
       },
 
       B: {
+        chinese: "28.3 天",
+        english: "28.3 days"
+      },
+
+      C: {
         chinese: "28.5 天",
         english: "28.5 days"
       },
 
-      C: {
+      D: {
         chinese: "29.5 天",
         english: "29.5 days"
-      },
-
-      D: {
-        chinese: "30.5 天",
-        english: "30.5 days"
       }
 
     },
 
-    correctAnswer: "C",
+    correctAnswer: "D",
 
     image: null,
     audio: null
@@ -172,13 +172,13 @@ export const questions = [
     options: {
 
       A: {
-        chinese: "右邊",
-        english: "Right side"
+        chinese: "左邊",
+        english: "Left side"
       },
 
       B: {
-        chinese: "左邊",
-        english: "Left side"
+        chinese: "右邊",
+        english: "Right side"
       },
 
       C: {
@@ -193,7 +193,7 @@ export const questions = [
 
     },
 
-    correctAnswer: "B",
+    correctAnswer: "A",
 
     image: null,
     audio: null
