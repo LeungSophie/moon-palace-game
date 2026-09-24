@@ -27,6 +27,12 @@
       cursor: pointer;
     }
 
+    #topButtons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
     #roomCode {
       font-size: 48px;
       font-weight: bold;
@@ -42,9 +48,10 @@
 
     .teamRow {
       display: grid;
-      grid-template-columns: 120px 130px 1fr;
+      grid-template-columns: 110px 125px 170px 1fr;
       align-items: center;
       gap: 12px;
+
       padding: 12px;
       background: rgba(255,255,255,0.07);
       border-radius: 10px;
@@ -64,11 +71,36 @@
     }
 
     input[type="number"] {
-      width: 140px;
+      width: 135px;
       font-size: 18px;
       padding: 8px;
       border-radius: 8px;
       border: none;
+    }
+
+    .photoArea {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .photoButton {
+      font-size: 15px;
+      padding: 9px 12px;
+    }
+
+    .photoPreview {
+      width: 70px;
+      height: 55px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 2px solid rgba(255,255,255,0.35);
+    }
+
+    .photoStatus {
+      font-size: 14px;
+      color: #8ff0a4;
     }
 
     #controls {
@@ -85,6 +117,12 @@
       margin-top: 16px;
       font-size: 17px;
     }
+
+    @media (max-width: 800px) {
+      .teamRow {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 
@@ -92,15 +130,18 @@
 
   <h1>🌙 Moon Palace Host</h1>
 
-  <div style="display:flex; gap:12px; flex-wrap:wrap;">
-  <button id="createRoomButton">
-    Create New Game Room
-  </button>
+  <div id="topButtons">
 
-  <button id="resetRoomButton">
-    Reset / End Current Game
-  </button>
-</div>
+    <button id="createRoomButton">
+      Create New Game Room
+    </button>
+
+    <button id="resetRoomButton">
+      Reset / End Current Game
+    </button>
+
+  </div>
+
 
   <section id="roomSection" hidden>
 
@@ -126,6 +167,7 @@
 
 
   <script type="module">
+
     import {
       db,
       ref,
@@ -135,11 +177,17 @@
     } from "./firebase.js";
 
 
+    import {
+      saveTeamPhoto,
+      getTeamPhoto
+    } from "./local-media.js";
+
+
     const createRoomButton =
       document.getElementById("createRoomButton");
 
     const resetRoomButton =
-  document.getElementById("resetRoomButton");
+      document.getElementById("resetRoomButton");
 
     const roomSection =
       document.getElementById("roomSection");
@@ -158,6 +206,7 @@
 
     const statusEl =
       document.getElementById("status");
+
 
     let currentRoomCode = null;
 
@@ -247,11 +296,12 @@
     }
 
 
-    function renderTeams(teams) {
+    async function renderTeams(teams) {
 
       teamList.innerHTML = "";
 
       let joinedCount = 0;
+
 
       for (
         let teamNumber = 1;
@@ -268,9 +318,11 @@
         const joined =
           teamData.joined === true;
 
+
         if (joined) {
           joinedCount++;
         }
+
 
         const row =
           document.createElement("div");
@@ -279,6 +331,7 @@
           "teamRow";
 
 
+        // TEAM NAME
         const name =
           document.createElement("div");
 
@@ -289,20 +342,22 @@
           "Team " + teamNumber;
 
 
-        const status =
+        // CONNECTION STATUS
+        const connectionStatus =
           document.createElement("div");
 
-        status.textContent =
+        connectionStatus.textContent =
           joined
             ? "● Connected"
             : "○ Waiting";
 
-        status.className =
+        connectionStatus.className =
           joined
             ? "statusJoined"
             : "statusWaiting";
 
 
+        // PREVIOUS ACTIVITY SCORE
         const scoreArea =
           document.createElement("div");
 
@@ -335,9 +390,7 @@
               const score =
                 Math.max(
                   0,
-                  Number(
-                    input.value
-                  ) || 0
+                  Number(input.value) || 0
                 );
 
               await update(
@@ -349,41 +402,231 @@
                   teamKey
                 ),
                 {
-                  previousScore:
-                    score
+                  previousScore: score
                 }
               );
 
             }
           );
 
-          scoreArea.appendChild(
-            input
-          );
+          scoreArea.appendChild(input);
 
         } else {
 
-          scoreArea.textContent =
-            "—";
+          scoreArea.textContent = "—";
 
         }
 
 
-        row.appendChild(
-          name
-        );
+        // TEAM PHOTO
+        const photoArea =
+          document.createElement("div");
+
+        photoArea.className =
+          "photoArea";
+
+
+        if (joined) {
+
+          const photoStorageKey =
+            currentRoomCode +
+            "-" +
+            teamKey;
+
+
+          const fileInput =
+            document.createElement("input");
+
+          fileInput.type = "file";
+          fileInput.accept = "image/*";
+          fileInput.hidden = true;
+
+
+          const chooseButton =
+            document.createElement("button");
+
+          chooseButton.type = "button";
+          chooseButton.className =
+            "photoButton";
+
+          chooseButton.textContent =
+            "Choose Photo";
+
+
+          const preview =
+            document.createElement("img");
+
+          preview.className =
+            "photoPreview";
+
+          preview.alt =
+            "Team " +
+            teamNumber +
+            " photo";
+
+          preview.hidden = true;
+
+
+          const photoStatus =
+            document.createElement("span");
+
+          photoStatus.className =
+            "photoStatus";
+
+
+          chooseButton.addEventListener(
+            "click",
+            () => {
+
+              fileInput.click();
+
+            }
+          );
+
+
+          fileInput.addEventListener(
+            "change",
+            async () => {
+
+              const file =
+                fileInput.files[0];
+
+              if (!file) {
+                return;
+              }
+
+
+              if (
+                !file.type.startsWith(
+                  "image/"
+                )
+              ) {
+
+                alert(
+                  "Please choose an image file."
+                );
+
+                return;
+              }
+
+
+              try {
+
+                await saveTeamPhoto(
+                  photoStorageKey,
+                  file
+                );
+
+
+                const previewURL =
+                  URL.createObjectURL(file);
+
+                preview.src =
+                  previewURL;
+
+                preview.hidden =
+                  false;
+
+                photoStatus.textContent =
+                  "✓ Photo stored locally";
+
+                chooseButton.textContent =
+                  "Change Photo";
+
+
+              } catch (error) {
+
+                console.error(error);
+
+                photoStatus.textContent =
+                  "Photo could not be saved.";
+
+              }
+
+            }
+          );
+
+
+          // Check whether this team already
+          // has a locally stored photo.
+          try {
+
+            const savedPhoto =
+              await getTeamPhoto(
+                photoStorageKey
+              );
+
+
+            if (savedPhoto) {
+
+              const savedURL =
+                URL.createObjectURL(
+                  savedPhoto
+                );
+
+              preview.src =
+                savedURL;
+
+              preview.hidden =
+                false;
+
+              photoStatus.textContent =
+                "✓ Photo stored locally";
+
+              chooseButton.textContent =
+                "Change Photo";
+
+            }
+
+          } catch (error) {
+
+            console.error(
+              "Could not load stored photo:",
+              error
+            );
+
+          }
+
+
+          photoArea.appendChild(
+            chooseButton
+          );
+
+          photoArea.appendChild(
+            fileInput
+          );
+
+          photoArea.appendChild(
+            preview
+          );
+
+          photoArea.appendChild(
+            photoStatus
+          );
+
+        } else {
+
+          photoArea.textContent = "—";
+
+        }
+
+
+        row.appendChild(name);
 
         row.appendChild(
-          status
+          connectionStatus
         );
 
         row.appendChild(
           scoreArea
         );
 
-        teamList.appendChild(
-          row
+        row.appendChild(
+          photoArea
         );
+
+
+        teamList.appendChild(row);
       }
 
 
@@ -408,6 +651,7 @@
           " team(s) currently connected.";
 
       }
+
     }
 
 
@@ -419,6 +663,7 @@
           return;
         }
 
+
         await update(
           ref(
             db,
@@ -426,70 +671,75 @@
             currentRoomCode
           ),
           {
-            state:
-              "questions",
-            currentQuestion:
-              1
+            state: "questions",
+            currentQuestion: 1
           }
         );
+
 
         statusEl.textContent =
           "Questions started.";
 
       }
     );
-resetRoomButton.addEventListener(
-  "click",
-  async () => {
 
-    const confirmed =
-      confirm(
-        "End the current game and return the TV to the waiting screen?"
-      );
 
-    if (!confirmed) {
-      return;
-    }
+    resetRoomButton.addEventListener(
+      "click",
+      async () => {
 
-    try {
+        const confirmed =
+          confirm(
+            "End the current game and return the TV to the waiting screen?"
+          );
 
-      await set(
-        ref(db, "currentRoom"),
-        null
-      );
 
-      currentRoomCode = null;
+        if (!confirmed) {
+          return;
+        }
 
-      roomSection.hidden =
-        true;
 
-      roomCodeEl.textContent =
-        "----";
+        try {
 
-      joinedCountEl.textContent =
-        "0 / 10 teams joined";
+          await set(
+            ref(db, "currentRoom"),
+            null
+          );
 
-      teamList.innerHTML =
-        "";
 
-      startButton.disabled =
-        true;
+          currentRoomCode = null;
 
-      statusEl.textContent =
-        "Current game ended. Ready to create a new room.";
+          roomSection.hidden =
+            true;
 
-    } catch (error) {
+          roomCodeEl.textContent =
+            "----";
 
-      console.error(error);
+          joinedCountEl.textContent =
+            "0 / 10 teams joined";
 
-      statusEl.textContent =
-        "❌ Error: " + error.message;
+          teamList.innerHTML =
+            "";
 
-    }
-  }
-);
+          startButton.disabled =
+            true;
 
-    
+          statusEl.textContent =
+            "Current game ended. Ready to create a new room.";
+
+
+        } catch (error) {
+
+          console.error(error);
+
+          statusEl.textContent =
+            "❌ Error: " +
+            error.message;
+
+        }
+      }
+    );
+
   </script>
 
 </body>
