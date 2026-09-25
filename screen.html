@@ -22,6 +22,7 @@
 html,
 body {
   margin: 0;
+  width: 100%;
   min-height: 100%;
 }
 
@@ -48,6 +49,7 @@ body {
   overflow-x: hidden;
 }
 
+
 h1 {
   font-size: 56px;
   margin-bottom: 10px;
@@ -58,6 +60,7 @@ h2 {
   margin-top: 0;
 }
 
+
 .screen {
   display: none;
 }
@@ -67,26 +70,52 @@ h2 {
 }
 
 
-/* ==========================================
-   TEAM NAMES
-========================================== */
+/* =========================================================
+   FULL WINDOW VIDEO
+========================================================= */
 
-.teamEnglishName {
-  font-weight: bold;
-  line-height: 1.18;
+.videoScreen {
+  position: fixed;
+
+  inset: 0;
+
+  width: 100vw;
+  height: 100vh;
+
+  padding: 0;
+
+  margin: 0;
+
+  background: #000;
+
+  z-index: 1000;
+
+  overflow: hidden;
 }
 
-.teamChineseName {
-  margin-top: 5px;
-  font-size: 0.82em;
-  opacity: 0.88;
-  line-height: 1.18;
+.videoScreen.active {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
 }
 
 
-/* ==========================================
+.fullscreenVideo {
+  display: block;
+
+  width: 100vw;
+  height: 100vh;
+
+  object-fit: contain;
+
+  background: #000;
+}
+
+
+/* =========================================================
    SOUND CONTROL
-========================================== */
+========================================================= */
 
 #soundControl {
   position: fixed;
@@ -94,39 +123,61 @@ h2 {
   top: 18px;
   right: 18px;
 
-  z-index: 2000;
+  z-index: 5000;
 
   display: flex;
+
   align-items: center;
+
   gap: 10px;
 }
+
 
 #enableSoundButton {
   padding: 11px 17px;
 
   border:
     2px solid
-    rgba(255,255,255,0.35);
+    rgba(
+      255,
+      255,
+      255,
+      0.35
+    );
 
   border-radius: 999px;
 
   background:
-    rgba(12,15,40,0.82);
+    rgba(
+      12,
+      15,
+      40,
+      0.82
+    );
 
   color: white;
 
   font-size: 17px;
+
   font-weight: bold;
 
   cursor: pointer;
 
-  backdrop-filter: blur(8px);
+  backdrop-filter:
+    blur(8px);
 }
+
 
 #enableSoundButton:hover {
   background:
-    rgba(50,55,100,0.9);
+    rgba(
+      50,
+      55,
+      100,
+      0.9
+    );
 }
+
 
 #soundStatus {
   display: none;
@@ -136,18 +187,46 @@ h2 {
   border-radius: 999px;
 
   background:
-    rgba(0,0,0,0.5);
+    rgba(
+      0,
+      0,
+      0,
+      0.55
+    );
 
   font-size: 14px;
 }
 
 
-/* ==========================================
+/* =========================================================
+   TEAM NAMES
+========================================================= */
+
+.teamEnglishName {
+  font-weight: bold;
+
+  line-height: 1.18;
+}
+
+
+.teamChineseName {
+  margin-top: 5px;
+
+  font-size: 0.82em;
+
+  opacity: 0.88;
+
+  line-height: 1.18;
+}
+
+
+/* =========================================================
    LOBBY
-========================================== */
+========================================================= */
 
 #roomCode {
   font-size: 92px;
+
   font-weight: bold;
 
   letter-spacing: 16px;
@@ -157,10 +236,14 @@ h2 {
   color: #ffe89a;
 }
 
+
 #joinedCount {
   font-size: 30px;
-  margin: 20px 0 30px;
+
+  margin:
+    20px 0 30px;
 }
+
 
 #teamGrid {
   display: grid;
@@ -168,7 +251,10 @@ h2 {
   grid-template-columns:
     repeat(
       5,
-      minmax(0,1fr)
+      minmax(
+        0,
+        1fr
+      )
     );
 
   gap: 16px;
@@ -177,6 +263,7 @@ h2 {
 
   margin: 0 auto;
 }
+
 
 .teamCard {
   min-height: 100px;
@@ -188,114 +275,120 @@ h2 {
   font-size: 20px;
 
   display: flex;
+
   flex-direction: column;
+
   justify-content: center;
 
   background:
-    rgba(255,255,255,0.08);
+    rgba(
+      255,
+      255,
+      255,
+      0.08
+    );
 
   border:
     2px solid
-    rgba(255,255,255,0.2);
+    rgba(
+      255,
+      255,
+      255,
+      0.2
+    );
 }
+
 
 .joined {
   background:
-    rgba(110,220,140,0.2);
+    rgba(
+      110,
+      220,
+      140,
+      0.2
+    );
 
   border-color:
-    rgba(110,220,140,0.9);
+    rgba(
+      110,
+      220,
+      140,
+      0.9
+    );
 }
+
 
 .waiting {
   opacity: 0.55;
 }
 
+
 #status {
   font-size: 24px;
+
   margin-top: 30px;
 }
 
 
-/* ==========================================
-   INTRO
-========================================== */
-
-#introScreen {
-  padding-top: 60px;
-}
-
-#introTitle {
-  font-size: 70px;
-  margin-bottom: 30px;
-}
-
-#introPlaceholder {
-  max-width: 1100px;
-
-  min-height: 470px;
-
-  margin: 0 auto;
-
-  border:
-    3px dashed
-    rgba(255,255,255,0.35);
-
-  border-radius: 24px;
-
-  background:
-    rgba(255,255,255,0.05);
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  font-size: 36px;
-
-  line-height: 1.5;
-}
-
-
-/* ==========================================
+/* =========================================================
    QUESTION
-========================================== */
+========================================================= */
 
 #questionScreen {
   padding-top: 10px;
 }
 
+
 #questionNumber {
   font-size: 30px;
+
   opacity: 0.8;
+
   margin-bottom: 18px;
 }
 
+
 #questionChinese {
   font-size: 54px;
+
   font-weight: bold;
+
   line-height: 1.22;
+
   max-width: 1450px;
-  margin: 0 auto 8px;
+
+  margin:
+    0 auto 8px;
 }
+
 
 #questionEnglish {
   font-size: 34px;
+
   line-height: 1.3;
+
   max-width: 1450px;
-  margin: 0 auto 24px;
+
+  margin:
+    0 auto 24px;
+
   opacity: 0.9;
 }
 
+
 #questionImageArea {
-  margin: 10px auto 22px;
+  margin:
+    10px auto 22px;
 }
+
 
 #questionImage {
   max-width: 900px;
+
   max-height: 330px;
 
   width: auto;
+
   height: auto;
 
   object-fit: contain;
@@ -303,13 +396,17 @@ h2 {
   border-radius: 18px;
 }
 
+
 #answerGrid {
   display: grid;
 
   grid-template-columns:
     repeat(
       2,
-      minmax(0,1fr)
+      minmax(
+        0,
+        1fr
+      )
     );
 
   gap: 16px;
@@ -319,19 +416,31 @@ h2 {
   margin: 0 auto;
 }
 
+
 .answerCard {
   min-height: 115px;
 
-  padding: 16px 22px;
+  padding:
+    16px 22px;
 
   border-radius: 18px;
 
   background:
-    rgba(255,255,255,0.09);
+    rgba(
+      255,
+      255,
+      255,
+      0.09
+    );
 
   border:
     2px solid
-    rgba(255,255,255,0.18);
+    rgba(
+      255,
+      255,
+      255,
+      0.18
+    );
 
   text-align: left;
 
@@ -343,29 +452,39 @@ h2 {
     box-shadow 0.35s ease;
 }
 
+
 .answerLetter {
   font-size: 32px;
+
   font-weight: bold;
+
   margin-bottom: 5px;
 }
 
+
 .answerChinese {
   font-size: 32px;
+
   font-weight: bold;
+
   line-height: 1.2;
 }
 
+
 .answerEnglish {
   font-size: 23px;
+
   line-height: 1.25;
+
   opacity: 0.9;
+
   margin-top: 5px;
 }
 
 
-/* ==========================================
+/* =========================================================
    ANSWER REVEAL
-========================================== */
+========================================================= */
 
 .answerCard.correctAnswer {
   border:
@@ -373,20 +492,35 @@ h2 {
     #8ff0a4;
 
   background:
-    rgba(90,210,120,0.3);
+    rgba(
+      90,
+      210,
+      120,
+      0.3
+    );
 
-  transform: scale(1.025);
+  transform:
+    scale(
+      1.025
+    );
 
   box-shadow:
     0 0 28px
-    rgba(143,240,164,0.35);
+    rgba(
+      143,
+      240,
+      164,
+      0.35
+    );
 
   opacity: 1;
 }
 
+
 .answerCard.dimmedAnswer {
   opacity: 0.25;
 }
+
 
 #revealMessage {
   display: none;
@@ -394,49 +528,66 @@ h2 {
   margin-top: 16px;
 
   font-size: 30px;
+
   font-weight: bold;
 
   color: #8ff0a4;
 }
 
+
 #revealMessage.visible {
   display: block;
 }
 
+
 #answeredStatus {
   font-size: 27px;
+
   margin-top: 18px;
 }
 
 
-/* ==========================================
+/* =========================================================
    MOON POWER
-========================================== */
+========================================================= */
 
 #moonPowerArea {
-  margin: 18px auto 0;
+  margin:
+    18px auto 0;
+
   max-width: 900px;
 }
 
+
 #moonPowerLabel {
   font-size: 27px;
+
   margin-bottom: 8px;
 }
 
+
 #moonPowerTrack {
   width: 100%;
+
   height: 28px;
 
   background:
-    rgba(255,255,255,0.15);
+    rgba(
+      255,
+      255,
+      255,
+      0.15
+    );
 
   border-radius: 999px;
 
   overflow: hidden;
 }
 
+
 #moonPowerFill {
   width: 0%;
+
   height: 100%;
 
   background:
@@ -451,29 +602,38 @@ h2 {
 
   box-shadow:
     0 0 22px
-    rgba(255,232,154,0.7);
+    rgba(
+      255,
+      232,
+      154,
+      0.7
+    );
 }
+
 
 #moonPowerText {
   margin-top: 8px;
 
   font-size: 24px;
+
   font-weight: bold;
 }
 
 
-/* ==========================================
-   TARGET CELEBRATION
-========================================== */
+/* =========================================================
+   MOON POWER COMPLETE
+========================================================= */
 
 #targetCelebration {
   display: none;
 
   max-width: 1000px;
 
-  margin: 20px auto 0;
+  margin:
+    20px auto 0;
 
-  padding: 20px 30px;
+  padding:
+    20px 30px;
 
   border-radius: 24px;
 
@@ -482,12 +642,23 @@ h2 {
     #ffe89a;
 
   background:
-    rgba(255,232,154,0.14);
+    rgba(
+      255,
+      232,
+      154,
+      0.14
+    );
 
   box-shadow:
     0 0 45px
-    rgba(255,232,154,0.4);
+    rgba(
+      255,
+      232,
+      154,
+      0.4
+    );
 }
+
 
 #targetCelebration.visible {
   display: block;
@@ -498,66 +669,96 @@ h2 {
     infinite alternate;
 }
 
+
 #targetCelebrationMoon {
   font-size: 55px;
 }
 
+
 #targetCelebrationChinese {
   font-size: 38px;
+
   font-weight: bold;
+
   color: #fff2af;
 }
 
+
 #targetCelebrationEnglish {
   margin-top: 4px;
+
   font-size: 30px;
+
   font-weight: bold;
 }
 
+
 #targetCelebrationSub {
   margin-top: 8px;
+
   font-size: 20px;
+
   opacity: 0.9;
 }
+
 
 @keyframes moonPowerPulse {
 
   from {
-    transform: scale(1);
+    transform:
+      scale(1);
 
     box-shadow:
       0 0 25px
-      rgba(255,232,154,0.3);
+      rgba(
+        255,
+        232,
+        154,
+        0.3
+      );
   }
 
   to {
-    transform: scale(1.02);
+    transform:
+      scale(
+        1.02
+      );
 
     box-shadow:
       0 0 65px
-      rgba(255,232,154,0.65);
+      rgba(
+        255,
+        232,
+        154,
+        0.65
+      );
   }
 
 }
 
 
-/* ==========================================
+/* =========================================================
    QUIZ COMPLETE
-========================================== */
+========================================================= */
 
 #quizCompleteScreen {
   min-height:
-    calc(100vh - 80px);
+    calc(
+      100vh - 80px
+    );
 
   display: none;
 
   align-items: center;
+
   justify-content: center;
 }
+
 
 #quizCompleteScreen.active {
   display: flex;
 }
+
 
 #quizCompleteContent {
   width:
@@ -568,111 +769,121 @@ h2 {
 
   margin: 0 auto;
 
-  padding: 40px 50px;
+  padding:
+    40px 50px;
 
   border-radius: 34px;
 
   background:
     radial-gradient(
       circle at top,
-      rgba(255,236,155,0.15),
-      rgba(255,255,255,0.045)
+      rgba(
+        255,
+        236,
+        155,
+        0.15
+      ),
+      rgba(
+        255,
+        255,
+        255,
+        0.045
+      )
     );
 
   border:
     2px solid
-    rgba(255,240,180,0.4);
+    rgba(
+      255,
+      240,
+      180,
+      0.4
+    );
 
   box-shadow:
     0 0 70px
-    rgba(255,225,120,0.16);
+    rgba(
+      255,
+      225,
+      120,
+      0.16
+    );
 }
+
 
 #completeMoon {
   font-size: 120px;
+
   line-height: 1;
-
-  animation:
-    completeMoonGlow
-    1.6s ease
-    infinite alternate;
 }
 
-@keyframes completeMoonGlow {
-
-  from {
-    filter:
-      drop-shadow(
-        0 0 10px
-        rgba(255,235,145,0.45)
-      );
-
-    transform: scale(1);
-  }
-
-  to {
-    filter:
-      drop-shadow(
-        0 0 42px
-        rgba(255,235,145,0.95)
-      );
-
-    transform: scale(1.04);
-  }
-
-}
 
 #completeChinese {
   margin-top: 12px;
 
   font-size: 58px;
+
   line-height: 1.2;
+
   font-weight: bold;
 
   color: #fff0a6;
 }
 
+
 #completeEnglish {
   margin-top: 8px;
 
   font-size: 43px;
+
   font-weight: bold;
 }
 
+
 #completeDescription {
-  margin: 18px auto 0;
+  margin:
+    18px auto 0;
 
   max-width: 1000px;
 
   font-size: 25px;
+
   line-height: 1.45;
 
   opacity: 0.92;
 }
 
+
 #completePowerArea {
   max-width: 900px;
-  margin: 32px auto 0;
+
+  margin:
+    32px auto 0;
 }
+
 
 #completePowerTrack {
   width: 100%;
+
   height: 40px;
 
   background:
-    rgba(255,255,255,0.14);
+    rgba(
+      255,
+      255,
+      255,
+      0.14
+    );
 
   border-radius: 999px;
 
   overflow: hidden;
-
-  border:
-    2px solid
-    rgba(255,255,255,0.16);
 }
+
 
 #completePowerFill {
   width: 100%;
+
   height: 100%;
 
   background:
@@ -681,51 +892,60 @@ h2 {
       #ffd76e,
       #fff4bd
     );
-
-  box-shadow:
-    0 0 30px
-    rgba(255,227,120,0.8);
 }
+
 
 #completePowerText {
   margin-top: 12px;
 
   font-size: 42px;
+
   font-weight: bold;
 
   color: #fff1a6;
 }
 
+
 #rawPowerNotice {
   display: none;
 
-  margin: 20px auto 0;
+  margin:
+    20px auto 0;
 
-  padding: 14px 20px;
+  padding:
+    14px 20px;
 
   max-width: 800px;
 
   border-radius: 16px;
 
   background:
-    rgba(255,255,255,0.07);
+    rgba(
+      255,
+      255,
+      255,
+      0.07
+    );
 
   font-size: 20px;
-  line-height: 1.45;
 
-  opacity: 0.88;
+  line-height: 1.45;
 }
+
 
 #rawPowerNotice.visible {
   display: block;
 }
 
+
 #waitingForLeaderboard {
   margin-top: 35px;
 
   font-size: 27px;
+
   font-weight: bold;
 }
+
 
 #waitingForLeaderboardEnglish {
   margin-top: 5px;
@@ -736,39 +956,50 @@ h2 {
 }
 
 
-/* ==========================================
+/* =========================================================
    LEADERBOARD
-========================================== */
+========================================================= */
 
-#leaderboardScreen {
-  padding-top: 5px;
-}
-
-#leaderboardTitleChinese {
+#leaderboardTitleChinese,
+#fullLeaderboardTitle {
   font-size: 46px;
+
   font-weight: bold;
+
   color: #fff0ad;
 }
 
-#leaderboardTitleEnglish {
+
+#leaderboardTitleEnglish,
+#fullLeaderboardEnglish {
   font-size: 34px;
+
   font-weight: bold;
+
   margin-top: 4px;
 }
 
+
 #leaderboardSubtitle {
   margin-top: 8px;
+
   font-size: 21px;
+
   opacity: 0.8;
 }
 
+
 #currentRevealArea {
-  margin: 25px auto 0;
+  margin:
+    25px auto 0;
+
   max-width: 1300px;
 }
 
+
 .suspensePanel {
-  margin: 75px auto;
+  margin:
+    75px auto;
 
   max-width: 900px;
 
@@ -776,65 +1007,79 @@ h2 {
 
   border-radius: 30px;
 
-  border:
-    2px solid
-    rgba(255,255,255,0.25);
-
   background:
-    rgba(255,255,255,0.06);
+    rgba(
+      255,
+      255,
+      255,
+      0.06
+    );
 }
+
 
 .suspenseIcon {
   font-size: 80px;
 }
 
+
 .suspenseChinese {
   margin-top: 20px;
+
   font-size: 42px;
+
   font-weight: bold;
 }
 
+
 .suspenseEnglish {
   margin-top: 8px;
+
   font-size: 29px;
+
   opacity: 0.9;
 }
+
 
 .currentRankHeader {
   margin-bottom: 18px;
 }
 
+
 .rankEmoji {
   font-size: 64px;
-  line-height: 1;
 }
 
+
 .currentRankChinese {
-  margin-top: 7px;
   font-size: 50px;
+
   font-weight: bold;
+
   color: #fff0ad;
 }
 
+
 .currentRankEnglish {
-  margin-top: 3px;
   font-size: 36px;
+
   font-weight: bold;
 }
+
 
 .featuredTeamGrid {
   display: flex;
 
   justify-content: center;
-  align-items: stretch;
 
   gap: 22px;
 
   flex-wrap: wrap;
 }
 
+
 .featuredTeamCard {
   width: 360px;
+
   min-height: 310px;
 
   padding: 20px;
@@ -843,39 +1088,73 @@ h2 {
 
   border:
     3px solid
-    rgba(255,255,255,0.25);
+    rgba(
+      255,
+      255,
+      255,
+      0.25
+    );
 
   background:
-    rgba(255,255,255,0.08);
-
-  box-shadow:
-    0 10px 40px
-    rgba(0,0,0,0.22);
+    rgba(
+      255,
+      255,
+      255,
+      0.08
+    );
 
   animation:
     rankRevealPop
     0.65s ease;
 }
 
+
+.featuredTeamCard.rank1 {
+  width: 430px;
+
+  border:
+    5px solid
+    #ffe071;
+
+  background:
+    rgba(
+      255,
+      224,
+      113,
+      0.14
+    );
+}
+
+
+.featuredTeamCard.rank2 {
+  border-color:
+    #dfe6ee;
+}
+
+
+.featuredTeamCard.rank3 {
+  border-color:
+    #d69a68;
+}
+
+
 @keyframes rankRevealPop {
 
-  0% {
+  from {
     opacity: 0;
 
     transform:
-      scale(0.75)
-      translateY(35px);
+      scale(
+        0.75
+      )
+      translateY(
+        35px
+      );
   }
 
-  70% {
+  to {
     opacity: 1;
 
-    transform:
-      scale(1.04)
-      translateY(-4px);
-  }
-
-  100% {
     transform:
       scale(1)
       translateY(0);
@@ -883,79 +1162,16 @@ h2 {
 
 }
 
-.featuredTeamCard.rank1 {
-  width: 430px;
-  min-height: 355px;
-
-  border:
-    5px solid
-    #ffe071;
-
-  background:
-    radial-gradient(
-      circle at top,
-      rgba(255,224,113,0.25),
-      rgba(255,255,255,0.08)
-    );
-
-  box-shadow:
-    0 0 65px
-    rgba(255,215,90,0.45);
-
-  animation:
-    championReveal
-    0.9s ease;
-}
-
-@keyframes championReveal {
-
-  0% {
-    opacity: 0;
-
-    transform:
-      scale(0.45)
-      rotate(-5deg);
-  }
-
-  65% {
-    opacity: 1;
-
-    transform:
-      scale(1.08)
-      rotate(1deg);
-  }
-
-  100% {
-    transform:
-      scale(1)
-      rotate(0);
-  }
-
-}
-
-.featuredTeamCard.rank2 {
-  border-color: #dfe6ee;
-
-  box-shadow:
-    0 0 40px
-    rgba(220,230,240,0.28);
-}
-
-.featuredTeamCard.rank3 {
-  border-color: #d69a68;
-
-  box-shadow:
-    0 0 40px
-    rgba(214,154,104,0.28);
-}
 
 .featuredPhotoWrap {
   width: 100%;
+
   height: 175px;
 
   display: flex;
 
   align-items: center;
+
   justify-content: center;
 
   margin-bottom: 14px;
@@ -965,32 +1181,40 @@ h2 {
   overflow: hidden;
 
   background:
-    rgba(0,0,0,0.18);
+    rgba(
+      0,
+      0,
+      0,
+      0.18
+    );
 }
+
 
 .rank1 .featuredPhotoWrap {
   height: 200px;
 }
 
+
 .featuredPhoto {
   width: 100%;
+
   height: 100%;
 
   object-fit: contain;
 }
 
+
 .photoFallback {
   font-size: 80px;
 }
 
+
 .featuredTeamName {
   font-size: 28px;
+
   font-weight: bold;
 }
 
-.rank1 .featuredTeamName {
-  font-size: 34px;
-}
 
 .featuredScoreLabel {
   margin-top: 9px;
@@ -1000,41 +1224,34 @@ h2 {
   opacity: 0.72;
 }
 
-.featuredScore {
-  margin-top: 2px;
 
+.featuredScore {
   font-size: 44px;
+
   font-weight: bold;
 
   color: #ffe89a;
 }
 
-.rank1 .featuredScore {
-  font-size: 54px;
-}
-
-
-/* ==========================================
-   PREVIOUS RANKS
-========================================== */
 
 #previousRanksArea {
   max-width: 1450px;
 
-  margin: 28px auto 0;
+  margin:
+    28px auto 0;
 
   padding-top: 18px;
 
   border-top:
     1px solid
-    rgba(255,255,255,0.18);
+    rgba(
+      255,
+      255,
+      255,
+      0.18
+    );
 }
 
-#previousRanksTitle {
-  font-size: 20px;
-  opacity: 0.7;
-  margin-bottom: 12px;
-}
 
 #previousRanksGrid {
   display: grid;
@@ -1042,11 +1259,15 @@ h2 {
   grid-template-columns:
     repeat(
       5,
-      minmax(0,1fr)
+      minmax(
+        0,
+        1fr
+      )
     );
 
   gap: 10px;
 }
+
 
 .miniRankCard {
   min-height: 100px;
@@ -1056,7 +1277,12 @@ h2 {
   border-radius: 14px;
 
   background:
-    rgba(255,255,255,0.07);
+    rgba(
+      255,
+      255,
+      255,
+      0.07
+    );
 
   display: grid;
 
@@ -1070,93 +1296,110 @@ h2 {
   text-align: left;
 }
 
-.miniPhoto {
-  width: 60px;
-  height: 60px;
 
-  border-radius: 10px;
-
+.miniPhoto,
+.fullPhoto {
   object-fit: contain;
 
   background:
-    rgba(0,0,0,0.18);
+    rgba(
+      0,
+      0,
+      0,
+      0.18
+    );
 }
 
+
+.miniPhoto,
 .miniPhotoFallback {
   width: 60px;
+
   height: 60px;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  font-size: 32px;
-
-  background:
-    rgba(0,0,0,0.18);
 
   border-radius: 10px;
 }
 
+
+.miniPhotoFallback,
+.fullPhotoFallback {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background:
+    rgba(
+      0,
+      0,
+      0,
+      0.18
+    );
+}
+
+
+.miniPhotoFallback {
+  font-size: 32px;
+}
+
+
 .miniRank {
   font-size: 15px;
+
   opacity: 0.7;
 }
 
+
 .miniTeamName {
   font-size: 16px;
+
   font-weight: bold;
 }
+
 
 .miniScore {
   font-size: 18px;
+
   color: #ffe89a;
+
   font-weight: bold;
 }
 
+
 #hiddenRanksMessage {
   margin-top: 14px;
+
   font-size: 20px;
+
   opacity: 0.75;
 }
 
 
-/* ==========================================
+/* =========================================================
    FULL LEADERBOARD
-========================================== */
-
-#fullLeaderboardScreen {
-  padding-top: 5px;
-}
-
-#fullLeaderboardTitle {
-  font-size: 46px;
-  font-weight: bold;
-  color: #fff0ad;
-}
-
-#fullLeaderboardEnglish {
-  margin-top: 3px;
-  font-size: 32px;
-  font-weight: bold;
-}
+========================================================= */
 
 #fullLeaderboardGrid {
   max-width: 1450px;
 
-  margin: 24px auto 0;
+  margin:
+    24px auto 0;
 
   display: grid;
 
   grid-template-columns:
     repeat(
       2,
-      minmax(0,1fr)
+      minmax(
+        0,
+        1fr
+      )
     );
 
   gap: 12px;
 }
+
 
 .fullRankRow {
   min-height: 125px;
@@ -1173,74 +1416,77 @@ h2 {
 
   align-items: center;
 
-  padding: 12px 16px;
+  padding:
+    12px 16px;
 
   border-radius: 18px;
 
   background:
-    rgba(255,255,255,0.075);
+    rgba(
+      255,
+      255,
+      255,
+      0.075
+    );
 
   border:
     2px solid
-    rgba(255,255,255,0.12);
+    rgba(
+      255,
+      255,
+      255,
+      0.12
+    );
 
   text-align: left;
 }
 
+
 .fullRankRow.rank1 {
   border-color: #ffe071;
-
-  background:
-    rgba(255,224,113,0.14);
 }
+
 
 .fullRankRow.rank2 {
   border-color: #dfe6ee;
 }
 
+
 .fullRankRow.rank3 {
   border-color: #d69a68;
 }
 
+
 .fullRankNumber {
   font-size: 32px;
+
   font-weight: bold;
+
   text-align: center;
 }
 
-.fullPhoto {
-  width: 88px;
-  height: 82px;
 
-  border-radius: 12px;
-
-  object-fit: contain;
-
-  background:
-    rgba(0,0,0,0.18);
-}
-
+.fullPhoto,
 .fullPhotoFallback {
   width: 88px;
+
   height: 82px;
 
   border-radius: 12px;
+}
 
-  display: flex;
 
-  justify-content: center;
-  align-items: center;
-
-  background:
-    rgba(0,0,0,0.18);
-
+.fullPhotoFallback {
   font-size: 45px;
 }
 
+
 .fullTeamName {
   font-size: 21px;
+
   font-weight: bold;
 }
+
 
 .scoreBreakdown {
   margin-top: 7px;
@@ -1250,25 +1496,31 @@ h2 {
   opacity: 0.67;
 }
 
+
 .fullTotalArea {
   text-align: right;
 }
 
+
 .fullTotalLabel {
   font-size: 14px;
+
   opacity: 0.65;
 }
 
+
 .fullTotal {
   font-size: 35px;
+
   font-weight: bold;
+
   color: #ffe89a;
 }
 
 
-/* ==========================================
-   FIVE-TONE MIRROR AUDIO HINT
-========================================== */
+/* =========================================================
+   MIRROR HINT
+========================================================= */
 
 #mirrorHintScreen {
   position: fixed;
@@ -1283,14 +1535,19 @@ h2 {
       #252956,
       #0b0d20 72%
     );
+
+  z-index: 1000;
 }
+
 
 #mirrorHintScreen.active {
   display: flex;
 
   align-items: center;
+
   justify-content: center;
 }
+
 
 #mirrorHintContent {
   width:
@@ -1299,97 +1556,85 @@ h2 {
       92vw
     );
 
-  padding: 55px 65px;
+  padding:
+    55px 65px;
 
   border-radius: 30px;
 
   background:
-    rgba(255,255,255,0.055);
+    rgba(
+      255,
+      255,
+      255,
+      0.055
+    );
 
   border:
     2px solid
-    rgba(255,239,169,0.28);
-
-  box-shadow:
-    0 0 75px
-    rgba(255,226,125,0.12);
+    rgba(
+      255,
+      239,
+      169,
+      0.28
+    );
 }
+
 
 #mirrorHintIcon {
   font-size: 95px;
-
-  line-height: 1;
-
-  animation:
-    hintPulse
-    1.7s ease
-    infinite alternate;
 }
 
-@keyframes hintPulse {
-
-  from {
-    transform: scale(1);
-
-    filter:
-      drop-shadow(
-        0 0 10px
-        rgba(255,232,154,0.35)
-      );
-  }
-
-  to {
-    transform: scale(1.06);
-
-    filter:
-      drop-shadow(
-        0 0 38px
-        rgba(255,232,154,0.8)
-      );
-  }
-
-}
 
 #mirrorHintChineseTitle {
   margin-top: 22px;
 
   font-size: 52px;
+
   font-weight: bold;
 
   color: #fff0a6;
 }
 
+
 #mirrorHintEnglishTitle {
   margin-top: 8px;
 
   font-size: 34px;
+
   font-weight: bold;
 }
+
 
 #mirrorHintInstructionChinese {
   margin-top: 32px;
 
   font-size: 30px;
+
   line-height: 1.45;
 }
+
 
 #mirrorHintInstructionEnglish {
   margin-top: 8px;
 
   font-size: 23px;
+
   line-height: 1.45;
 
   opacity: 0.82;
 }
 
+
 #mirrorHintPlaying {
   margin-top: 35px;
 
   font-size: 26px;
+
   font-weight: bold;
 
   color: #ffe89a;
 }
+
 
 #mirrorHintStatus {
   margin-top: 10px;
@@ -1398,255 +1643,13 @@ h2 {
 
   font-size: 19px;
 
-  opacity: 0.75;
+  opacity: 0.8;
 }
 
 
-/* ==========================================
-   FINALE
-========================================== */
-
-#finaleScreen {
-  position: fixed;
-
-  inset: 0;
-
-  padding: 35px;
-
-  overflow: hidden;
-
-  background:
-    radial-gradient(
-      circle at 50% 24%,
-      #fff2ad 0%,
-      #ebcf73 5%,
-      #4a4480 17%,
-      #211c4b 43%,
-      #0d1027 78%
-    );
-}
-
-#finaleScreen.active {
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-}
-
-#finaleStars {
-  position: absolute;
-
-  inset: 0;
-
-  pointer-events: none;
-
-  background-image:
-    radial-gradient(
-      circle,
-      rgba(255,255,255,0.8) 1px,
-      transparent 2px
-    );
-
-  background-size:
-    75px 75px;
-
-  opacity: 0.22;
-
-  animation:
-    starsDrift
-    12s linear
-    infinite;
-}
-
-@keyframes starsDrift {
-
-  from {
-    transform: translateY(0);
-  }
-
-  to {
-    transform: translateY(75px);
-  }
-
-}
-
-#finaleContent {
-  position: relative;
-
-  z-index: 5;
-
-  width:
-    min(
-      1200px,
-      94vw
-    );
-
-  margin: 0 auto;
-
-  padding:
-    28px 45px 38px;
-
-  border-radius: 40px;
-
-  background:
-    rgba(14,17,45,0.62);
-
-  border:
-    2px solid
-    rgba(255,238,165,0.42);
-
-  box-shadow:
-    0 0 100px
-    rgba(255,220,120,0.18);
-
-  backdrop-filter:
-    blur(4px);
-
-  animation:
-    finaleAppear
-    1.2s ease;
-}
-
-@keyframes finaleAppear {
-
-  from {
-    opacity: 0;
-    transform: scale(0.88);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-}
-
-#finaleMoon {
-  font-size: 115px;
-  line-height: 1;
-
-  animation:
-    finaleMoonPulse
-    1.8s ease
-    infinite alternate;
-}
-
-@keyframes finaleMoonPulse {
-
-  from {
-    transform: scale(1);
-
-    filter:
-      drop-shadow(
-        0 0 18px
-        rgba(255,236,146,0.6)
-      );
-  }
-
-  to {
-    transform: scale(1.06);
-
-    filter:
-      drop-shadow(
-        0 0 55px
-        rgba(255,236,146,1)
-      );
-  }
-
-}
-
-#finalePalace {
-  font-size: 78px;
-}
-
-#finaleChinese {
-  margin-top: 5px;
-
-  font-size: 54px;
-  font-weight: bold;
-
-  color: #fff1aa;
-}
-
-#finaleEnglish {
-  margin-top: 7px;
-
-  font-size: 40px;
-  font-weight: bold;
-}
-
-#finaleMirror {
-  width:
-    min(
-      820px,
-      85vw
-    );
-
-  margin: 25px auto 0;
-
-  padding: 25px 30px;
-
-  border-radius:
-    50% / 35%;
-
-  border:
-    5px solid
-    rgba(255,220,110,0.78);
-
-  background:
-    radial-gradient(
-      ellipse at center,
-      rgba(92,79,150,0.82),
-      rgba(18,17,48,0.95)
-    );
-}
-
-#finalTreasure {
-  font-size: 38px;
-  line-height: 1.25;
-  font-weight: bold;
-
-  color: #fff4bd;
-
-  letter-spacing: 2px;
-}
-
-#finalTreasureChinese {
-  margin-top: 8px;
-
-  font-size: 31px;
-  font-weight: bold;
-
-  color: #ffe89a;
-}
-
-#finaleRabbits {
-  margin-top: 22px;
-
-  font-size: 55px;
-
-  letter-spacing: 15px;
-}
-
-#finaleBlessing {
-  margin-top: 20px;
-
-  font-size: 26px;
-  line-height: 1.45;
-}
-
-#finaleBlessingEnglish {
-  margin-top: 5px;
-
-  font-size: 21px;
-
-  opacity: 0.82;
-}
-
-
-/* ==========================================
+/* =========================================================
    CONFETTI
-========================================== */
+========================================================= */
 
 #confettiLayer {
   position: fixed;
@@ -1657,8 +1660,9 @@ h2 {
 
   overflow: hidden;
 
-  z-index: 999;
+  z-index: 4000;
 }
+
 
 .confettiPiece {
   position: absolute;
@@ -1666,6 +1670,7 @@ h2 {
   top: -30px;
 
   width: 13px;
+
   height: 20px;
 
   border-radius: 3px;
@@ -1675,20 +1680,29 @@ h2 {
     linear forwards;
 }
 
+
 @keyframes confettiFall {
 
-  0% {
+  from {
     transform:
-      translateY(-20px)
-      rotate(0deg);
+      translateY(
+        -20px
+      )
+      rotate(
+        0deg
+      );
 
     opacity: 1;
   }
 
-  100% {
+  to {
     transform:
-      translateY(115vh)
-      rotate(900deg);
+      translateY(
+        115vh
+      )
+      rotate(
+        900deg
+      );
 
     opacity: 0.8;
   }
@@ -1696,11 +1710,10 @@ h2 {
 }
 
 
-/* ==========================================
-   RESPONSIVE
-========================================== */
-
-@media (max-width: 1000px) {
+@media (
+  max-width:
+  1000px
+) {
 
   #questionChinese {
     font-size: 42px;
@@ -1710,24 +1723,17 @@ h2 {
     font-size: 29px;
   }
 
-  .answerChinese {
-    font-size: 27px;
-  }
-
-  .answerEnglish {
-    font-size: 20px;
-  }
-
   #previousRanksGrid {
     grid-template-columns:
       repeat(
         3,
-        minmax(0,1fr)
+        1fr
       );
   }
 
   #fullLeaderboardGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns:
+      1fr;
   }
 
 }
@@ -1737,13 +1743,12 @@ h2 {
 </head>
 
 
-
 <body>
 
 
-<!-- ==========================================
+<!-- =======================================================
      SOUND
-========================================== -->
+======================================================= -->
 
 <div id="soundControl">
 
@@ -1759,9 +1764,9 @@ h2 {
 
 
 
-<!-- ==========================================
+<!-- =======================================================
      LOBBY
-========================================== -->
+======================================================= -->
 
 <section
   id="lobbyScreen"
@@ -1794,36 +1799,36 @@ h2 {
 
 
 
-<!-- ==========================================
-     INTRO
-========================================== -->
+<!-- =======================================================
+     INTRO VIDEO
+======================================================= -->
 
 <section
   id="introScreen"
-  class="screen"
+  class="screen videoScreen"
 >
 
-  <div id="introTitle">
-    🌙 Moon Palace Adventure
-  </div>
+  <video
+    id="introVideo"
+    class="fullscreenVideo"
+    preload="auto"
+    playsinline
+  >
 
-  <div id="introPlaceholder">
+    <source
+      src="./media/intro.mp4"
+      type="video/mp4"
+    >
 
-    INTRO VIDEO / SLIDESHOW
-
-    <br><br>
-
-    Placeholder
-
-  </div>
+  </video>
 
 </section>
 
 
 
-<!-- ==========================================
+<!-- =======================================================
      QUESTIONS
-========================================== -->
+======================================================= -->
 
 <section
   id="questionScreen"
@@ -1858,8 +1863,12 @@ h2 {
       class="answerCard"
       id="answerA"
     >
-      <div class="answerLetter">A</div>
+      <div class="answerLetter">
+        A
+      </div>
+
       <div class="answerChinese"></div>
+
       <div class="answerEnglish"></div>
     </div>
 
@@ -1868,8 +1877,12 @@ h2 {
       class="answerCard"
       id="answerB"
     >
-      <div class="answerLetter">B</div>
+      <div class="answerLetter">
+        B
+      </div>
+
       <div class="answerChinese"></div>
+
       <div class="answerEnglish"></div>
     </div>
 
@@ -1878,8 +1891,12 @@ h2 {
       class="answerCard"
       id="answerC"
     >
-      <div class="answerLetter">C</div>
+      <div class="answerLetter">
+        C
+      </div>
+
       <div class="answerChinese"></div>
+
       <div class="answerEnglish"></div>
     </div>
 
@@ -1888,8 +1905,12 @@ h2 {
       class="answerCard"
       id="answerD"
     >
-      <div class="answerLetter">D</div>
+      <div class="answerLetter">
+        D
+      </div>
+
       <div class="answerChinese"></div>
+
       <div class="answerEnglish"></div>
     </div>
 
@@ -1913,7 +1934,9 @@ h2 {
     </div>
 
     <div id="moonPowerTrack">
+
       <div id="moonPowerFill"></div>
+
     </div>
 
     <div id="moonPowerText">
@@ -1947,9 +1970,9 @@ h2 {
 
 
 
-<!-- ==========================================
+<!-- =======================================================
      QUIZ COMPLETE
-========================================== -->
+======================================================= -->
 
 <section
   id="quizCompleteScreen"
@@ -1980,7 +2003,9 @@ h2 {
     <div id="completePowerArea">
 
       <div id="completePowerTrack">
+
         <div id="completePowerFill"></div>
+
       </div>
 
       <div id="completePowerText">
@@ -2007,9 +2032,9 @@ h2 {
 
 
 
-<!-- ==========================================
-     PROGRESSIVE LEADERBOARD
-========================================== -->
+<!-- =======================================================
+     LEADERBOARD
+======================================================= -->
 
 <section
   id="leaderboardScreen"
@@ -2047,9 +2072,9 @@ h2 {
 
 
 
-<!-- ==========================================
+<!-- =======================================================
      FULL LEADERBOARD
-========================================== -->
+======================================================= -->
 
 <section
   id="fullLeaderboardScreen"
@@ -2070,9 +2095,9 @@ h2 {
 
 
 
-<!-- ==========================================
+<!-- =======================================================
      FIVE-TONE MIRROR HINT
-========================================== -->
+======================================================= -->
 
 <section
   id="mirrorHintScreen"
@@ -2119,63 +2144,28 @@ h2 {
 
 
 
-<!-- ==========================================
-     FINALE
-========================================== -->
+<!-- =======================================================
+     FINALE VIDEO
+======================================================= -->
 
 <section
   id="finaleScreen"
-  class="screen"
+  class="screen videoScreen"
 >
 
-  <div id="finaleStars"></div>
+  <video
+    id="finaleVideo"
+    class="fullscreenVideo"
+    preload="auto"
+    playsinline
+  >
 
+    <source
+      src="./media/finale.mp4"
+      type="video/mp4"
+    >
 
-  <div id="finaleContent">
-
-    <div id="finaleMoon">
-      🌕
-    </div>
-
-    <div id="finalePalace">
-      🏯
-    </div>
-
-    <div id="finaleChinese">
-      月宮重新綻放光芒！
-    </div>
-
-    <div id="finaleEnglish">
-      THE MOON PALACE SHINES AGAIN!
-    </div>
-
-
-    <div id="finaleMirror">
-
-      <div id="finalTreasure">
-        TOGETHER BENEATH THE FULL MOON
-      </div>
-
-      <div id="finalTreasureChinese">
-        人月兩團圓
-      </div>
-
-    </div>
-
-
-    <div id="finaleRabbits">
-      🐇 🐇 🐇 🐇 🐇
-    </div>
-
-    <div id="finaleBlessing">
-      🌙 祝大家中秋快樂，團團圓圓！
-    </div>
-
-    <div id="finaleBlessingEnglish">
-      Happy Mid-Autumn Festival to everyone and your families!
-    </div>
-
-  </div>
+  </video>
 
 </section>
 
@@ -2188,9 +2178,9 @@ h2 {
 <script type="module">
 
 
-/* ==========================================
+/* =========================================================
    IMPORTS
-========================================== */
+========================================================= */
 
 import {
   db,
@@ -2210,63 +2200,94 @@ import {
 
 
 
-/* ==========================================
+/* =========================================================
    TEAM NAMES
-========================================== */
+========================================================= */
 
 const TEAM_NAMES = {
 
   1: {
-    english: "Team 1 Moonblade",
-    chinese: "第一隊 月刃"
+    english:
+      "Team 1 Moonblade",
+
+    chinese:
+      "第一隊 月刃"
   },
 
   2: {
-    english: "Team 2 Starhunter",
-    chinese: "第二隊 獵星者"
+    english:
+      "Team 2 Starhunter",
+
+    chinese:
+      "第二隊 獵星者"
   },
 
   3: {
-    english: "Team 3 Rabbitshade",
-    chinese: "第三隊 兔影衛"
+    english:
+      "Team 3 Rabbitshade",
+
+    chinese:
+      "第三隊 兔影衛"
   },
 
   4: {
-    english: "Team 4 Nightflare",
-    chinese: "第四隊 夜煌隊"
+    english:
+      "Team 4 Nightflare",
+
+    chinese:
+      "第四隊 夜煌隊"
   },
 
   5: {
-    english: "Team 5 Moonscar",
-    chinese: "第五隊 月痕使"
+    english:
+      "Team 5 Moonscar",
+
+    chinese:
+      "第五隊 月痕使"
   },
 
   6: {
-    english: "Team 6 Starfire",
-    chinese: "第六隊 星焰團"
+    english:
+      "Team 6 Starfire",
+
+    chinese:
+      "第六隊 星焰團"
   },
 
   7: {
-    english: "Team 7 Dark Rabbit",
-    chinese: "第七隊 玄兔眾"
+    english:
+      "Team 7 Dark Rabbit",
+
+    chinese:
+      "第七隊 玄兔眾"
   },
 
   8: {
-    english: "Team 8 Silvermoon",
-    chinese: "第八隊 銀月盟"
+    english:
+      "Team 8 Silvermoon",
+
+    chinese:
+      "第八隊 銀月盟"
   },
 
   9: {
-    english: "Team 9 Sky Lantern",
-    chinese: "第九隊 天燈使"
+    english:
+      "Team 9 Sky Lantern",
+
+    chinese:
+      "第九隊 天燈使"
   },
 
   10: {
-    english: "Team 10 Moonsoul",
-    chinese: "第十隊 月魂隊"
+    english:
+      "Team 10 Moonsoul",
+
+    chinese:
+      "第十隊 月魂隊"
   }
 
 };
+
 
 
 function getTeamName(
@@ -2299,802 +2320,9 @@ const photoChannel =
 
 
 
-/* ==========================================
-   AUDIO FILES
-========================================== */
-
-/*
-  Existing files:
-
-  audio/bgm-game.mp3
-  audio/answer-reveal.mp3
-  audio/moon-complete.mp3
-  audio/rank-reveal.mp3
-  audio/champion.mp3
-
-  NEW:
-
-  audio/bgm-lobby.mp3
-  audio/mirror-hint.mp3
-*/
-
-
-const lobbyBgm =
-  new Audio(
-    "./audio/bgm-lobby.mp3"
-  );
-
-
-const gameBgm =
-  new Audio(
-    "./audio/bgm-game.mp3"
-  );
-
-
-const answerRevealSound =
-  new Audio(
-    "./audio/answer-reveal.mp3"
-  );
-
-
-const moonCompleteSound =
-  new Audio(
-    "./audio/moon-complete.mp3"
-  );
-
-
-const rankRevealSound =
-  new Audio(
-    "./audio/rank-reveal.mp3"
-  );
-
-
-const championSound =
-  new Audio(
-    "./audio/champion.mp3"
-  );
-
-
-const mirrorHintSound =
-  new Audio(
-    "./audio/mirror-hint.mp3"
-  );
-
-
-
-lobbyBgm.loop =
-  true;
-
-
-gameBgm.loop =
-  true;
-
-
-
-const NORMAL_LOBBY_VOLUME =
-  0.18;
-
-
-const NORMAL_GAME_VOLUME =
-  0.20;
-
-
-const DUCKED_GAME_VOLUME =
-  0.07;
-
-
-
-lobbyBgm.volume =
-  NORMAL_LOBBY_VOLUME;
-
-
-gameBgm.volume =
-  NORMAL_GAME_VOLUME;
-
-
-answerRevealSound.volume =
-  0.65;
-
-
-moonCompleteSound.volume =
-  0.78;
-
-
-rankRevealSound.volume =
-  0.68;
-
-
-championSound.volume =
-  0.85;
-
-
-mirrorHintSound.volume =
-  0.90;
-
-
-
-const allAudio =
-  [
-    lobbyBgm,
-    gameBgm,
-    answerRevealSound,
-    moonCompleteSound,
-    rankRevealSound,
-    championSound,
-    mirrorHintSound
-  ];
-
-
-for (
-  const audio of
-  allAudio
-) {
-
-  audio.preload =
-    "auto";
-
-}
-
-
-
-let soundEnabled =
-  false;
-
-
-let soundUnlocked =
-  false;
-
-
-let currentGameStateForAudio =
-  "lobby";
-
-
-let bgmRestoreTimer =
-  null;
-
-
-let lastRevealSoundKey =
-  null;
-
-
-let lastRankSoundKey =
-  null;
-
-
-let lastMirrorHintKey =
-  null;
-
-
-
-/* ==========================================
-   SOUND BUTTON
-========================================== */
-
-const enableSoundButton =
-  document.getElementById(
-    "enableSoundButton"
-  );
-
-
-const soundStatus =
-  document.getElementById(
-    "soundStatus"
-  );
-
-
-const mirrorHintStatus =
-  document.getElementById(
-    "mirrorHintStatus"
-  );
-
-
-
-enableSoundButton.addEventListener(
-  "click",
-  async () => {
-
-
-    if (
-      soundUnlocked
-    ) {
-
-
-      soundEnabled =
-        !soundEnabled;
-
-
-      if (
-        soundEnabled
-      ) {
-
-
-        enableSoundButton.textContent =
-          "🔊 Sound On";
-
-
-        syncBackgroundMusic(
-          currentGameStateForAudio
-        );
-
-
-        /*
-          If sound is turned back on while
-          already on the hint screen,
-          allow the hint to play.
-        */
-
-        if (
-          currentGameStateForAudio ===
-            "mirrorHint" &&
-          latestRoomData
-        ) {
-
-          playMirrorHintAudio(
-            latestRoomData
-          );
-
-        }
-
-
-      } else {
-
-
-        enableSoundButton.textContent =
-          "🔇 Sound Off";
-
-
-        pauseAllAudio();
-
-      }
-
-
-      return;
-
-    }
-
-
-
-    /*
-      FIRST CLICK:
-      unlock browser audio.
-    */
-
-
-    for (
-      const audio of
-      allAudio
-    ) {
-
-      try {
-
-        audio.muted =
-          true;
-
-
-        await audio
-          .play()
-          .catch(
-            () => {}
-          );
-
-
-        audio.pause();
-
-
-        audio.currentTime =
-          0;
-
-
-        audio.muted =
-          false;
-
-
-      } catch (
-        error
-      ) {
-
-        console.warn(
-          "Audio unlock:",
-          error
-        );
-
-      }
-
-    }
-
-
-    soundUnlocked =
-      true;
-
-
-    soundEnabled =
-      true;
-
-
-    enableSoundButton.textContent =
-      "🔊 Sound On";
-
-
-    soundStatus.textContent =
-      "✓ Audio enabled";
-
-
-    soundStatus.style.display =
-      "block";
-
-
-    setTimeout(
-      () => {
-
-        soundStatus.style.display =
-          "none";
-
-      },
-      1800
-    );
-
-
-    syncBackgroundMusic(
-      currentGameStateForAudio
-    );
-
-
-    if (
-      currentGameStateForAudio ===
-        "mirrorHint" &&
-      latestRoomData
-    ) {
-
-      playMirrorHintAudio(
-        latestRoomData
-      );
-
-    }
-
-  }
-);
-
-
-
-/* ==========================================
-   AUDIO HELPERS
-========================================== */
-
-function resetAudio(
-  audio
-) {
-
-  audio.pause();
-
-
-  try {
-
-    audio.currentTime =
-      0;
-
-  } catch (
-    error
-  ) {
-
-    /* Ignore */
-
-  }
-
-}
-
-
-
-function pauseAllAudio() {
-
-  for (
-    const audio of
-    allAudio
-  ) {
-
-    resetAudio(
-      audio
-    );
-
-  }
-
-}
-
-
-
-function playAudioSafely(
-  audio
-) {
-
-  if (
-    !soundEnabled
-  ) {
-
-    return;
-
-  }
-
-
-  const promise =
-    audio.play();
-
-
-  if (
-    promise
-  ) {
-
-    promise.catch(
-      error => {
-
-        console.warn(
-          "Audio could not play:",
-          error
-        );
-
-      }
-    );
-
-  }
-
-}
-
-
-
-function playLobbyBgm() {
-
-  if (
-    !soundEnabled
-  ) {
-
-    return;
-
-  }
-
-
-  if (
-    !gameBgm.paused
-  ) {
-
-    gameBgm.pause();
-
-  }
-
-
-  gameBgm.currentTime =
-    gameBgm.currentTime || 0;
-
-
-  lobbyBgm.volume =
-    NORMAL_LOBBY_VOLUME;
-
-
-  if (
-    lobbyBgm.paused
-  ) {
-
-    playAudioSafely(
-      lobbyBgm
-    );
-
-  }
-
-}
-
-
-
-function playGameBgm() {
-
-  if (
-    !soundEnabled
-  ) {
-
-    return;
-
-  }
-
-
-  if (
-    !lobbyBgm.paused
-  ) {
-
-    lobbyBgm.pause();
-
-  }
-
-
-  gameBgm.volume =
-    NORMAL_GAME_VOLUME;
-
-
-  if (
-    gameBgm.paused
-  ) {
-
-    playAudioSafely(
-      gameBgm
-    );
-
-  }
-
-}
-
-
-
-function stopBackgroundMusic() {
-
-  lobbyBgm.pause();
-
-  gameBgm.pause();
-
-}
-
-
-
-function syncBackgroundMusic(
-  state
-) {
-
-  currentGameStateForAudio =
-    state;
-
-
-  if (
-    !soundEnabled
-  ) {
-
-    stopBackgroundMusic();
-
-    return;
-
-  }
-
-
-  /*
-    Lobby gets its own music.
-  */
-
-  if (
-    state ===
-    "lobby"
-  ) {
-
-    playLobbyBgm();
-
-    return;
-
-  }
-
-
-  /*
-    Main game BGM.
-  */
-
-  if (
-    state ===
-      "questions" ||
-
-    state ===
-      "reveal" ||
-
-    state ===
-      "quizComplete" ||
-
-    state ===
-      "leaderboard" ||
-
-    state ===
-      "leaderboardFull"
-  ) {
-
-    playGameBgm();
-
-    return;
-
-  }
-
-
-  /*
-    No normal BGM during:
-
-    intro
-    mirrorHint
-    finale
-  */
-
-  stopBackgroundMusic();
-
-}
-
-
-
-function duckGameBgm(
-  duration =
-    1300
-) {
-
-  if (
-    !soundEnabled ||
-    gameBgm.paused
-  ) {
-
-    return;
-
-  }
-
-
-  if (
-    bgmRestoreTimer
-  ) {
-
-    clearTimeout(
-      bgmRestoreTimer
-    );
-
-  }
-
-
-  gameBgm.volume =
-    DUCKED_GAME_VOLUME;
-
-
-  bgmRestoreTimer =
-    setTimeout(
-      () => {
-
-        if (
-          soundEnabled &&
-          !gameBgm.paused
-        ) {
-
-          gameBgm.volume =
-            NORMAL_GAME_VOLUME;
-
-        }
-
-      },
-      duration
-    );
-
-}
-
-
-
-function playSoundEffect(
-  audio,
-  duckDuration =
-    1300
-) {
-
-  if (
-    !soundEnabled
-  ) {
-
-    return;
-
-  }
-
-
-  duckGameBgm(
-    duckDuration
-  );
-
-
-  resetAudio(
-    audio
-  );
-
-
-  playAudioSafely(
-    audio
-  );
-
-}
-
-
-
-/* ==========================================
-   MIRROR HINT AUDIO
-========================================== */
-
-function playMirrorHintAudio(
-  room
-) {
-
-  if (
-    !soundEnabled
-  ) {
-
-    mirrorHintStatus.textContent =
-      "🔇 Sound is off — click Enable Sound.";
-
-    return;
-
-  }
-
-
-  const hintKey =
-    activeRoomCode +
-    ":" +
-    (
-      room.mirrorHintStartedAt ||
-      "hint"
-    );
-
-
-  if (
-    lastMirrorHintKey ===
-    hintKey
-  ) {
-
-    return;
-
-  }
-
-
-  lastMirrorHintKey =
-    hintKey;
-
-
-  /*
-    Hint gets the room to itself.
-  */
-
-  stopBackgroundMusic();
-
-
-  resetAudio(
-    answerRevealSound
-  );
-
-
-  resetAudio(
-    moonCompleteSound
-  );
-
-
-  resetAudio(
-    rankRevealSound
-  );
-
-
-  resetAudio(
-    championSound
-  );
-
-
-  resetAudio(
-    mirrorHintSound
-  );
-
-
-  mirrorHintStatus.textContent =
-    "🎵 Playing audio clue…";
-
-
-  playAudioSafely(
-    mirrorHintSound
-  );
-
-}
-
-
-
-mirrorHintSound.addEventListener(
-  "ended",
-  () => {
-
-    mirrorHintStatus.innerHTML =
-      "✓ 提示播放完畢 / Audio clue complete" +
-      "<br>" +
-      "請開始排列五音玄鏡！ / Assemble the Five-Tone Mirror!";
-
-  }
-);
-
-
-
-/* ==========================================
-   SCREEN ELEMENTS
-========================================== */
+/* =========================================================
+   ELEMENTS
+========================================================= */
 
 const lobbyScreen =
   document.getElementById(
@@ -3144,6 +2372,18 @@ const finaleScreen =
   );
 
 
+const introVideo =
+  document.getElementById(
+    "introVideo"
+  );
+
+
+const finaleVideo =
+  document.getElementById(
+    "finaleVideo"
+  );
+
+
 const roomCodeEl =
   document.getElementById(
     "roomCode"
@@ -3165,6 +2405,24 @@ const teamGrid =
 const statusEl =
   document.getElementById(
     "status"
+  );
+
+
+const enableSoundButton =
+  document.getElementById(
+    "enableSoundButton"
+  );
+
+
+const soundStatus =
+  document.getElementById(
+    "soundStatus"
+  );
+
+
+const mirrorHintStatus =
+  document.getElementById(
+    "mirrorHintStatus"
   );
 
 
@@ -3295,9 +2553,135 @@ const confettiLayer =
 
 
 
-/* ==========================================
+/* =========================================================
+   AUDIO FILES
+========================================================= */
+
+const lobbyBgm =
+  new Audio(
+    "./audio/bgm-lobby.mp3"
+  );
+
+
+const gameBgm =
+  new Audio(
+    "./audio/bgm-game.mp3"
+  );
+
+
+const answerRevealSound =
+  new Audio(
+    "./audio/answer-reveal.mp3"
+  );
+
+
+const moonCompleteSound =
+  new Audio(
+    "./audio/moon-complete.mp3"
+  );
+
+
+const rankRevealSound =
+  new Audio(
+    "./audio/rank-reveal.mp3"
+  );
+
+
+const championSound =
+  new Audio(
+    "./audio/champion.mp3"
+  );
+
+
+const mirrorHintSound =
+  new Audio(
+    "./audio/mirror-hint.mp3"
+  );
+
+
+
+lobbyBgm.loop =
+  true;
+
+
+gameBgm.loop =
+  true;
+
+
+
+lobbyBgm.volume =
+  0.18;
+
+
+gameBgm.volume =
+  0.20;
+
+
+answerRevealSound.volume =
+  0.65;
+
+
+moonCompleteSound.volume =
+  0.78;
+
+
+rankRevealSound.volume =
+  0.68;
+
+
+championSound.volume =
+  0.85;
+
+
+mirrorHintSound.volume =
+  0.90;
+
+
+introVideo.volume =
+  1.0;
+
+
+finaleVideo.volume =
+  1.0;
+
+
+
+const audioTracks =
+  [
+    lobbyBgm,
+    gameBgm,
+    answerRevealSound,
+    moonCompleteSound,
+    rankRevealSound,
+    championSound,
+    mirrorHintSound
+  ];
+
+
+const unlockMedia =
+  [
+    ...audioTracks,
+    introVideo,
+    finaleVideo
+  ];
+
+
+
+for (
+  const media of
+  unlockMedia
+) {
+
+  media.preload =
+    "auto";
+
+}
+
+
+
+/* =========================================================
    VARIABLES
-========================================== */
+========================================================= */
 
 let activeRoomCode =
   null;
@@ -3315,12 +2699,44 @@ let stopTeamsListener =
   null;
 
 
+let soundUnlocked =
+  false;
+
+
+let soundEnabled =
+  false;
+
+
+let currentGameStateForAudio =
+  "lobby";
+
+
+let bgmRestoreTimer =
+  null;
+
+
+let lastRevealSoundKey =
+  null;
+
+
+let lastRankSoundKey =
+  null;
+
+
+let lastMirrorHintKey =
+  null;
+
+
 let lastChampionCelebrationKey =
   null;
 
 
-let finaleCelebrated =
-  false;
+let lastIntroVideoKey =
+  null;
+
+
+let lastFinaleVideoKey =
+  null;
 
 
 let suppressNextStateSound =
@@ -3332,9 +2748,809 @@ const photoURLCache =
 
 
 
-/* ==========================================
+/* =========================================================
+   BASIC MEDIA HELPERS
+========================================================= */
+
+function resetMedia(
+  media
+) {
+
+  media.pause();
+
+
+  try {
+
+    media.currentTime =
+      0;
+
+  } catch (
+    error
+  ) {
+
+    /* Ignore */
+
+  }
+
+}
+
+
+
+function pauseSoundEffects() {
+
+  resetMedia(
+    answerRevealSound
+  );
+
+
+  resetMedia(
+    moonCompleteSound
+  );
+
+
+  resetMedia(
+    rankRevealSound
+  );
+
+
+  resetMedia(
+    championSound
+  );
+
+
+  resetMedia(
+    mirrorHintSound
+  );
+
+}
+
+
+
+function stopBackgroundMusic() {
+
+  lobbyBgm.pause();
+
+  gameBgm.pause();
+
+}
+
+
+
+function stopIntroVideo() {
+
+  if (
+    !introVideo.paused ||
+    introVideo.currentTime >
+      0
+  ) {
+
+    resetMedia(
+      introVideo
+    );
+
+  }
+
+}
+
+
+
+function stopFinaleVideo() {
+
+  if (
+    !finaleVideo.paused ||
+    finaleVideo.currentTime >
+      0
+  ) {
+
+    resetMedia(
+      finaleVideo
+    );
+
+  }
+
+}
+
+
+
+function playSafely(
+  media
+) {
+
+  const promise =
+    media.play();
+
+
+  if (
+    promise
+  ) {
+
+    return promise.catch(
+      error => {
+
+        console.warn(
+          "Media playback failed:",
+          error
+        );
+
+
+        throw error;
+
+      }
+    );
+
+  }
+
+
+  return Promise.resolve();
+
+}
+
+
+
+/* =========================================================
+   ENABLE SOUND
+========================================================= */
+
+enableSoundButton.addEventListener(
+  "click",
+  async () => {
+
+
+    if (
+      soundUnlocked
+    ) {
+
+
+      soundEnabled =
+        !soundEnabled;
+
+
+      if (
+        soundEnabled
+      ) {
+
+        enableSoundButton.textContent =
+          "🔊 Sound On";
+
+
+        syncCurrentMedia();
+
+
+      } else {
+
+        enableSoundButton.textContent =
+          "🔇 Sound Off";
+
+
+        for (
+          const media of
+          unlockMedia
+        ) {
+
+          media.pause();
+
+        }
+
+      }
+
+
+      return;
+
+    }
+
+
+
+    /*
+      First physical click on TV browser.
+
+      Unlock all audio AND both MP4s.
+    */
+
+    for (
+      const media of
+      unlockMedia
+    ) {
+
+      try {
+
+        const previousMuted =
+          media.muted;
+
+
+        media.muted =
+          true;
+
+
+        await media
+          .play()
+          .catch(
+            () => {}
+          );
+
+
+        media.pause();
+
+
+        media.currentTime =
+          0;
+
+
+        media.muted =
+          previousMuted;
+
+
+      } catch (
+        error
+      ) {
+
+        console.warn(
+          "Unlock attempt:",
+          error
+        );
+
+      }
+
+    }
+
+
+    soundUnlocked =
+      true;
+
+
+    soundEnabled =
+      true;
+
+
+    enableSoundButton.textContent =
+      "🔊 Sound On";
+
+
+    soundStatus.textContent =
+      "✓ Audio enabled";
+
+
+    soundStatus.style.display =
+      "block";
+
+
+    setTimeout(
+      () => {
+
+        soundStatus.style.display =
+          "none";
+
+      },
+      1800
+    );
+
+
+    syncCurrentMedia();
+
+  }
+);
+
+
+
+/* =========================================================
+   BGM
+========================================================= */
+
+function playLobbyBgm() {
+
+  if (
+    !soundEnabled
+  ) {
+
+    return;
+
+  }
+
+
+  gameBgm.pause();
+
+
+  lobbyBgm.volume =
+    0.18;
+
+
+  if (
+    lobbyBgm.paused
+  ) {
+
+    playSafely(
+      lobbyBgm
+    ).catch(
+      () => {}
+    );
+
+  }
+
+}
+
+
+
+function playGameBgm() {
+
+  if (
+    !soundEnabled
+  ) {
+
+    return;
+
+  }
+
+
+  lobbyBgm.pause();
+
+
+  gameBgm.volume =
+    0.20;
+
+
+  if (
+    gameBgm.paused
+  ) {
+
+    playSafely(
+      gameBgm
+    ).catch(
+      () => {}
+    );
+
+  }
+
+}
+
+
+
+function syncBackgroundMusic(
+  state
+) {
+
+  currentGameStateForAudio =
+    state;
+
+
+  if (
+    !soundEnabled
+  ) {
+
+    stopBackgroundMusic();
+
+    return;
+
+  }
+
+
+  if (
+    state ===
+    "lobby"
+  ) {
+
+    playLobbyBgm();
+
+    return;
+
+  }
+
+
+  if (
+    state ===
+      "questions" ||
+
+    state ===
+      "reveal" ||
+
+    state ===
+      "quizComplete" ||
+
+    state ===
+      "leaderboard" ||
+
+    state ===
+      "leaderboardFull"
+  ) {
+
+    playGameBgm();
+
+    return;
+
+  }
+
+
+  stopBackgroundMusic();
+
+}
+
+
+
+function duckGameBgm(
+  duration =
+    1300
+) {
+
+  if (
+    gameBgm.paused
+  ) {
+
+    return;
+
+  }
+
+
+  if (
+    bgmRestoreTimer
+  ) {
+
+    clearTimeout(
+      bgmRestoreTimer
+    );
+
+  }
+
+
+  gameBgm.volume =
+    0.07;
+
+
+  bgmRestoreTimer =
+    setTimeout(
+      () => {
+
+        if (
+          soundEnabled &&
+          !gameBgm.paused
+        ) {
+
+          gameBgm.volume =
+            0.20;
+
+        }
+
+      },
+      duration
+    );
+
+}
+
+
+
+function playSoundEffect(
+  audio,
+  duckDuration =
+    1300
+) {
+
+  if (
+    !soundEnabled
+  ) {
+
+    return;
+
+  }
+
+
+  duckGameBgm(
+    duckDuration
+  );
+
+
+  resetMedia(
+    audio
+  );
+
+
+  playSafely(
+    audio
+  ).catch(
+    () => {}
+  );
+
+}
+
+
+
+/* =========================================================
+   INTRO VIDEO
+========================================================= */
+
+async function playIntroVideo() {
+
+  if (
+    !soundEnabled ||
+    !activeRoomCode
+  ) {
+
+    return;
+
+  }
+
+
+  const key =
+    activeRoomCode +
+    ":intro";
+
+
+  if (
+    lastIntroVideoKey ===
+    key
+  ) {
+
+    return;
+
+  }
+
+
+  stopBackgroundMusic();
+
+  pauseSoundEffects();
+
+  stopFinaleVideo();
+
+
+  resetMedia(
+    introVideo
+  );
+
+
+  introVideo.muted =
+    false;
+
+
+  try {
+
+    await playSafely(
+      introVideo
+    );
+
+
+    lastIntroVideoKey =
+      key;
+
+
+  } catch (
+    error
+  ) {
+
+    lastIntroVideoKey =
+      null;
+
+  }
+
+}
+
+
+
+/* =========================================================
+   FINALE VIDEO
+========================================================= */
+
+async function playFinaleVideo(
+  room
+) {
+
+  if (
+    !soundEnabled ||
+    !activeRoomCode
+  ) {
+
+    return;
+
+  }
+
+
+  const key =
+    activeRoomCode +
+    ":finale:" +
+    (
+      room.finaleStartedAt ||
+      "finale"
+    );
+
+
+  if (
+    lastFinaleVideoKey ===
+    key
+  ) {
+
+    return;
+
+  }
+
+
+  stopBackgroundMusic();
+
+  pauseSoundEffects();
+
+  stopIntroVideo();
+
+
+  resetMedia(
+    finaleVideo
+  );
+
+
+  finaleVideo.muted =
+    false;
+
+
+  try {
+
+    await playSafely(
+      finaleVideo
+    );
+
+
+    lastFinaleVideoKey =
+      key;
+
+
+  } catch (
+    error
+  ) {
+
+    lastFinaleVideoKey =
+      null;
+
+  }
+
+}
+
+
+
+/* =========================================================
+   MIRROR HINT
+========================================================= */
+
+function playMirrorHintAudio(
+  room
+) {
+
+  if (
+    !soundEnabled
+  ) {
+
+    mirrorHintStatus.textContent =
+      "🔇 Click Enable Sound on the TV.";
+
+    return;
+
+  }
+
+
+  const hintKey =
+    activeRoomCode +
+    ":" +
+    (
+      room.mirrorHintStartedAt ||
+      "hint"
+    );
+
+
+  if (
+    lastMirrorHintKey ===
+    hintKey
+  ) {
+
+    return;
+
+  }
+
+
+  lastMirrorHintKey =
+    hintKey;
+
+
+  stopBackgroundMusic();
+
+  pauseSoundEffects();
+
+  stopIntroVideo();
+
+  stopFinaleVideo();
+
+
+  mirrorHintStatus.textContent =
+    "🎵 Playing audio clue…";
+
+
+  playSafely(
+    mirrorHintSound
+  ).catch(
+    () => {}
+  );
+
+}
+
+
+
+mirrorHintSound.addEventListener(
+  "ended",
+  () => {
+
+    mirrorHintStatus.innerHTML =
+      "✓ 提示播放完畢 / Audio clue complete" +
+      "<br>" +
+      "請開始排列五音玄鏡！ / Assemble the Five-Tone Mirror!";
+
+  }
+);
+
+
+
+/* =========================================================
+   RESUME CURRENT MEDIA AFTER ENABLE SOUND
+========================================================= */
+
+function syncCurrentMedia() {
+
+  if (
+    !latestRoomData
+  ) {
+
+    syncBackgroundMusic(
+      currentGameStateForAudio
+    );
+
+    return;
+
+  }
+
+
+  const state =
+    latestRoomData.state ||
+    "lobby";
+
+
+  syncBackgroundMusic(
+    state
+  );
+
+
+  if (
+    state ===
+    "intro"
+  ) {
+
+    playIntroVideo();
+
+  }
+
+
+  if (
+    state ===
+    "mirrorHint"
+  ) {
+
+    lastMirrorHintKey =
+      null;
+
+
+    playMirrorHintAudio(
+      latestRoomData
+    );
+
+  }
+
+
+  if (
+    state ===
+    "finale"
+  ) {
+
+    playFinaleVideo(
+      latestRoomData
+    );
+
+  }
+
+}
+
+
+
+/* =========================================================
    SCREEN SWITCHER
-========================================== */
+========================================================= */
 
 function showScreen(
   screenName
@@ -3365,96 +3581,45 @@ function showScreen(
   }
 
 
-  if (
-    screenName ===
-    "lobby"
-  ) {
+  const map =
+    {
 
-    lobbyScreen.classList.add(
-      "active"
-    );
+      lobby:
+        lobbyScreen,
 
-  }
+      intro:
+        introScreen,
 
+      questions:
+        questionScreen,
 
-  if (
-    screenName ===
-    "intro"
-  ) {
+      quizComplete:
+        quizCompleteScreen,
 
-    introScreen.classList.add(
-      "active"
-    );
+      leaderboard:
+        leaderboardScreen,
 
-  }
+      leaderboardFull:
+        fullLeaderboardScreen,
 
+      mirrorHint:
+        mirrorHintScreen,
 
-  if (
-    screenName ===
-    "questions"
-  ) {
+      finale:
+        finaleScreen
 
-    questionScreen.classList.add(
-      "active"
-    );
-
-  }
+    };
 
 
   if (
-    screenName ===
-    "quizComplete"
+    map[
+      screenName
+    ]
   ) {
 
-    quizCompleteScreen.classList.add(
-      "active"
-    );
-
-  }
-
-
-  if (
-    screenName ===
-    "leaderboard"
-  ) {
-
-    leaderboardScreen.classList.add(
-      "active"
-    );
-
-  }
-
-
-  if (
-    screenName ===
-    "leaderboardFull"
-  ) {
-
-    fullLeaderboardScreen.classList.add(
-      "active"
-    );
-
-  }
-
-
-  if (
-    screenName ===
-    "mirrorHint"
-  ) {
-
-    mirrorHintScreen.classList.add(
-      "active"
-    );
-
-  }
-
-
-  if (
-    screenName ===
-    "finale"
-  ) {
-
-    finaleScreen.classList.add(
+    map[
+      screenName
+    ].classList.add(
       "active"
     );
 
@@ -3464,9 +3629,9 @@ function showScreen(
 
 
 
-/* ==========================================
+/* =========================================================
    PHOTO CACHE
-========================================== */
+========================================================= */
 
 function clearPhotoCache() {
 
@@ -3570,7 +3735,6 @@ async function getTeamPhotoURL(
   ) {
 
     console.error(
-      "Could not load team photo:",
       error
     );
 
@@ -3583,24 +3747,20 @@ async function getTeamPhotoURL(
 
 
 
-/* ==========================================
-   QUESTION
-========================================== */
+/* =========================================================
+   QUESTION HELPERS
+========================================================= */
 
 function clearAnswerRevealStyles() {
 
-  const letters =
+  for (
+    const letter of
     [
       "A",
       "B",
       "C",
       "D"
-    ];
-
-
-  for (
-    const letter of
-    letters
+    ]
   ) {
 
     const card =
@@ -3636,45 +3796,42 @@ function clearAnswerRevealStyles() {
 
 
 function updateMoonPowerDisplay(
-  roomData
+  room
 ) {
 
-  const rawMoonPower =
+  const raw =
     Number(
-      roomData.moonPower
+      room.moonPower
     ) || 0;
 
 
   const target =
     Number(
-      roomData.targetMoonPower
+      room.targetMoonPower
     ) || 1500;
 
 
-  const visibleMoonPower =
+  const shown =
     Math.min(
-      rawMoonPower,
+      raw,
       target
     );
 
 
-  const percent =
+  moonPowerFill.style.width =
     Math.min(
       100,
       (
-        visibleMoonPower /
+        shown /
         target
-      ) * 100
-    );
-
-
-  moonPowerFill.style.width =
-    percent +
+      ) *
+      100
+    ) +
     "%";
 
 
   moonPowerText.textContent =
-    visibleMoonPower +
+    shown +
     " / " +
     target;
 
@@ -3684,7 +3841,7 @@ function updateMoonPowerDisplay(
 
 function renderQuestion(
   questionNumber,
-  roomData
+  room
 ) {
 
   clearAnswerRevealStyles();
@@ -3701,14 +3858,6 @@ function renderQuestion(
   if (
     !question
   ) {
-
-    questionChineseEl.textContent =
-      "找不到此題目";
-
-
-    questionEnglishEl.textContent =
-      "Question not found";
-
 
     return;
 
@@ -3730,18 +3879,14 @@ function renderQuestion(
     question.english;
 
 
-  const letters =
+  for (
+    const letter of
     [
       "A",
       "B",
       "C",
       "D"
-    ];
-
-
-  for (
-    const letter of
-    letters
+    ]
   ) {
 
     const card =
@@ -3795,57 +3940,48 @@ function renderQuestion(
 
 
   updateMoonPowerDisplay(
-    roomData
+    room
   );
 
 
   const teams =
-    roomData.teams ||
+    room.teams ||
     {};
 
 
-  const activeTeamKeys =
+  const activeTeams =
     Object.keys(
       teams
     ).filter(
-      teamKey =>
+      key =>
         teams[
-          teamKey
-        ] &&
-        teams[
-          teamKey
-        ].joined ===
+          key
+        ]?.joined ===
           true
     );
 
 
-  const questionKey =
-    "q" +
-    questionNumber;
+  const answers =
+    room.answers?.[
+      "q" +
+      questionNumber
+    ] ||
+    {};
 
 
-  const questionAnswers =
-    (
-      roomData.answers &&
-      roomData.answers[
-        questionKey
-      ]
-    ) || {};
-
-
-  const answeredCount =
-    activeTeamKeys.filter(
-      teamKey =>
-        questionAnswers[
-          teamKey
+  const answered =
+    activeTeams.filter(
+      key =>
+        answers[
+          key
         ]
     ).length;
 
 
   answeredStatus.textContent =
-    answeredCount +
+    answered +
     " / " +
-    activeTeamKeys.length +
+    activeTeams.length +
     " teams answered";
 
 }
@@ -3854,12 +3990,12 @@ function renderQuestion(
 
 function renderAnswerReveal(
   questionNumber,
-  roomData
+  room
 ) {
 
   renderQuestion(
     questionNumber,
-    roomData
+    room
   );
 
 
@@ -3880,22 +4016,14 @@ function renderAnswerReveal(
   }
 
 
-  const correctAnswer =
-    question.correctAnswer;
-
-
-  const letters =
+  for (
+    const letter of
     [
       "A",
       "B",
       "C",
       "D"
-    ];
-
-
-  for (
-    const letter of
-    letters
+    ]
   ) {
 
     const card =
@@ -3907,7 +4035,7 @@ function renderAnswerReveal(
 
     if (
       letter ===
-      correctAnswer
+      question.correctAnswer
     ) {
 
       card.classList.add(
@@ -3932,82 +4060,70 @@ function renderAnswerReveal(
 
 
   const teams =
-    roomData.teams ||
+    room.teams ||
     {};
 
 
-  const activeTeamKeys =
+  const activeTeams =
     Object.keys(
       teams
     ).filter(
-      teamKey =>
+      key =>
         teams[
-          teamKey
-        ] &&
-        teams[
-          teamKey
-        ].joined ===
+          key
+        ]?.joined ===
           true
     );
 
 
-  const questionKey =
-    "q" +
-    questionNumber;
-
-
   const answers =
-    (
-      roomData.answers &&
-      roomData.answers[
-        questionKey
-      ]
-    ) || {};
+    room.answers?.[
+      "q" +
+      questionNumber
+    ] ||
+    {};
 
 
   const correctCount =
-    activeTeamKeys.filter(
-      teamKey =>
+    activeTeams.filter(
+      key =>
         answers[
-          teamKey
-        ] &&
-        answers[
-          teamKey
-        ].answer ===
-          correctAnswer
+          key
+        ]?.answer ===
+          question.correctAnswer
     ).length;
 
 
   answeredStatus.textContent =
     correctCount +
     " / " +
-    activeTeamKeys.length +
+    activeTeams.length +
     " teams correct";
 
 
-  const rawMoonPower =
+  const raw =
     Number(
-      roomData.moonPower
+      room.moonPower
     ) || 0;
 
 
   const target =
     Number(
-      roomData.targetMoonPower
+      room.targetMoonPower
     ) || 1500;
 
 
-  const reachedAtQuestion =
+  const reachedAt =
     Number(
-      roomData
+      room
         .moonPowerReachedAtQuestion
     ) || 0;
 
 
   if (
-    rawMoonPower >=
+    raw >=
       target &&
-    reachedAtQuestion ===
+    reachedAt ===
       questionNumber
   ) {
 
@@ -4021,9 +4137,9 @@ function renderAnswerReveal(
 
 
 
-/* ==========================================
+/* =========================================================
    QUIZ COMPLETE
-========================================== */
+========================================================= */
 
 function renderQuizComplete(
   room
@@ -4035,7 +4151,7 @@ function renderQuizComplete(
     ) || 1500;
 
 
-  const rawMoonPower =
+  const raw =
     Number(
       room.rawMoonPowerAtQuizComplete
     ) ||
@@ -4043,11 +4159,6 @@ function renderQuizComplete(
       room.moonPower
     ) ||
     0;
-
-
-  const completedByHost =
-    room.moonPowerCompletedByHost ===
-      true;
 
 
   completePowerText.textContent =
@@ -4062,7 +4173,8 @@ function renderQuizComplete(
 
 
   if (
-    completedByHost
+    room.moonPowerCompletedByHost ===
+      true
   ) {
 
     completeChinese.textContent =
@@ -4081,12 +4193,12 @@ function renderQuizComplete(
 
     rawPowerNotice.innerHTML =
       "問答實際收集月華力量：" +
-      rawMoonPower +
+      raw +
       " / " +
       target +
       "<br>" +
       "Quiz-collected Moon Power: " +
-      rawMoonPower +
+      raw +
       " / " +
       target +
       "<br><br>" +
@@ -4115,123 +4227,72 @@ function renderQuizComplete(
       "<br>" +
       "Together you gathered enough Moon Power!";
 
-
-    if (
-      rawMoonPower >
-      target
-    ) {
-
-      rawPowerNotice.innerHTML =
-        "實際問答累積：" +
-        rawMoonPower +
-        " Moon Power" +
-        "<br>" +
-        "Actual quiz total: " +
-        rawMoonPower +
-        " Moon Power";
-
-
-      rawPowerNotice.classList.add(
-        "visible"
-      );
-
-    }
-
   }
 
 }
 
 
 
-/* ==========================================
+/* =========================================================
    LEADERBOARD DATA
-========================================== */
+========================================================= */
 
 function getStandings(
   room
 ) {
 
-  const source =
-    room.finalStandings ||
-    {};
-
-
-  const standings =
-    Object.entries(
-      source
-    ).map(
+  return Object
+    .entries(
+      room.finalStandings ||
+      {}
+    )
+    .map(
       (
         [
           teamKey,
           data
         ]
-      ) => {
+      ) => ({
 
-        return {
+        teamKey,
 
-          teamKey:
-            teamKey,
+        teamNumber:
+          Number(
+            data.teamNumber
+          ) || 0,
 
-          teamNumber:
-            Number(
-              data.teamNumber
-            ) || 0,
+        previousScore:
+          Number(
+            data.previousScore
+          ) || 0,
 
-          previousScore:
-            Number(
-              data.previousScore
-            ) || 0,
+        quizScore:
+          Number(
+            data.quizScore
+          ) || 0,
 
-          quizScore:
-            Number(
-              data.quizScore
-            ) || 0,
+        totalScore:
+          Number(
+            data.totalScore
+          ) || 0,
 
-          totalScore:
-            Number(
-              data.totalScore
-            ) || 0,
+        rank:
+          Number(
+            data.rank
+          ) || 0
 
-          rank:
-            Number(
-              data.rank
-            ) || 0
-
-        };
-
-      }
-    );
-
-
-  standings.sort(
-    (
-      a,
-      b
-    ) => {
-
-      if (
-        a.rank !==
-        b.rank
-      ) {
-
-        return (
-          a.rank -
-          b.rank
-        );
-
-      }
-
-
-      return (
+      })
+    )
+    .sort(
+      (
+        a,
+        b
+      ) =>
+        a.rank -
+          b.rank ||
         a.teamNumber -
-        b.teamNumber
-      );
-
-    }
-  );
-
-
-  return standings;
+          b.teamNumber
+    );
 
 }
 
@@ -4254,14 +4315,11 @@ function getRevealOrder(
     return raw
       .filter(
         value =>
-          value !== null &&
-          value !== undefined
+          value !==
+            null
       )
       .map(
-        value =>
-          Number(
-            value
-          )
+        Number
       );
 
   }
@@ -4309,29 +4367,17 @@ function rankEmoji(
 
   if (
     rank === 1
-  ) {
-
-    return "🥇";
-
-  }
+  ) return "🥇";
 
 
   if (
     rank === 2
-  ) {
-
-    return "🥈";
-
-  }
+  ) return "🥈";
 
 
   if (
     rank === 3
-  ) {
-
-    return "🥉";
-
-  }
+  ) return "🥉";
 
 
   return "🌙";
@@ -4342,14 +4388,14 @@ function rankEmoji(
 
 function rankChinese(
   rank,
-  teamCount
+  count
 ) {
 
   if (
     rank === 1
   ) {
 
-    return teamCount >
+    return count >
       1
         ? "共同冠軍"
         : "冠軍";
@@ -4367,14 +4413,14 @@ function rankChinese(
 
 function rankEnglish(
   rank,
-  teamCount
+  count
 ) {
 
   if (
     rank === 1
   ) {
 
-    return teamCount >
+    return count >
       1
         ? "SHARED CHAMPIONS"
         : "CHAMPION";
@@ -4389,9 +4435,9 @@ function rankEnglish(
 
 
 
-/* ==========================================
-   FEATURED CARD
-========================================== */
+/* =========================================================
+   LEADERBOARD CARDS
+========================================================= */
 
 async function createFeaturedTeamCard(
   team
@@ -4404,43 +4450,8 @@ async function createFeaturedTeamCard(
 
 
   card.className =
-    "featuredTeamCard";
-
-
-  if (
-    team.rank ===
-    1
-  ) {
-
-    card.classList.add(
-      "rank1"
-    );
-
-  }
-
-
-  if (
-    team.rank ===
-    2
-  ) {
-
-    card.classList.add(
-      "rank2"
-    );
-
-  }
-
-
-  if (
-    team.rank ===
-    3
-  ) {
-
-    card.classList.add(
-      "rank3"
-    );
-
-  }
+    "featuredTeamCard rank" +
+    team.rank;
 
 
   const photoWrap =
@@ -4463,27 +4474,22 @@ async function createFeaturedTeamCard(
     photoURL
   ) {
 
-    const photo =
+    const image =
       document.createElement(
         "img"
       );
 
 
-    photo.className =
+    image.className =
       "featuredPhoto";
 
 
-    photo.src =
+    image.src =
       photoURL;
 
 
-    photo.alt =
-      "Team " +
-      team.teamNumber;
-
-
     photoWrap.appendChild(
-      photo
+      image
     );
 
 
@@ -4510,45 +4516,45 @@ async function createFeaturedTeamCard(
   }
 
 
-  const teamName =
-    document.createElement(
-      "div"
-    );
-
-
-  teamName.className =
-    "featuredTeamName";
-
-
-  const displayName =
+  const nameData =
     getTeamName(
       team.teamNumber
     );
 
 
-  teamName.innerHTML =
-    `
-      <div class="teamEnglishName">
-        ${displayName.english}
-      </div>
-
-      <div class="teamChineseName">
-        ${displayName.chinese}
-      </div>
-    `;
-
-
-  const scoreLabel =
+  const name =
     document.createElement(
       "div"
     );
 
 
-  scoreLabel.className =
+  name.className =
+    "featuredTeamName";
+
+
+  name.innerHTML =
+    `
+      <div class="teamEnglishName">
+        ${nameData.english}
+      </div>
+
+      <div class="teamChineseName">
+        ${nameData.chinese}
+      </div>
+    `;
+
+
+  const label =
+    document.createElement(
+      "div"
+    );
+
+
+  label.className =
     "featuredScoreLabel";
 
 
-  scoreLabel.textContent =
+  label.textContent =
     "FINAL SCORE";
 
 
@@ -4566,22 +4572,10 @@ async function createFeaturedTeamCard(
     team.totalScore;
 
 
-  card.appendChild(
-    photoWrap
-  );
-
-
-  card.appendChild(
-    teamName
-  );
-
-
-  card.appendChild(
-    scoreLabel
-  );
-
-
-  card.appendChild(
+  card.append(
+    photoWrap,
+    name,
+    label,
     score
   );
 
@@ -4591,10 +4585,6 @@ async function createFeaturedTeamCard(
 }
 
 
-
-/* ==========================================
-   MINI CARD
-========================================== */
 
 async function createMiniRankCard(
   team
@@ -4616,11 +4606,14 @@ async function createMiniRankCard(
     );
 
 
+  let photo;
+
+
   if (
     photoURL
   ) {
 
-    const photo =
+    photo =
       document.createElement(
         "img"
       );
@@ -4634,32 +4627,28 @@ async function createMiniRankCard(
       photoURL;
 
 
-    card.appendChild(
-      photo
-    );
-
-
   } else {
 
-    const fallback =
+    photo =
       document.createElement(
         "div"
       );
 
 
-    fallback.className =
+    photo.className =
       "miniPhotoFallback";
 
 
-    fallback.textContent =
+    photo.textContent =
       "🐇";
 
-
-    card.appendChild(
-      fallback
-    );
-
   }
+
+
+  const nameData =
+    getTeamName(
+      team.teamNumber
+    );
 
 
   const info =
@@ -4668,80 +4657,32 @@ async function createMiniRankCard(
     );
 
 
-  const rank =
-    document.createElement(
-      "div"
-    );
-
-
-  rank.className =
-    "miniRank";
-
-
-  rank.textContent =
-    "#" +
-    team.rank;
-
-
-  const name =
-    document.createElement(
-      "div"
-    );
-
-
-  name.className =
-    "miniTeamName";
-
-
-  const displayName =
-    getTeamName(
-      team.teamNumber
-    );
-
-
-  name.innerHTML =
+  info.innerHTML =
     `
-      <div class="teamEnglishName">
-        ${displayName.english}
+      <div class="miniRank">
+        #${team.rank}
       </div>
 
-      <div class="teamChineseName">
-        ${displayName.chinese}
+      <div class="miniTeamName">
+
+        <div class="teamEnglishName">
+          ${nameData.english}
+        </div>
+
+        <div class="teamChineseName">
+          ${nameData.chinese}
+        </div>
+
+      </div>
+
+      <div class="miniScore">
+        ${team.totalScore} pts
       </div>
     `;
 
 
-  const score =
-    document.createElement(
-      "div"
-    );
-
-
-  score.className =
-    "miniScore";
-
-
-  score.textContent =
-    team.totalScore +
-    " pts";
-
-
-  info.appendChild(
-    rank
-  );
-
-
-  info.appendChild(
-    name
-  );
-
-
-  info.appendChild(
-    score
-  );
-
-
-  card.appendChild(
+  card.append(
+    photo,
     info
   );
 
@@ -4751,10 +4692,6 @@ async function createMiniRankCard(
 }
 
 
-
-/* ==========================================
-   PROGRESSIVE LEADERBOARD
-========================================== */
 
 async function renderLeaderboard(
   room
@@ -4781,13 +4718,6 @@ async function renderLeaderboard(
     );
 
 
-  const revealedRanks =
-    revealOrder.slice(
-      0,
-      step
-    );
-
-
   currentRevealArea.innerHTML =
     "";
 
@@ -4805,35 +4735,24 @@ async function renderLeaderboard(
     0
   ) {
 
-    const panel =
-      document.createElement(
-        "div"
-      );
-
-
-    panel.className =
-      "suspensePanel";
-
-
-    panel.innerHTML =
+    currentRevealArea.innerHTML =
       `
-        <div class="suspenseIcon">
-          🏆
-        </div>
+        <div class="suspensePanel">
 
-        <div class="suspenseChinese">
-          最終排名即將揭曉……
-        </div>
+          <div class="suspenseIcon">
+            🏆
+          </div>
 
-        <div class="suspenseEnglish">
-          The Final Leaderboard is ready.
+          <div class="suspenseChinese">
+            最終排名即將揭曉……
+          </div>
+
+          <div class="suspenseEnglish">
+            The Final Leaderboard is ready.
+          </div>
+
         </div>
       `;
-
-
-    currentRevealArea.appendChild(
-      panel
-    );
 
 
     previousRanksArea.style.display =
@@ -4845,20 +4764,21 @@ async function renderLeaderboard(
   }
 
 
-  previousRanksArea.style.display =
-    "block";
+  const revealed =
+    revealOrder.slice(
+      0,
+      step
+    );
 
 
   const currentRank =
     Number(
       room.leaderboardCurrentRank
     ) ||
-    Number(
-      revealedRanks[
-        revealedRanks.length -
-        1
-      ]
-    );
+    revealed[
+      revealed.length -
+      1
+    ];
 
 
   const currentTeams =
@@ -4869,50 +4789,39 @@ async function renderLeaderboard(
     );
 
 
-  const header =
-    document.createElement(
-      "div"
-    );
-
-
-  header.className =
-    "currentRankHeader";
-
-
-  header.innerHTML =
+  currentRevealArea.innerHTML =
     `
-      <div class="rankEmoji">
-        ${rankEmoji(currentRank)}
-      </div>
+      <div class="currentRankHeader">
 
-      <div class="currentRankChinese">
-        ${rankChinese(
-          currentRank,
-          currentTeams.length
-        )}
-      </div>
+        <div class="rankEmoji">
+          ${rankEmoji(currentRank)}
+        </div>
 
-      <div class="currentRankEnglish">
-        ${rankEnglish(
-          currentRank,
-          currentTeams.length
-        )}
+        <div class="currentRankChinese">
+          ${rankChinese(
+            currentRank,
+            currentTeams.length
+          )}
+        </div>
+
+        <div class="currentRankEnglish">
+          ${rankEnglish(
+            currentRank,
+            currentTeams.length
+          )}
+        </div>
+
       </div>
     `;
 
 
-  currentRevealArea.appendChild(
-    header
-  );
-
-
-  const featuredGrid =
+  const featured =
     document.createElement(
       "div"
     );
 
 
-  featuredGrid.className =
+  featured.className =
     "featuredTeamGrid";
 
 
@@ -4921,30 +4830,24 @@ async function renderLeaderboard(
     currentTeams
   ) {
 
-    const card =
+    featured.appendChild(
       await createFeaturedTeamCard(
         team
-      );
-
-
-    featuredGrid.appendChild(
-      card
+      )
     );
 
   }
 
 
   currentRevealArea.appendChild(
-    featuredGrid
+    featured
   );
 
 
   const previousRanks =
-    revealedRanks.filter(
+    revealed.filter(
       rank =>
-        Number(
-          rank
-        ) !==
+        rank !==
         currentRank
     );
 
@@ -4958,32 +4861,10 @@ async function renderLeaderboard(
     );
 
 
-  previousTeams.sort(
-    (
-      a,
-      b
-    ) => {
-
-      if (
-        a.rank !==
-        b.rank
-      ) {
-
-        return (
-          a.rank -
-          b.rank
-        );
-
-      }
-
-
-      return (
-        a.teamNumber -
-        b.teamNumber
-      );
-
-    }
-  );
+  previousRanksArea.style.display =
+    previousTeams.length
+      ? "block"
+      : "none";
 
 
   for (
@@ -4991,26 +4872,11 @@ async function renderLeaderboard(
     previousTeams
   ) {
 
-    const miniCard =
+    previousRanksGrid.appendChild(
       await createMiniRankCard(
         team
-      );
-
-
-    previousRanksGrid.appendChild(
-      miniCard
+      )
     );
-
-  }
-
-
-  if (
-    previousTeams.length ===
-    0
-  ) {
-
-    previousRanksArea.style.display =
-      "none";
 
   }
 
@@ -5020,28 +4886,13 @@ async function renderLeaderboard(
     step;
 
 
-  if (
+  hiddenRanksMessage.textContent =
     remaining >
-    0
-  ) {
-
-    hiddenRanksMessage.textContent =
-      "🔒 " +
-      remaining +
-      (
-        remaining ===
-        1
-          ? " rank remains hidden"
-          : " ranks remain hidden"
-      );
-
-
-  } else {
-
-    hiddenRanksMessage.textContent =
-      "🏆 All ranks have been revealed!";
-
-  }
+      0
+        ? "🔒 " +
+          remaining +
+          " rank(s) remain hidden"
+        : "🏆 All ranks have been revealed!";
 
 
   if (
@@ -5049,19 +4900,19 @@ async function renderLeaderboard(
     1
   ) {
 
-    const celebrationKey =
+    const key =
       activeRoomCode +
       ":" +
       step;
 
 
     if (
-      lastChampionCelebrationKey !==
-      celebrationKey
+      key !==
+      lastChampionCelebrationKey
     ) {
 
       lastChampionCelebrationKey =
-        celebrationKey;
+        key;
 
 
       launchConfetti(
@@ -5076,285 +4927,9 @@ async function renderLeaderboard(
 
 
 
-/* ==========================================
+/* =========================================================
    FULL LEADERBOARD
-========================================== */
-
-async function createFullLeaderboardRow(
-  team
-) {
-
-  const row =
-    document.createElement(
-      "div"
-    );
-
-
-  row.className =
-    "fullRankRow";
-
-
-  if (
-    team.rank ===
-    1
-  ) {
-
-    row.classList.add(
-      "rank1"
-    );
-
-  }
-
-
-  if (
-    team.rank ===
-    2
-  ) {
-
-    row.classList.add(
-      "rank2"
-    );
-
-  }
-
-
-  if (
-    team.rank ===
-    3
-  ) {
-
-    row.classList.add(
-      "rank3"
-    );
-
-  }
-
-
-  const rank =
-    document.createElement(
-      "div"
-    );
-
-
-  rank.className =
-    "fullRankNumber";
-
-
-  if (
-    team.rank ===
-    1
-  ) {
-
-    rank.textContent =
-      "🥇";
-
-
-  } else if (
-    team.rank ===
-    2
-  ) {
-
-    rank.textContent =
-      "🥈";
-
-
-  } else if (
-    team.rank ===
-    3
-  ) {
-
-    rank.textContent =
-      "🥉";
-
-
-  } else {
-
-    rank.textContent =
-      "#" +
-      team.rank;
-
-  }
-
-
-  const photoURL =
-    await getTeamPhotoURL(
-      team.teamKey
-    );
-
-
-  let photoElement;
-
-
-  if (
-    photoURL
-  ) {
-
-    photoElement =
-      document.createElement(
-        "img"
-      );
-
-
-    photoElement.className =
-      "fullPhoto";
-
-
-    photoElement.src =
-      photoURL;
-
-
-  } else {
-
-    photoElement =
-      document.createElement(
-        "div"
-      );
-
-
-    photoElement.className =
-      "fullPhotoFallback";
-
-
-    photoElement.textContent =
-      "🐇";
-
-  }
-
-
-  const teamInfo =
-    document.createElement(
-      "div"
-    );
-
-
-  const teamName =
-    document.createElement(
-      "div"
-    );
-
-
-  teamName.className =
-    "fullTeamName";
-
-
-  const displayName =
-    getTeamName(
-      team.teamNumber
-    );
-
-
-  teamName.innerHTML =
-    `
-      <div class="teamEnglishName">
-        ${displayName.english}
-      </div>
-
-      <div class="teamChineseName">
-        ${displayName.chinese}
-      </div>
-    `;
-
-
-  const breakdown =
-    document.createElement(
-      "div"
-    );
-
-
-  breakdown.className =
-    "scoreBreakdown";
-
-
-  breakdown.textContent =
-    "Previous " +
-    team.previousScore +
-    " + Quiz " +
-    team.quizScore;
-
-
-  teamInfo.appendChild(
-    teamName
-  );
-
-
-  teamInfo.appendChild(
-    breakdown
-  );
-
-
-  const totalArea =
-    document.createElement(
-      "div"
-    );
-
-
-  totalArea.className =
-    "fullTotalArea";
-
-
-  const totalLabel =
-    document.createElement(
-      "div"
-    );
-
-
-  totalLabel.className =
-    "fullTotalLabel";
-
-
-  totalLabel.textContent =
-    "FINAL SCORE";
-
-
-  const total =
-    document.createElement(
-      "div"
-    );
-
-
-  total.className =
-    "fullTotal";
-
-
-  total.textContent =
-    team.totalScore;
-
-
-  totalArea.appendChild(
-    totalLabel
-  );
-
-
-  totalArea.appendChild(
-    total
-  );
-
-
-  row.appendChild(
-    rank
-  );
-
-
-  row.appendChild(
-    photoElement
-  );
-
-
-  row.appendChild(
-    teamInfo
-  );
-
-
-  row.appendChild(
-    totalArea
-  );
-
-
-  return row;
-
-}
-
-
+========================================================= */
 
 async function renderFullLeaderboard(
   room
@@ -5376,9 +4951,146 @@ async function renderFullLeaderboard(
   ) {
 
     const row =
-      await createFullLeaderboardRow(
-        team
+      document.createElement(
+        "div"
       );
+
+
+    row.className =
+      "fullRankRow rank" +
+      team.rank;
+
+
+    const rank =
+      document.createElement(
+        "div"
+      );
+
+
+    rank.className =
+      "fullRankNumber";
+
+
+    rank.textContent =
+      team.rank ===
+        1
+        ? "🥇"
+        : team.rank ===
+            2
+          ? "🥈"
+          : team.rank ===
+              3
+            ? "🥉"
+            : "#" +
+              team.rank;
+
+
+    const photoURL =
+      await getTeamPhotoURL(
+        team.teamKey
+      );
+
+
+    let photo;
+
+
+    if (
+      photoURL
+    ) {
+
+      photo =
+        document.createElement(
+          "img"
+        );
+
+
+      photo.className =
+        "fullPhoto";
+
+
+      photo.src =
+        photoURL;
+
+
+    } else {
+
+      photo =
+        document.createElement(
+          "div"
+        );
+
+
+      photo.className =
+        "fullPhotoFallback";
+
+
+      photo.textContent =
+        "🐇";
+
+    }
+
+
+    const nameData =
+      getTeamName(
+        team.teamNumber
+      );
+
+
+    const info =
+      document.createElement(
+        "div"
+      );
+
+
+    info.innerHTML =
+      `
+        <div class="fullTeamName">
+
+          <div class="teamEnglishName">
+            ${nameData.english}
+          </div>
+
+          <div class="teamChineseName">
+            ${nameData.chinese}
+          </div>
+
+        </div>
+
+        <div class="scoreBreakdown">
+          Previous ${team.previousScore}
+          + Quiz ${team.quizScore}
+        </div>
+      `;
+
+
+    const total =
+      document.createElement(
+        "div"
+      );
+
+
+    total.className =
+      "fullTotalArea";
+
+
+    total.innerHTML =
+      `
+        <div class="fullTotalLabel">
+          FINAL SCORE
+        </div>
+
+        <div class="fullTotal">
+          ${team.totalScore}
+        </div>
+      `;
+
+
+    row.append(
+      rank,
+      photo,
+      info,
+      total
+    );
 
 
     fullLeaderboardGrid.appendChild(
@@ -5391,53 +5103,9 @@ async function renderFullLeaderboard(
 
 
 
-/* ==========================================
-   FINALE
-========================================== */
-
-function renderFinale() {
-
-  if (
-    !finaleCelebrated
-  ) {
-
-    finaleCelebrated =
-      true;
-
-
-    launchConfetti(
-      140
-    );
-
-
-    setTimeout(
-      () => {
-
-        if (
-          latestRoomData &&
-          latestRoomData.state ===
-            "finale"
-        ) {
-
-          launchConfetti(
-            90
-          );
-
-        }
-
-      },
-      2800
-    );
-
-  }
-
-}
-
-
-
-/* ==========================================
-   STATE AUDIO
-========================================== */
+/* =========================================================
+   AUDIO STATE EVENTS
+========================================================= */
 
 function handleStateAudio(
   room,
@@ -5448,6 +5116,69 @@ function handleStateAudio(
     state
   );
 
+
+  /*
+    Stop videos when leaving their states.
+  */
+
+  if (
+    state !==
+    "intro"
+  ) {
+
+    stopIntroVideo();
+
+  }
+
+
+  if (
+    state !==
+    "finale"
+  ) {
+
+    stopFinaleVideo();
+
+  }
+
+
+
+  /*
+    Videos are not treated like tiny SFX.
+
+    If we are entering intro/finale,
+    play them.
+  */
+
+  if (
+    state ===
+    "intro"
+  ) {
+
+    playIntroVideo();
+
+    return;
+
+  }
+
+
+  if (
+    state ===
+    "finale"
+  ) {
+
+    playFinaleVideo(
+      room
+    );
+
+    return;
+
+  }
+
+
+
+  /*
+    Don't replay old SFX after a TV refresh.
+  */
 
   if (
     suppressNextStateSound
@@ -5461,9 +5192,6 @@ function handleStateAudio(
   }
 
 
-  /*
-    Answer reveal
-  */
 
   if (
     state ===
@@ -5476,15 +5204,15 @@ function handleStateAudio(
       ) || 1;
 
 
-    const revealKey =
+    const key =
       activeRoomCode +
-      ":question:" +
+      ":q:" +
       questionNumber;
 
 
     if (
       lastRevealSoundKey ===
-      revealKey
+      key
     ) {
 
       return;
@@ -5493,10 +5221,10 @@ function handleStateAudio(
 
 
     lastRevealSoundKey =
-      revealKey;
+      key;
 
 
-    const rawMoonPower =
+    const raw =
       Number(
         room.moonPower
       ) || 0;
@@ -5508,16 +5236,17 @@ function handleStateAudio(
       ) || 1500;
 
 
-    const reachedAtQuestion =
+    const reachedAt =
       Number(
-        room.moonPowerReachedAtQuestion
+        room
+          .moonPowerReachedAtQuestion
       ) || 0;
 
 
     if (
-      rawMoonPower >=
+      raw >=
         target &&
-      reachedAtQuestion ===
+      reachedAt ===
         questionNumber
     ) {
 
@@ -5542,9 +5271,6 @@ function handleStateAudio(
   }
 
 
-  /*
-    Leaderboard rank reveal
-  */
 
   if (
     state ===
@@ -5573,9 +5299,9 @@ function handleStateAudio(
       ) || 0;
 
 
-    const rankKey =
+    const key =
       activeRoomCode +
-      ":leaderboard:" +
+      ":rank:" +
       step +
       ":" +
       rank;
@@ -5583,7 +5309,7 @@ function handleStateAudio(
 
     if (
       lastRankSoundKey ===
-      rankKey
+      key
     ) {
 
       return;
@@ -5592,7 +5318,7 @@ function handleStateAudio(
 
 
     lastRankSoundKey =
-      rankKey;
+      key;
 
 
     if (
@@ -5621,9 +5347,6 @@ function handleStateAudio(
   }
 
 
-  /*
-    Five-Tone Mirror Hint
-  */
 
   if (
     state ===
@@ -5634,18 +5357,15 @@ function handleStateAudio(
       room
     );
 
-
-    return;
-
   }
 
 }
 
 
 
-/* ==========================================
+/* =========================================================
    CONFETTI
-========================================== */
+========================================================= */
 
 function launchConfetti(
   amount =
@@ -5709,14 +5429,6 @@ function launchConfetti(
       "s";
 
 
-    piece.style.animationDelay =
-      (
-        Math.random() *
-        0.7
-      ) +
-      "s";
-
-
     confettiLayer.appendChild(
       piece
     );
@@ -5738,22 +5450,16 @@ function launchConfetti(
 
 
 
-/* ==========================================
+/* =========================================================
    CURRENT ROOM
-========================================== */
+========================================================= */
 
-const currentRoomRef =
+onValue(
   ref(
     db,
     "currentRoom"
-  );
-
-
-onValue(
-  currentRoomRef,
-  (
-    snapshot
-  ) => {
+  ),
+  snapshot => {
 
     const roomCode =
       snapshot.val();
@@ -5765,9 +5471,6 @@ onValue(
 
       stopRoomListener();
 
-      stopRoomListener =
-        null;
-
     }
 
 
@@ -5776,9 +5479,6 @@ onValue(
     ) {
 
       stopTeamsListener();
-
-      stopTeamsListener =
-        null;
 
     }
 
@@ -5791,14 +5491,6 @@ onValue(
       clearPhotoCache();
 
 
-      lastChampionCelebrationKey =
-        null;
-
-
-      finaleCelebrated =
-        false;
-
-
       lastRevealSoundKey =
         null;
 
@@ -5808,6 +5500,18 @@ onValue(
 
 
       lastMirrorHintKey =
+        null;
+
+
+      lastChampionCelebrationKey =
+        null;
+
+
+      lastIntroVideoKey =
+        null;
+
+
+      lastFinaleVideoKey =
         null;
 
 
@@ -5833,6 +5537,10 @@ onValue(
       showScreen(
         "lobby"
       );
+
+
+      currentGameStateForAudio =
+        "lobby";
 
 
       syncBackgroundMusic(
@@ -5865,10 +5573,6 @@ onValue(
       roomCode;
 
 
-    statusEl.textContent =
-      "Join using the room code above";
-
-
     watchRoom(
       roomCode
     );
@@ -5883,28 +5587,22 @@ onValue(
 
 
 
-/* ==========================================
+/* =========================================================
    WATCH ROOM
-========================================== */
+========================================================= */
 
 function watchRoom(
   roomCode
 ) {
 
-  const roomRef =
-    ref(
-      db,
-      "rooms/" +
-      roomCode
-    );
-
-
   stopRoomListener =
     onValue(
-      roomRef,
-      async (
-        snapshot
-      ) => {
+      ref(
+        db,
+        "rooms/" +
+        roomCode
+      ),
+      async snapshot => {
 
         const room =
           snapshot.val();
@@ -5926,6 +5624,10 @@ function watchRoom(
         const state =
           room.state ||
           "lobby";
+
+
+        currentGameStateForAudio =
+          state;
 
 
         handleStateAudio(
@@ -6077,7 +5779,6 @@ function watchRoom(
             "mirrorHint"
           );
 
-
           return;
 
         }
@@ -6092,10 +5793,6 @@ function watchRoom(
             "finale"
           );
 
-
-          renderFinale();
-
-
           return;
 
         }
@@ -6107,29 +5804,23 @@ function watchRoom(
 
 
 
-/* ==========================================
+/* =========================================================
    WATCH TEAMS
-========================================== */
+========================================================= */
 
 function watchTeams(
   roomCode
 ) {
 
-  const teamsRef =
-    ref(
-      db,
-      "rooms/" +
-      roomCode +
-      "/teams"
-    );
-
-
   stopTeamsListener =
     onValue(
-      teamsRef,
-      (
-        snapshot
-      ) => {
+      ref(
+        db,
+        "rooms/" +
+        roomCode +
+        "/teams"
+      ),
+      snapshot => {
 
         const teams =
           snapshot.val() ||
@@ -6146,7 +5837,8 @@ function watchTeams(
 
         for (
           let teamNumber = 1;
-          teamNumber <= 10;
+          teamNumber <=
+            10;
           teamNumber++
         ) {
 
@@ -6158,10 +5850,7 @@ function watchTeams(
           const joined =
             teams[
               teamKey
-            ] &&
-            teams[
-              teamKey
-            ].joined ===
+            ]?.joined ===
               true;
 
 
@@ -6189,7 +5878,7 @@ function watchTeams(
             );
 
 
-          const teamName =
+          const name =
             getTeamName(
               teamNumber
             );
@@ -6198,11 +5887,11 @@ function watchTeams(
           card.innerHTML =
             `
               <div class="teamEnglishName">
-                ${teamName.english}${joined ? " ✓" : ""}
+                ${name.english}${joined ? " ✓" : ""}
               </div>
 
               <div class="teamChineseName">
-                ${teamName.chinese}
+                ${name.chinese}
               </div>
             `;
 
@@ -6220,18 +5909,15 @@ function watchTeams(
 
 
         if (
-          joinedCount ===
-          10
+          latestRoomData?.state ===
+            "lobby"
         ) {
 
           statusEl.textContent =
-            "All teams are ready ✓";
-
-
-        } else {
-
-          statusEl.textContent =
-            "Waiting for teams to join...";
+            joinedCount ===
+              10
+              ? "All teams are ready ✓"
+              : "Waiting for teams to join...";
 
         }
 
@@ -6242,15 +5928,13 @@ function watchTeams(
 
 
 
-/* ==========================================
-   PHOTO UPDATE
-========================================== */
+/* =========================================================
+   PHOTO UPDATES FROM HOST
+========================================================= */
 
 photoChannel.addEventListener(
   "message",
-  async (
-    event
-  ) => {
+  async event => {
 
     const data =
       event.data;
@@ -6259,17 +5943,9 @@ photoChannel.addEventListener(
     if (
       !data ||
       data.type !==
-        "photo-updated"
-    ) {
-
-      return;
-
-    }
-
-
-    if (
+        "photo-updated" ||
       data.roomCode !==
-      activeRoomCode
+        activeRoomCode
     ) {
 
       return;
@@ -6277,7 +5953,7 @@ photoChannel.addEventListener(
     }
 
 
-    const storageKey =
+    const key =
       data.roomCode +
       "-" +
       data.teamKey;
@@ -6285,46 +5961,37 @@ photoChannel.addEventListener(
 
     if (
       photoURLCache.has(
-        storageKey
+        key
       )
     ) {
 
-      const oldURL =
+      const old =
         photoURLCache.get(
-          storageKey
+          key
         );
 
 
       if (
-        typeof oldURL ===
+        typeof old ===
         "string"
       ) {
 
         URL.revokeObjectURL(
-          oldURL
+          old
         );
 
       }
 
 
       photoURLCache.delete(
-        storageKey
+        key
       );
 
     }
 
 
     if (
-      !latestRoomData
-    ) {
-
-      return;
-
-    }
-
-
-    if (
-      latestRoomData.state ===
+      latestRoomData?.state ===
         "leaderboard"
     ) {
 
@@ -6336,7 +6003,7 @@ photoChannel.addEventListener(
 
 
     if (
-      latestRoomData.state ===
+      latestRoomData?.state ===
         "leaderboardFull"
     ) {
 
