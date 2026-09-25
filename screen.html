@@ -1,1 +1,6357 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<title>Moon Palace TV</title>
+
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  padding: 40px;
+
+  font-family:
+    Arial,
+    sans-serif;
+
+  text-align: center;
+
+  background:
+    radial-gradient(
+      circle at top,
+      #313974,
+      #101426 65%
+    );
+
+  color: white;
+
+  min-height: 100vh;
+
+  overflow-x: hidden;
+}
+
+h1 {
+  font-size: 56px;
+  margin-bottom: 10px;
+}
+
+h2 {
+  font-size: 34px;
+  margin-top: 0;
+}
+
+.screen {
+  display: none;
+}
+
+.screen.active {
+  display: block;
+}
+
+
+/* ==========================================
+   TEAM NAMES
+========================================== */
+
+.teamEnglishName {
+  font-weight: bold;
+  line-height: 1.18;
+}
+
+.teamChineseName {
+  margin-top: 5px;
+  font-size: 0.82em;
+  opacity: 0.88;
+  line-height: 1.18;
+}
+
+
+/* ==========================================
+   SOUND CONTROL
+========================================== */
+
+#soundControl {
+  position: fixed;
+
+  top: 18px;
+  right: 18px;
+
+  z-index: 2000;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#enableSoundButton {
+  padding: 11px 17px;
+
+  border:
+    2px solid
+    rgba(255,255,255,0.35);
+
+  border-radius: 999px;
+
+  background:
+    rgba(12,15,40,0.82);
+
+  color: white;
+
+  font-size: 17px;
+  font-weight: bold;
+
+  cursor: pointer;
+
+  backdrop-filter: blur(8px);
+}
+
+#enableSoundButton:hover {
+  background:
+    rgba(50,55,100,0.9);
+}
+
+#soundStatus {
+  display: none;
+
+  padding: 8px 12px;
+
+  border-radius: 999px;
+
+  background:
+    rgba(0,0,0,0.5);
+
+  font-size: 14px;
+}
+
+
+/* ==========================================
+   LOBBY
+========================================== */
+
+#roomCode {
+  font-size: 92px;
+  font-weight: bold;
+
+  letter-spacing: 16px;
+
+  margin: 25px 0;
+
+  color: #ffe89a;
+}
+
+#joinedCount {
+  font-size: 30px;
+  margin: 20px 0 30px;
+}
+
+#teamGrid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      5,
+      minmax(0,1fr)
+    );
+
+  gap: 16px;
+
+  max-width: 1450px;
+
+  margin: 0 auto;
+}
+
+.teamCard {
+  min-height: 100px;
+
+  padding: 16px 8px;
+
+  border-radius: 14px;
+
+  font-size: 20px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  background:
+    rgba(255,255,255,0.08);
+
+  border:
+    2px solid
+    rgba(255,255,255,0.2);
+}
+
+.joined {
+  background:
+    rgba(110,220,140,0.2);
+
+  border-color:
+    rgba(110,220,140,0.9);
+}
+
+.waiting {
+  opacity: 0.55;
+}
+
+#status {
+  font-size: 24px;
+  margin-top: 30px;
+}
+
+
+/* ==========================================
+   INTRO
+========================================== */
+
+#introScreen {
+  padding-top: 60px;
+}
+
+#introTitle {
+  font-size: 70px;
+  margin-bottom: 30px;
+}
+
+#introPlaceholder {
+  max-width: 1100px;
+
+  min-height: 470px;
+
+  margin: 0 auto;
+
+  border:
+    3px dashed
+    rgba(255,255,255,0.35);
+
+  border-radius: 24px;
+
+  background:
+    rgba(255,255,255,0.05);
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  font-size: 36px;
+
+  line-height: 1.5;
+}
+
+
+/* ==========================================
+   QUESTION
+========================================== */
+
+#questionScreen {
+  padding-top: 10px;
+}
+
+#questionNumber {
+  font-size: 30px;
+  opacity: 0.8;
+  margin-bottom: 18px;
+}
+
+#questionChinese {
+  font-size: 54px;
+  font-weight: bold;
+  line-height: 1.22;
+  max-width: 1450px;
+  margin: 0 auto 8px;
+}
+
+#questionEnglish {
+  font-size: 34px;
+  line-height: 1.3;
+  max-width: 1450px;
+  margin: 0 auto 24px;
+  opacity: 0.9;
+}
+
+#questionImageArea {
+  margin: 10px auto 22px;
+}
+
+#questionImage {
+  max-width: 900px;
+  max-height: 330px;
+
+  width: auto;
+  height: auto;
+
+  object-fit: contain;
+
+  border-radius: 18px;
+}
+
+#answerGrid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0,1fr)
+    );
+
+  gap: 16px;
+
+  max-width: 1400px;
+
+  margin: 0 auto;
+}
+
+.answerCard {
+  min-height: 115px;
+
+  padding: 16px 22px;
+
+  border-radius: 18px;
+
+  background:
+    rgba(255,255,255,0.09);
+
+  border:
+    2px solid
+    rgba(255,255,255,0.18);
+
+  text-align: left;
+
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease,
+    background 0.35s ease,
+    border 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.answerLetter {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.answerChinese {
+  font-size: 32px;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.answerEnglish {
+  font-size: 23px;
+  line-height: 1.25;
+  opacity: 0.9;
+  margin-top: 5px;
+}
+
+
+/* ==========================================
+   ANSWER REVEAL
+========================================== */
+
+.answerCard.correctAnswer {
+  border:
+    5px solid
+    #8ff0a4;
+
+  background:
+    rgba(90,210,120,0.3);
+
+  transform: scale(1.025);
+
+  box-shadow:
+    0 0 28px
+    rgba(143,240,164,0.35);
+
+  opacity: 1;
+}
+
+.answerCard.dimmedAnswer {
+  opacity: 0.25;
+}
+
+#revealMessage {
+  display: none;
+
+  margin-top: 16px;
+
+  font-size: 30px;
+  font-weight: bold;
+
+  color: #8ff0a4;
+}
+
+#revealMessage.visible {
+  display: block;
+}
+
+#answeredStatus {
+  font-size: 27px;
+  margin-top: 18px;
+}
+
+
+/* ==========================================
+   MOON POWER
+========================================== */
+
+#moonPowerArea {
+  margin: 18px auto 0;
+  max-width: 900px;
+}
+
+#moonPowerLabel {
+  font-size: 27px;
+  margin-bottom: 8px;
+}
+
+#moonPowerTrack {
+  width: 100%;
+  height: 28px;
+
+  background:
+    rgba(255,255,255,0.15);
+
+  border-radius: 999px;
+
+  overflow: hidden;
+}
+
+#moonPowerFill {
+  width: 0%;
+  height: 100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      #ffe89a,
+      #fff8cf
+    );
+
+  transition:
+    width 0.6s ease;
+
+  box-shadow:
+    0 0 22px
+    rgba(255,232,154,0.7);
+}
+
+#moonPowerText {
+  margin-top: 8px;
+
+  font-size: 24px;
+  font-weight: bold;
+}
+
+
+/* ==========================================
+   TARGET CELEBRATION
+========================================== */
+
+#targetCelebration {
+  display: none;
+
+  max-width: 1000px;
+
+  margin: 20px auto 0;
+
+  padding: 20px 30px;
+
+  border-radius: 24px;
+
+  border:
+    3px solid
+    #ffe89a;
+
+  background:
+    rgba(255,232,154,0.14);
+
+  box-shadow:
+    0 0 45px
+    rgba(255,232,154,0.4);
+}
+
+#targetCelebration.visible {
+  display: block;
+
+  animation:
+    moonPowerPulse
+    1.1s ease
+    infinite alternate;
+}
+
+#targetCelebrationMoon {
+  font-size: 55px;
+}
+
+#targetCelebrationChinese {
+  font-size: 38px;
+  font-weight: bold;
+  color: #fff2af;
+}
+
+#targetCelebrationEnglish {
+  margin-top: 4px;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+#targetCelebrationSub {
+  margin-top: 8px;
+  font-size: 20px;
+  opacity: 0.9;
+}
+
+@keyframes moonPowerPulse {
+
+  from {
+    transform: scale(1);
+
+    box-shadow:
+      0 0 25px
+      rgba(255,232,154,0.3);
+  }
+
+  to {
+    transform: scale(1.02);
+
+    box-shadow:
+      0 0 65px
+      rgba(255,232,154,0.65);
+  }
+
+}
+
+
+/* ==========================================
+   QUIZ COMPLETE
+========================================== */
+
+#quizCompleteScreen {
+  min-height:
+    calc(100vh - 80px);
+
+  display: none;
+
+  align-items: center;
+  justify-content: center;
+}
+
+#quizCompleteScreen.active {
+  display: flex;
+}
+
+#quizCompleteContent {
+  width:
+    min(
+      1250px,
+      94vw
+    );
+
+  margin: 0 auto;
+
+  padding: 40px 50px;
+
+  border-radius: 34px;
+
+  background:
+    radial-gradient(
+      circle at top,
+      rgba(255,236,155,0.15),
+      rgba(255,255,255,0.045)
+    );
+
+  border:
+    2px solid
+    rgba(255,240,180,0.4);
+
+  box-shadow:
+    0 0 70px
+    rgba(255,225,120,0.16);
+}
+
+#completeMoon {
+  font-size: 120px;
+  line-height: 1;
+
+  animation:
+    completeMoonGlow
+    1.6s ease
+    infinite alternate;
+}
+
+@keyframes completeMoonGlow {
+
+  from {
+    filter:
+      drop-shadow(
+        0 0 10px
+        rgba(255,235,145,0.45)
+      );
+
+    transform: scale(1);
+  }
+
+  to {
+    filter:
+      drop-shadow(
+        0 0 42px
+        rgba(255,235,145,0.95)
+      );
+
+    transform: scale(1.04);
+  }
+
+}
+
+#completeChinese {
+  margin-top: 12px;
+
+  font-size: 58px;
+  line-height: 1.2;
+  font-weight: bold;
+
+  color: #fff0a6;
+}
+
+#completeEnglish {
+  margin-top: 8px;
+
+  font-size: 43px;
+  font-weight: bold;
+}
+
+#completeDescription {
+  margin: 18px auto 0;
+
+  max-width: 1000px;
+
+  font-size: 25px;
+  line-height: 1.45;
+
+  opacity: 0.92;
+}
+
+#completePowerArea {
+  max-width: 900px;
+  margin: 32px auto 0;
+}
+
+#completePowerTrack {
+  width: 100%;
+  height: 40px;
+
+  background:
+    rgba(255,255,255,0.14);
+
+  border-radius: 999px;
+
+  overflow: hidden;
+
+  border:
+    2px solid
+    rgba(255,255,255,0.16);
+}
+
+#completePowerFill {
+  width: 100%;
+  height: 100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      #ffd76e,
+      #fff4bd
+    );
+
+  box-shadow:
+    0 0 30px
+    rgba(255,227,120,0.8);
+}
+
+#completePowerText {
+  margin-top: 12px;
+
+  font-size: 42px;
+  font-weight: bold;
+
+  color: #fff1a6;
+}
+
+#rawPowerNotice {
+  display: none;
+
+  margin: 20px auto 0;
+
+  padding: 14px 20px;
+
+  max-width: 800px;
+
+  border-radius: 16px;
+
+  background:
+    rgba(255,255,255,0.07);
+
+  font-size: 20px;
+  line-height: 1.45;
+
+  opacity: 0.88;
+}
+
+#rawPowerNotice.visible {
+  display: block;
+}
+
+#waitingForLeaderboard {
+  margin-top: 35px;
+
+  font-size: 27px;
+  font-weight: bold;
+}
+
+#waitingForLeaderboardEnglish {
+  margin-top: 5px;
+
+  font-size: 21px;
+
+  opacity: 0.78;
+}
+
+
+/* ==========================================
+   LEADERBOARD
+========================================== */
+
+#leaderboardScreen {
+  padding-top: 5px;
+}
+
+#leaderboardTitleChinese {
+  font-size: 46px;
+  font-weight: bold;
+  color: #fff0ad;
+}
+
+#leaderboardTitleEnglish {
+  font-size: 34px;
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+#leaderboardSubtitle {
+  margin-top: 8px;
+  font-size: 21px;
+  opacity: 0.8;
+}
+
+#currentRevealArea {
+  margin: 25px auto 0;
+  max-width: 1300px;
+}
+
+.suspensePanel {
+  margin: 75px auto;
+
+  max-width: 900px;
+
+  padding: 50px;
+
+  border-radius: 30px;
+
+  border:
+    2px solid
+    rgba(255,255,255,0.25);
+
+  background:
+    rgba(255,255,255,0.06);
+}
+
+.suspenseIcon {
+  font-size: 80px;
+}
+
+.suspenseChinese {
+  margin-top: 20px;
+  font-size: 42px;
+  font-weight: bold;
+}
+
+.suspenseEnglish {
+  margin-top: 8px;
+  font-size: 29px;
+  opacity: 0.9;
+}
+
+.currentRankHeader {
+  margin-bottom: 18px;
+}
+
+.rankEmoji {
+  font-size: 64px;
+  line-height: 1;
+}
+
+.currentRankChinese {
+  margin-top: 7px;
+  font-size: 50px;
+  font-weight: bold;
+  color: #fff0ad;
+}
+
+.currentRankEnglish {
+  margin-top: 3px;
+  font-size: 36px;
+  font-weight: bold;
+}
+
+.featuredTeamGrid {
+  display: flex;
+
+  justify-content: center;
+  align-items: stretch;
+
+  gap: 22px;
+
+  flex-wrap: wrap;
+}
+
+.featuredTeamCard {
+  width: 360px;
+  min-height: 310px;
+
+  padding: 20px;
+
+  border-radius: 28px;
+
+  border:
+    3px solid
+    rgba(255,255,255,0.25);
+
+  background:
+    rgba(255,255,255,0.08);
+
+  box-shadow:
+    0 10px 40px
+    rgba(0,0,0,0.22);
+
+  animation:
+    rankRevealPop
+    0.65s ease;
+}
+
+@keyframes rankRevealPop {
+
+  0% {
+    opacity: 0;
+
+    transform:
+      scale(0.75)
+      translateY(35px);
+  }
+
+  70% {
+    opacity: 1;
+
+    transform:
+      scale(1.04)
+      translateY(-4px);
+  }
+
+  100% {
+    transform:
+      scale(1)
+      translateY(0);
+  }
+
+}
+
+.featuredTeamCard.rank1 {
+  width: 430px;
+  min-height: 355px;
+
+  border:
+    5px solid
+    #ffe071;
+
+  background:
+    radial-gradient(
+      circle at top,
+      rgba(255,224,113,0.25),
+      rgba(255,255,255,0.08)
+    );
+
+  box-shadow:
+    0 0 65px
+    rgba(255,215,90,0.45);
+
+  animation:
+    championReveal
+    0.9s ease;
+}
+
+@keyframes championReveal {
+
+  0% {
+    opacity: 0;
+
+    transform:
+      scale(0.45)
+      rotate(-5deg);
+  }
+
+  65% {
+    opacity: 1;
+
+    transform:
+      scale(1.08)
+      rotate(1deg);
+  }
+
+  100% {
+    transform:
+      scale(1)
+      rotate(0);
+  }
+
+}
+
+.featuredTeamCard.rank2 {
+  border-color: #dfe6ee;
+
+  box-shadow:
+    0 0 40px
+    rgba(220,230,240,0.28);
+}
+
+.featuredTeamCard.rank3 {
+  border-color: #d69a68;
+
+  box-shadow:
+    0 0 40px
+    rgba(214,154,104,0.28);
+}
+
+.featuredPhotoWrap {
+  width: 100%;
+  height: 175px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 14px;
+
+  border-radius: 18px;
+
+  overflow: hidden;
+
+  background:
+    rgba(0,0,0,0.18);
+}
+
+.rank1 .featuredPhotoWrap {
+  height: 200px;
+}
+
+.featuredPhoto {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+}
+
+.photoFallback {
+  font-size: 80px;
+}
+
+.featuredTeamName {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.rank1 .featuredTeamName {
+  font-size: 34px;
+}
+
+.featuredScoreLabel {
+  margin-top: 9px;
+
+  font-size: 17px;
+
+  opacity: 0.72;
+}
+
+.featuredScore {
+  margin-top: 2px;
+
+  font-size: 44px;
+  font-weight: bold;
+
+  color: #ffe89a;
+}
+
+.rank1 .featuredScore {
+  font-size: 54px;
+}
+
+
+/* ==========================================
+   PREVIOUS RANKS
+========================================== */
+
+#previousRanksArea {
+  max-width: 1450px;
+
+  margin: 28px auto 0;
+
+  padding-top: 18px;
+
+  border-top:
+    1px solid
+    rgba(255,255,255,0.18);
+}
+
+#previousRanksTitle {
+  font-size: 20px;
+  opacity: 0.7;
+  margin-bottom: 12px;
+}
+
+#previousRanksGrid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      5,
+      minmax(0,1fr)
+    );
+
+  gap: 10px;
+}
+
+.miniRankCard {
+  min-height: 100px;
+
+  padding: 9px;
+
+  border-radius: 14px;
+
+  background:
+    rgba(255,255,255,0.07);
+
+  display: grid;
+
+  grid-template-columns:
+    60px 1fr;
+
+  gap: 9px;
+
+  align-items: center;
+
+  text-align: left;
+}
+
+.miniPhoto {
+  width: 60px;
+  height: 60px;
+
+  border-radius: 10px;
+
+  object-fit: contain;
+
+  background:
+    rgba(0,0,0,0.18);
+}
+
+.miniPhotoFallback {
+  width: 60px;
+  height: 60px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  font-size: 32px;
+
+  background:
+    rgba(0,0,0,0.18);
+
+  border-radius: 10px;
+}
+
+.miniRank {
+  font-size: 15px;
+  opacity: 0.7;
+}
+
+.miniTeamName {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.miniScore {
+  font-size: 18px;
+  color: #ffe89a;
+  font-weight: bold;
+}
+
+#hiddenRanksMessage {
+  margin-top: 14px;
+  font-size: 20px;
+  opacity: 0.75;
+}
+
+
+/* ==========================================
+   FULL LEADERBOARD
+========================================== */
+
+#fullLeaderboardScreen {
+  padding-top: 5px;
+}
+
+#fullLeaderboardTitle {
+  font-size: 46px;
+  font-weight: bold;
+  color: #fff0ad;
+}
+
+#fullLeaderboardEnglish {
+  margin-top: 3px;
+  font-size: 32px;
+  font-weight: bold;
+}
+
+#fullLeaderboardGrid {
+  max-width: 1450px;
+
+  margin: 24px auto 0;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0,1fr)
+    );
+
+  gap: 12px;
+}
+
+.fullRankRow {
+  min-height: 125px;
+
+  display: grid;
+
+  grid-template-columns:
+    85px
+    90px
+    1fr
+    160px;
+
+  gap: 12px;
+
+  align-items: center;
+
+  padding: 12px 16px;
+
+  border-radius: 18px;
+
+  background:
+    rgba(255,255,255,0.075);
+
+  border:
+    2px solid
+    rgba(255,255,255,0.12);
+
+  text-align: left;
+}
+
+.fullRankRow.rank1 {
+  border-color: #ffe071;
+
+  background:
+    rgba(255,224,113,0.14);
+}
+
+.fullRankRow.rank2 {
+  border-color: #dfe6ee;
+}
+
+.fullRankRow.rank3 {
+  border-color: #d69a68;
+}
+
+.fullRankNumber {
+  font-size: 32px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.fullPhoto {
+  width: 88px;
+  height: 82px;
+
+  border-radius: 12px;
+
+  object-fit: contain;
+
+  background:
+    rgba(0,0,0,0.18);
+}
+
+.fullPhotoFallback {
+  width: 88px;
+  height: 82px;
+
+  border-radius: 12px;
+
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  background:
+    rgba(0,0,0,0.18);
+
+  font-size: 45px;
+}
+
+.fullTeamName {
+  font-size: 21px;
+  font-weight: bold;
+}
+
+.scoreBreakdown {
+  margin-top: 7px;
+
+  font-size: 15px;
+
+  opacity: 0.67;
+}
+
+.fullTotalArea {
+  text-align: right;
+}
+
+.fullTotalLabel {
+  font-size: 14px;
+  opacity: 0.65;
+}
+
+.fullTotal {
+  font-size: 35px;
+  font-weight: bold;
+  color: #ffe89a;
+}
+
+
+/* ==========================================
+   FIVE-TONE MIRROR AUDIO HINT
+========================================== */
+
+#mirrorHintScreen {
+  position: fixed;
+
+  inset: 0;
+
+  padding: 40px;
+
+  background:
+    radial-gradient(
+      circle at center,
+      #252956,
+      #0b0d20 72%
+    );
+}
+
+#mirrorHintScreen.active {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+}
+
+#mirrorHintContent {
+  width:
+    min(
+      1100px,
+      92vw
+    );
+
+  padding: 55px 65px;
+
+  border-radius: 30px;
+
+  background:
+    rgba(255,255,255,0.055);
+
+  border:
+    2px solid
+    rgba(255,239,169,0.28);
+
+  box-shadow:
+    0 0 75px
+    rgba(255,226,125,0.12);
+}
+
+#mirrorHintIcon {
+  font-size: 95px;
+
+  line-height: 1;
+
+  animation:
+    hintPulse
+    1.7s ease
+    infinite alternate;
+}
+
+@keyframes hintPulse {
+
+  from {
+    transform: scale(1);
+
+    filter:
+      drop-shadow(
+        0 0 10px
+        rgba(255,232,154,0.35)
+      );
+  }
+
+  to {
+    transform: scale(1.06);
+
+    filter:
+      drop-shadow(
+        0 0 38px
+        rgba(255,232,154,0.8)
+      );
+  }
+
+}
+
+#mirrorHintChineseTitle {
+  margin-top: 22px;
+
+  font-size: 52px;
+  font-weight: bold;
+
+  color: #fff0a6;
+}
+
+#mirrorHintEnglishTitle {
+  margin-top: 8px;
+
+  font-size: 34px;
+  font-weight: bold;
+}
+
+#mirrorHintInstructionChinese {
+  margin-top: 32px;
+
+  font-size: 30px;
+  line-height: 1.45;
+}
+
+#mirrorHintInstructionEnglish {
+  margin-top: 8px;
+
+  font-size: 23px;
+  line-height: 1.45;
+
+  opacity: 0.82;
+}
+
+#mirrorHintPlaying {
+  margin-top: 35px;
+
+  font-size: 26px;
+  font-weight: bold;
+
+  color: #ffe89a;
+}
+
+#mirrorHintStatus {
+  margin-top: 10px;
+
+  min-height: 28px;
+
+  font-size: 19px;
+
+  opacity: 0.75;
+}
+
+
+/* ==========================================
+   FINALE
+========================================== */
+
+#finaleScreen {
+  position: fixed;
+
+  inset: 0;
+
+  padding: 35px;
+
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 50% 24%,
+      #fff2ad 0%,
+      #ebcf73 5%,
+      #4a4480 17%,
+      #211c4b 43%,
+      #0d1027 78%
+    );
+}
+
+#finaleScreen.active {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+}
+
+#finaleStars {
+  position: absolute;
+
+  inset: 0;
+
+  pointer-events: none;
+
+  background-image:
+    radial-gradient(
+      circle,
+      rgba(255,255,255,0.8) 1px,
+      transparent 2px
+    );
+
+  background-size:
+    75px 75px;
+
+  opacity: 0.22;
+
+  animation:
+    starsDrift
+    12s linear
+    infinite;
+}
+
+@keyframes starsDrift {
+
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(75px);
+  }
+
+}
+
+#finaleContent {
+  position: relative;
+
+  z-index: 5;
+
+  width:
+    min(
+      1200px,
+      94vw
+    );
+
+  margin: 0 auto;
+
+  padding:
+    28px 45px 38px;
+
+  border-radius: 40px;
+
+  background:
+    rgba(14,17,45,0.62);
+
+  border:
+    2px solid
+    rgba(255,238,165,0.42);
+
+  box-shadow:
+    0 0 100px
+    rgba(255,220,120,0.18);
+
+  backdrop-filter:
+    blur(4px);
+
+  animation:
+    finaleAppear
+    1.2s ease;
+}
+
+@keyframes finaleAppear {
+
+  from {
+    opacity: 0;
+    transform: scale(0.88);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+}
+
+#finaleMoon {
+  font-size: 115px;
+  line-height: 1;
+
+  animation:
+    finaleMoonPulse
+    1.8s ease
+    infinite alternate;
+}
+
+@keyframes finaleMoonPulse {
+
+  from {
+    transform: scale(1);
+
+    filter:
+      drop-shadow(
+        0 0 18px
+        rgba(255,236,146,0.6)
+      );
+  }
+
+  to {
+    transform: scale(1.06);
+
+    filter:
+      drop-shadow(
+        0 0 55px
+        rgba(255,236,146,1)
+      );
+  }
+
+}
+
+#finalePalace {
+  font-size: 78px;
+}
+
+#finaleChinese {
+  margin-top: 5px;
+
+  font-size: 54px;
+  font-weight: bold;
+
+  color: #fff1aa;
+}
+
+#finaleEnglish {
+  margin-top: 7px;
+
+  font-size: 40px;
+  font-weight: bold;
+}
+
+#finaleMirror {
+  width:
+    min(
+      820px,
+      85vw
+    );
+
+  margin: 25px auto 0;
+
+  padding: 25px 30px;
+
+  border-radius:
+    50% / 35%;
+
+  border:
+    5px solid
+    rgba(255,220,110,0.78);
+
+  background:
+    radial-gradient(
+      ellipse at center,
+      rgba(92,79,150,0.82),
+      rgba(18,17,48,0.95)
+    );
+}
+
+#finalTreasure {
+  font-size: 38px;
+  line-height: 1.25;
+  font-weight: bold;
+
+  color: #fff4bd;
+
+  letter-spacing: 2px;
+}
+
+#finalTreasureChinese {
+  margin-top: 8px;
+
+  font-size: 31px;
+  font-weight: bold;
+
+  color: #ffe89a;
+}
+
+#finaleRabbits {
+  margin-top: 22px;
+
+  font-size: 55px;
+
+  letter-spacing: 15px;
+}
+
+#finaleBlessing {
+  margin-top: 20px;
+
+  font-size: 26px;
+  line-height: 1.45;
+}
+
+#finaleBlessingEnglish {
+  margin-top: 5px;
+
+  font-size: 21px;
+
+  opacity: 0.82;
+}
+
+
+/* ==========================================
+   CONFETTI
+========================================== */
+
+#confettiLayer {
+  position: fixed;
+
+  inset: 0;
+
+  pointer-events: none;
+
+  overflow: hidden;
+
+  z-index: 999;
+}
+
+.confettiPiece {
+  position: absolute;
+
+  top: -30px;
+
+  width: 13px;
+  height: 20px;
+
+  border-radius: 3px;
+
+  animation:
+    confettiFall
+    linear forwards;
+}
+
+@keyframes confettiFall {
+
+  0% {
+    transform:
+      translateY(-20px)
+      rotate(0deg);
+
+    opacity: 1;
+  }
+
+  100% {
+    transform:
+      translateY(115vh)
+      rotate(900deg);
+
+    opacity: 0.8;
+  }
+
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 1000px) {
+
+  #questionChinese {
+    font-size: 42px;
+  }
+
+  #questionEnglish {
+    font-size: 29px;
+  }
+
+  .answerChinese {
+    font-size: 27px;
+  }
+
+  .answerEnglish {
+    font-size: 20px;
+  }
+
+  #previousRanksGrid {
+    grid-template-columns:
+      repeat(
+        3,
+        minmax(0,1fr)
+      );
+  }
+
+  #fullLeaderboardGrid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+</style>
+
+</head>
+
+
+
+<body>
+
+
+<!-- ==========================================
+     SOUND
+========================================== -->
+
+<div id="soundControl">
+
+  <button id="enableSoundButton">
+    🔊 Enable Sound
+  </button>
+
+  <div id="soundStatus">
+    Sound ready
+  </div>
+
+</div>
+
+
+
+<!-- ==========================================
+     LOBBY
+========================================== -->
+
+<section
+  id="lobbyScreen"
+  class="screen active"
+>
+
+  <h1>
+    🌙 Moon Palace Adventure
+  </h1>
+
+  <h2>
+    月宮大冒險
+  </h2>
+
+  <div id="roomCode">
+    ----
+  </div>
+
+  <div id="joinedCount">
+    Waiting for teams...
+  </div>
+
+  <div id="teamGrid"></div>
+
+  <div id="status">
+    Waiting for host to create a room...
+  </div>
+
+</section>
+
+
+
+<!-- ==========================================
+     INTRO
+========================================== -->
+
+<section
+  id="introScreen"
+  class="screen"
+>
+
+  <div id="introTitle">
+    🌙 Moon Palace Adventure
+  </div>
+
+  <div id="introPlaceholder">
+
+    INTRO VIDEO / SLIDESHOW
+
+    <br><br>
+
+    Placeholder
+
+  </div>
+
+</section>
+
+
+
+<!-- ==========================================
+     QUESTIONS
+========================================== -->
+
+<section
+  id="questionScreen"
+  class="screen"
+>
+
+  <div id="questionNumber">
+    QUESTION 1 / 10
+  </div>
+
+  <div id="questionChinese"></div>
+
+  <div id="questionEnglish"></div>
+
+
+  <div
+    id="questionImageArea"
+    hidden
+  >
+
+    <img
+      id="questionImage"
+      alt="Question diagram"
+    >
+
+  </div>
+
+
+  <div id="answerGrid">
+
+    <div
+      class="answerCard"
+      id="answerA"
+    >
+      <div class="answerLetter">A</div>
+      <div class="answerChinese"></div>
+      <div class="answerEnglish"></div>
+    </div>
+
+
+    <div
+      class="answerCard"
+      id="answerB"
+    >
+      <div class="answerLetter">B</div>
+      <div class="answerChinese"></div>
+      <div class="answerEnglish"></div>
+    </div>
+
+
+    <div
+      class="answerCard"
+      id="answerC"
+    >
+      <div class="answerLetter">C</div>
+      <div class="answerChinese"></div>
+      <div class="answerEnglish"></div>
+    </div>
+
+
+    <div
+      class="answerCard"
+      id="answerD"
+    >
+      <div class="answerLetter">D</div>
+      <div class="answerChinese"></div>
+      <div class="answerEnglish"></div>
+    </div>
+
+  </div>
+
+
+  <div id="revealMessage">
+    ✓ Correct Answer Revealed
+  </div>
+
+
+  <div id="answeredStatus">
+    0 / 0 teams answered
+  </div>
+
+
+  <div id="moonPowerArea">
+
+    <div id="moonPowerLabel">
+      🌕 Moon Power
+    </div>
+
+    <div id="moonPowerTrack">
+      <div id="moonPowerFill"></div>
+    </div>
+
+    <div id="moonPowerText">
+      0 / 1500
+    </div>
+
+  </div>
+
+
+  <div id="targetCelebration">
+
+    <div id="targetCelebrationMoon">
+      🌕
+    </div>
+
+    <div id="targetCelebrationChinese">
+      月華力量已集滿！
+    </div>
+
+    <div id="targetCelebrationEnglish">
+      MOON POWER COMPLETE!
+    </div>
+
+    <div id="targetCelebrationSub">
+      The Moon Power target has been reached!
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- ==========================================
+     QUIZ COMPLETE
+========================================== -->
+
+<section
+  id="quizCompleteScreen"
+  class="screen"
+>
+
+  <div id="quizCompleteContent">
+
+    <div id="completeMoon">
+      🌕
+    </div>
+
+    <div id="completeChinese">
+      月華力量已聚集！
+    </div>
+
+    <div id="completeEnglish">
+      MOON POWER COMPLETE!
+    </div>
+
+    <div id="completeDescription">
+      大家成功完成月宮問答挑戰！
+      <br>
+      The Moon Palace quiz challenge is complete!
+    </div>
+
+
+    <div id="completePowerArea">
+
+      <div id="completePowerTrack">
+        <div id="completePowerFill"></div>
+      </div>
+
+      <div id="completePowerText">
+        1500 / 1500
+      </div>
+
+    </div>
+
+
+    <div id="rawPowerNotice"></div>
+
+
+    <div id="waitingForLeaderboard">
+      🏆 準備揭曉最終排名……
+    </div>
+
+    <div id="waitingForLeaderboardEnglish">
+      Get ready for the Final Leaderboard...
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- ==========================================
+     PROGRESSIVE LEADERBOARD
+========================================== -->
+
+<section
+  id="leaderboardScreen"
+  class="screen"
+>
+
+  <div id="leaderboardTitleChinese">
+    🏆 最終排名
+  </div>
+
+  <div id="leaderboardTitleEnglish">
+    FINAL LEADERBOARD
+  </div>
+
+  <div id="leaderboardSubtitle">
+    Previous Activity + Moon Palace Quiz
+  </div>
+
+  <div id="currentRevealArea"></div>
+
+
+  <div id="previousRanksArea">
+
+    <div id="previousRanksTitle">
+      已揭曉排名 / Revealed Rankings
+    </div>
+
+    <div id="previousRanksGrid"></div>
+
+    <div id="hiddenRanksMessage"></div>
+
+  </div>
+
+</section>
+
+
+
+<!-- ==========================================
+     FULL LEADERBOARD
+========================================== -->
+
+<section
+  id="fullLeaderboardScreen"
+  class="screen"
+>
+
+  <div id="fullLeaderboardTitle">
+    🏆 最終排名
+  </div>
+
+  <div id="fullLeaderboardEnglish">
+    FINAL LEADERBOARD
+  </div>
+
+  <div id="fullLeaderboardGrid"></div>
+
+</section>
+
+
+
+<!-- ==========================================
+     FIVE-TONE MIRROR HINT
+========================================== -->
+
+<section
+  id="mirrorHintScreen"
+  class="screen"
+>
+
+  <div id="mirrorHintContent">
+
+    <div id="mirrorHintIcon">
+      🎵 🪞
+    </div>
+
+    <div id="mirrorHintChineseTitle">
+      五音玄鏡・最後提示
+    </div>
+
+    <div id="mirrorHintEnglishTitle">
+      FINAL FIVE-TONE MIRROR HINT
+    </div>
+
+
+    <div id="mirrorHintInstructionChinese">
+      仔細聆聽這段旋律——
+      <br>
+      這就是正確排列五音玄鏡的最後線索！
+    </div>
+
+    <div id="mirrorHintInstructionEnglish">
+      Listen carefully to the melody —
+      <br>
+      it is the final clue for assembling the Five-Tone Mirror correctly!
+    </div>
+
+
+    <div id="mirrorHintPlaying">
+      ♪ 音樂提示播放中… / Listen carefully…
+    </div>
+
+    <div id="mirrorHintStatus"></div>
+
+  </div>
+
+</section>
+
+
+
+<!-- ==========================================
+     FINALE
+========================================== -->
+
+<section
+  id="finaleScreen"
+  class="screen"
+>
+
+  <div id="finaleStars"></div>
+
+
+  <div id="finaleContent">
+
+    <div id="finaleMoon">
+      🌕
+    </div>
+
+    <div id="finalePalace">
+      🏯
+    </div>
+
+    <div id="finaleChinese">
+      月宮重新綻放光芒！
+    </div>
+
+    <div id="finaleEnglish">
+      THE MOON PALACE SHINES AGAIN!
+    </div>
+
+
+    <div id="finaleMirror">
+
+      <div id="finalTreasure">
+        TOGETHER BENEATH THE FULL MOON
+      </div>
+
+      <div id="finalTreasureChinese">
+        人月兩團圓
+      </div>
+
+    </div>
+
+
+    <div id="finaleRabbits">
+      🐇 🐇 🐇 🐇 🐇
+    </div>
+
+    <div id="finaleBlessing">
+      🌙 祝大家中秋快樂，團團圓圓！
+    </div>
+
+    <div id="finaleBlessingEnglish">
+      Happy Mid-Autumn Festival to everyone and your families!
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<div id="confettiLayer"></div>
+
+
+
+<script type="module">
+
+
+/* ==========================================
+   IMPORTS
+========================================== */
+
+import {
+  db,
+  ref,
+  onValue
+} from "./firebase.js";
+
+
+import {
+  getTeamPhoto
+} from "./local-media.js";
+
+
+import {
+  questions
+} from "./questions.js";
+
+
+
+/* ==========================================
+   TEAM NAMES
+========================================== */
+
+const TEAM_NAMES = {
+
+  1: {
+    english: "Team 1 Moonblade",
+    chinese: "第一隊 月刃"
+  },
+
+  2: {
+    english: "Team 2 Starhunter",
+    chinese: "第二隊 獵星者"
+  },
+
+  3: {
+    english: "Team 3 Rabbitshade",
+    chinese: "第三隊 兔影衛"
+  },
+
+  4: {
+    english: "Team 4 Nightflare",
+    chinese: "第四隊 夜煌隊"
+  },
+
+  5: {
+    english: "Team 5 Moonscar",
+    chinese: "第五隊 月痕使"
+  },
+
+  6: {
+    english: "Team 6 Starfire",
+    chinese: "第六隊 星焰團"
+  },
+
+  7: {
+    english: "Team 7 Dark Rabbit",
+    chinese: "第七隊 玄兔眾"
+  },
+
+  8: {
+    english: "Team 8 Silvermoon",
+    chinese: "第八隊 銀月盟"
+  },
+
+  9: {
+    english: "Team 9 Sky Lantern",
+    chinese: "第九隊 天燈使"
+  },
+
+  10: {
+    english: "Team 10 Moonsoul",
+    chinese: "第十隊 月魂隊"
+  }
+
+};
+
+
+function getTeamName(
+  teamNumber
+) {
+
+  return TEAM_NAMES[
+    teamNumber
+  ] || {
+
+    english:
+      "Team " +
+      teamNumber,
+
+    chinese:
+      "第 " +
+      teamNumber +
+      " 隊"
+
+  };
+
+}
+
+
+
+const photoChannel =
+  new BroadcastChannel(
+    "moon-palace-photos"
+  );
+
+
+
+/* ==========================================
+   AUDIO FILES
+========================================== */
+
+/*
+  Existing files:
+
+  audio/bgm-game.mp3
+  audio/answer-reveal.mp3
+  audio/moon-complete.mp3
+  audio/rank-reveal.mp3
+  audio/champion.mp3
+
+  NEW:
+
+  audio/bgm-lobby.mp3
+  audio/mirror-hint.mp3
+*/
+
+
+const lobbyBgm =
+  new Audio(
+    "./audio/bgm-lobby.mp3"
+  );
+
+
+const gameBgm =
+  new Audio(
+    "./audio/bgm-game.mp3"
+  );
+
+
+const answerRevealSound =
+  new Audio(
+    "./audio/answer-reveal.mp3"
+  );
+
+
+const moonCompleteSound =
+  new Audio(
+    "./audio/moon-complete.mp3"
+  );
+
+
+const rankRevealSound =
+  new Audio(
+    "./audio/rank-reveal.mp3"
+  );
+
+
+const championSound =
+  new Audio(
+    "./audio/champion.mp3"
+  );
+
+
+const mirrorHintSound =
+  new Audio(
+    "./audio/mirror-hint.mp3"
+  );
+
+
+
+lobbyBgm.loop =
+  true;
+
+
+gameBgm.loop =
+  true;
+
+
+
+const NORMAL_LOBBY_VOLUME =
+  0.18;
+
+
+const NORMAL_GAME_VOLUME =
+  0.20;
+
+
+const DUCKED_GAME_VOLUME =
+  0.07;
+
+
+
+lobbyBgm.volume =
+  NORMAL_LOBBY_VOLUME;
+
+
+gameBgm.volume =
+  NORMAL_GAME_VOLUME;
+
+
+answerRevealSound.volume =
+  0.65;
+
+
+moonCompleteSound.volume =
+  0.78;
+
+
+rankRevealSound.volume =
+  0.68;
+
+
+championSound.volume =
+  0.85;
+
+
+mirrorHintSound.volume =
+  0.90;
+
+
+
+const allAudio =
+  [
+    lobbyBgm,
+    gameBgm,
+    answerRevealSound,
+    moonCompleteSound,
+    rankRevealSound,
+    championSound,
+    mirrorHintSound
+  ];
+
+
+for (
+  const audio of
+  allAudio
+) {
+
+  audio.preload =
+    "auto";
+
+}
+
+
+
+let soundEnabled =
+  false;
+
+
+let soundUnlocked =
+  false;
+
+
+let currentGameStateForAudio =
+  "lobby";
+
+
+let bgmRestoreTimer =
+  null;
+
+
+let lastRevealSoundKey =
+  null;
+
+
+let lastRankSoundKey =
+  null;
+
+
+let lastMirrorHintKey =
+  null;
+
+
+
+/* ==========================================
+   SOUND BUTTON
+========================================== */
+
+const enableSoundButton =
+  document.getElementById(
+    "enableSoundButton"
+  );
+
+
+const soundStatus =
+  document.getElementById(
+    "soundStatus"
+  );
+
+
+const mirrorHintStatus =
+  document.getElementById(
+    "mirrorHintStatus"
+  );
+
+
+
+enableSoundButton.addEventListener(
+  "click",
+  async () => {
+
+
+    if (
+      soundUnlocked
+    ) {
+
+
+      soundEnabled =
+        !soundEnabled;
+
+
+      if (
+        soundEnabled
+      ) {
+
+
+        enableSoundButton.textContent =
+          "🔊 Sound On";
+
+
+        syncBackgroundMusic(
+          currentGameStateForAudio
+        );
+
+
+        /*
+          If sound is turned back on while
+          already on the hint screen,
+          allow the hint to play.
+        */
+
+        if (
+          currentGameStateForAudio ===
+            "mirrorHint" &&
+          latestRoomData
+        ) {
+
+          playMirrorHintAudio(
+            latestRoomData
+          );
+
+        }
+
+
+      } else {
+
+
+        enableSoundButton.textContent =
+          "🔇 Sound Off";
+
+
+        pauseAllAudio();
+
+      }
+
+
+      return;
+
+    }
+
+
+
+    /*
+      FIRST CLICK:
+      unlock browser audio.
+    */
+
+
+    for (
+      const audio of
+      allAudio
+    ) {
+
+      try {
+
+        audio.muted =
+          true;
+
+
+        await audio
+          .play()
+          .catch(
+            () => {}
+          );
+
+
+        audio.pause();
+
+
+        audio.currentTime =
+          0;
+
+
+        audio.muted =
+          false;
+
+
+      } catch (
+        error
+      ) {
+
+        console.warn(
+          "Audio unlock:",
+          error
+        );
+
+      }
+
+    }
+
+
+    soundUnlocked =
+      true;
+
+
+    soundEnabled =
+      true;
+
+
+    enableSoundButton.textContent =
+      "🔊 Sound On";
+
+
+    soundStatus.textContent =
+      "✓ Audio enabled";
+
+
+    soundStatus.style.display =
+      "block";
+
+
+    setTimeout(
+      () => {
+
+        soundStatus.style.display =
+          "none";
+
+      },
+      1800
+    );
+
+
+    syncBackgroundMusic(
+      currentGameStateForAudio
+    );
+
+
+    if (
+      currentGameStateForAudio ===
+        "mirrorHint" &&
+      latestRoomData
+    ) {
+
+      playMirrorHintAudio(
+        latestRoomData
+      );
+
+    }
+
+  }
+);
+
+
+
+/* ==========================================
+   AUDIO HELPERS
+========================================== */
+
+function resetAudio(
+  audio
+) {
+
+  audio.pause();
+
+
+  try {
+
+    audio.currentTime =
+      0;
+
+  } catch (
+    error
+  ) {
+
+    /* Ignore */
+
+  }
+
+}
+
+
+
+function pauseAllAudio() {
+
+  for (
+    const audio of
+    allAudio
+  ) {
+
+    resetAudio(
+      audio
+    );
+
+  }
+
+}
+
+
+
+function playAudioSafely(
+  audio
+) {
+
+  if (
+    !soundEnabled
+  ) {
+
+    return;
+
+  }
+
+
+  const promise =
+    audio.play();
+
+
+  if (
+    promise
+  ) {
+
+    promise.catch(
+      error => {
+
+        console.warn(
+          "Audio could not play:",
+          error
+        );
+
+      }
+    );
+
+  }
+
+}
+
+
+
+function playLobbyBgm() {
+
+  if (
+    !soundEnabled
+  ) {
+
+    return;
+
+  }
+
+
+  if (
+    !gameBgm.paused
+  ) {
+
+    gameBgm.pause();
+
+  }
+
+
+  gameBgm.currentTime =
+    gameBgm.currentTime || 0;
+
+
+  lobbyBgm.volume =
+    NORMAL_LOBBY_VOLUME;
+
+
+  if (
+    lobbyBgm.paused
+  ) {
+
+    playAudioSafely(
+      lobbyBgm
+    );
+
+  }
+
+}
+
+
+
+function playGameBgm() {
+
+  if (
+    !soundEnabled
+  ) {
+
+    return;
+
+  }
+
+
+  if (
+    !lobbyBgm.paused
+  ) {
+
+    lobbyBgm.pause();
+
+  }
+
+
+  gameBgm.volume =
+    NORMAL_GAME_VOLUME;
+
+
+  if (
+    gameBgm.paused
+  ) {
+
+    playAudioSafely(
+      gameBgm
+    );
+
+  }
+
+}
+
+
+
+function stopBackgroundMusic() {
+
+  lobbyBgm.pause();
+
+  gameBgm.pause();
+
+}
+
+
+
+function syncBackgroundMusic(
+  state
+) {
+
+  currentGameStateForAudio =
+    state;
+
+
+  if (
+    !soundEnabled
+  ) {
+
+    stopBackgroundMusic();
+
+    return;
+
+  }
+
+
+  /*
+    Lobby gets its own music.
+  */
+
+  if (
+    state ===
+    "lobby"
+  ) {
+
+    playLobbyBgm();
+
+    return;
+
+  }
+
+
+  /*
+    Main game BGM.
+  */
+
+  if (
+    state ===
+      "questions" ||
+
+    state ===
+      "reveal" ||
+
+    state ===
+      "quizComplete" ||
+
+    state ===
+      "leaderboard" ||
+
+    state ===
+      "leaderboardFull"
+  ) {
+
+    playGameBgm();
+
+    return;
+
+  }
+
+
+  /*
+    No normal BGM during:
+
+    intro
+    mirrorHint
+    finale
+  */
+
+  stopBackgroundMusic();
+
+}
+
+
+
+function duckGameBgm(
+  duration =
+    1300
+) {
+
+  if (
+    !soundEnabled ||
+    gameBgm.paused
+  ) {
+
+    return;
+
+  }
+
+
+  if (
+    bgmRestoreTimer
+  ) {
+
+    clearTimeout(
+      bgmRestoreTimer
+    );
+
+  }
+
+
+  gameBgm.volume =
+    DUCKED_GAME_VOLUME;
+
+
+  bgmRestoreTimer =
+    setTimeout(
+      () => {
+
+        if (
+          soundEnabled &&
+          !gameBgm.paused
+        ) {
+
+          gameBgm.volume =
+            NORMAL_GAME_VOLUME;
+
+        }
+
+      },
+      duration
+    );
+
+}
+
+
+
+function playSoundEffect(
+  audio,
+  duckDuration =
+    1300
+) {
+
+  if (
+    !soundEnabled
+  ) {
+
+    return;
+
+  }
+
+
+  duckGameBgm(
+    duckDuration
+  );
+
+
+  resetAudio(
+    audio
+  );
+
+
+  playAudioSafely(
+    audio
+  );
+
+}
+
+
+
+/* ==========================================
+   MIRROR HINT AUDIO
+========================================== */
+
+function playMirrorHintAudio(
+  room
+) {
+
+  if (
+    !soundEnabled
+  ) {
+
+    mirrorHintStatus.textContent =
+      "🔇 Sound is off — click Enable Sound.";
+
+    return;
+
+  }
+
+
+  const hintKey =
+    activeRoomCode +
+    ":" +
+    (
+      room.mirrorHintStartedAt ||
+      "hint"
+    );
+
+
+  if (
+    lastMirrorHintKey ===
+    hintKey
+  ) {
+
+    return;
+
+  }
+
+
+  lastMirrorHintKey =
+    hintKey;
+
+
+  /*
+    Hint gets the room to itself.
+  */
+
+  stopBackgroundMusic();
+
+
+  resetAudio(
+    answerRevealSound
+  );
+
+
+  resetAudio(
+    moonCompleteSound
+  );
+
+
+  resetAudio(
+    rankRevealSound
+  );
+
+
+  resetAudio(
+    championSound
+  );
+
+
+  resetAudio(
+    mirrorHintSound
+  );
+
+
+  mirrorHintStatus.textContent =
+    "🎵 Playing audio clue…";
+
+
+  playAudioSafely(
+    mirrorHintSound
+  );
+
+}
+
+
+
+mirrorHintSound.addEventListener(
+  "ended",
+  () => {
+
+    mirrorHintStatus.innerHTML =
+      "✓ 提示播放完畢 / Audio clue complete" +
+      "<br>" +
+      "請開始排列五音玄鏡！ / Assemble the Five-Tone Mirror!";
+
+  }
+);
+
+
+
+/* ==========================================
+   SCREEN ELEMENTS
+========================================== */
+
+const lobbyScreen =
+  document.getElementById(
+    "lobbyScreen"
+  );
+
+
+const introScreen =
+  document.getElementById(
+    "introScreen"
+  );
+
+
+const questionScreen =
+  document.getElementById(
+    "questionScreen"
+  );
+
+
+const quizCompleteScreen =
+  document.getElementById(
+    "quizCompleteScreen"
+  );
+
+
+const leaderboardScreen =
+  document.getElementById(
+    "leaderboardScreen"
+  );
+
+
+const fullLeaderboardScreen =
+  document.getElementById(
+    "fullLeaderboardScreen"
+  );
+
+
+const mirrorHintScreen =
+  document.getElementById(
+    "mirrorHintScreen"
+  );
+
+
+const finaleScreen =
+  document.getElementById(
+    "finaleScreen"
+  );
+
+
+const roomCodeEl =
+  document.getElementById(
+    "roomCode"
+  );
+
+
+const joinedCountEl =
+  document.getElementById(
+    "joinedCount"
+  );
+
+
+const teamGrid =
+  document.getElementById(
+    "teamGrid"
+  );
+
+
+const statusEl =
+  document.getElementById(
+    "status"
+  );
+
+
+const questionNumberEl =
+  document.getElementById(
+    "questionNumber"
+  );
+
+
+const questionChineseEl =
+  document.getElementById(
+    "questionChinese"
+  );
+
+
+const questionEnglishEl =
+  document.getElementById(
+    "questionEnglish"
+  );
+
+
+const questionImageArea =
+  document.getElementById(
+    "questionImageArea"
+  );
+
+
+const questionImage =
+  document.getElementById(
+    "questionImage"
+  );
+
+
+const answeredStatus =
+  document.getElementById(
+    "answeredStatus"
+  );
+
+
+const moonPowerFill =
+  document.getElementById(
+    "moonPowerFill"
+  );
+
+
+const moonPowerText =
+  document.getElementById(
+    "moonPowerText"
+  );
+
+
+const revealMessage =
+  document.getElementById(
+    "revealMessage"
+  );
+
+
+const targetCelebration =
+  document.getElementById(
+    "targetCelebration"
+  );
+
+
+const completeChinese =
+  document.getElementById(
+    "completeChinese"
+  );
+
+
+const completeEnglish =
+  document.getElementById(
+    "completeEnglish"
+  );
+
+
+const completeDescription =
+  document.getElementById(
+    "completeDescription"
+  );
+
+
+const completePowerText =
+  document.getElementById(
+    "completePowerText"
+  );
+
+
+const rawPowerNotice =
+  document.getElementById(
+    "rawPowerNotice"
+  );
+
+
+const currentRevealArea =
+  document.getElementById(
+    "currentRevealArea"
+  );
+
+
+const previousRanksArea =
+  document.getElementById(
+    "previousRanksArea"
+  );
+
+
+const previousRanksGrid =
+  document.getElementById(
+    "previousRanksGrid"
+  );
+
+
+const hiddenRanksMessage =
+  document.getElementById(
+    "hiddenRanksMessage"
+  );
+
+
+const fullLeaderboardGrid =
+  document.getElementById(
+    "fullLeaderboardGrid"
+  );
+
+
+const confettiLayer =
+  document.getElementById(
+    "confettiLayer"
+  );
+
+
+
+/* ==========================================
+   VARIABLES
+========================================== */
+
+let activeRoomCode =
+  null;
+
+
+let latestRoomData =
+  null;
+
+
+let stopRoomListener =
+  null;
+
+
+let stopTeamsListener =
+  null;
+
+
+let lastChampionCelebrationKey =
+  null;
+
+
+let finaleCelebrated =
+  false;
+
+
+let suppressNextStateSound =
+  true;
+
+
+const photoURLCache =
+  new Map();
+
+
+
+/* ==========================================
+   SCREEN SWITCHER
+========================================== */
+
+function showScreen(
+  screenName
+) {
+
+  const allScreens =
+    [
+      lobbyScreen,
+      introScreen,
+      questionScreen,
+      quizCompleteScreen,
+      leaderboardScreen,
+      fullLeaderboardScreen,
+      mirrorHintScreen,
+      finaleScreen
+    ];
+
+
+  for (
+    const screen of
+    allScreens
+  ) {
+
+    screen.classList.remove(
+      "active"
+    );
+
+  }
+
+
+  if (
+    screenName ===
+    "lobby"
+  ) {
+
+    lobbyScreen.classList.add(
+      "active"
+    );
+
+  }
+
+
+  if (
+    screenName ===
+    "intro"
+  ) {
+
+    introScreen.classList.add(
+      "active"
+    );
+
+  }
+
+
+  if (
+    screenName ===
+    "questions"
+  ) {
+
+    questionScreen.classList.add(
+      "active"
+    );
+
+  }
+
+
+  if (
+    screenName ===
+    "quizComplete"
+  ) {
+
+    quizCompleteScreen.classList.add(
+      "active"
+    );
+
+  }
+
+
+  if (
+    screenName ===
+    "leaderboard"
+  ) {
+
+    leaderboardScreen.classList.add(
+      "active"
+    );
+
+  }
+
+
+  if (
+    screenName ===
+    "leaderboardFull"
+  ) {
+
+    fullLeaderboardScreen.classList.add(
+      "active"
+    );
+
+  }
+
+
+  if (
+    screenName ===
+    "mirrorHint"
+  ) {
+
+    mirrorHintScreen.classList.add(
+      "active"
+    );
+
+  }
+
+
+  if (
+    screenName ===
+    "finale"
+  ) {
+
+    finaleScreen.classList.add(
+      "active"
+    );
+
+  }
+
+}
+
+
+
+/* ==========================================
+   PHOTO CACHE
+========================================== */
+
+function clearPhotoCache() {
+
+  for (
+    const url of
+    photoURLCache.values()
+  ) {
+
+    if (
+      typeof url ===
+      "string"
+    ) {
+
+      URL.revokeObjectURL(
+        url
+      );
+
+    }
+
+  }
+
+
+  photoURLCache.clear();
+
+}
+
+
+
+async function getTeamPhotoURL(
+  teamKey
+) {
+
+  if (
+    !activeRoomCode
+  ) {
+
+    return null;
+
+  }
+
+
+  const storageKey =
+    activeRoomCode +
+    "-" +
+    teamKey;
+
+
+  if (
+    photoURLCache.has(
+      storageKey
+    )
+  ) {
+
+    return photoURLCache.get(
+      storageKey
+    );
+
+  }
+
+
+  try {
+
+    const photo =
+      await getTeamPhoto(
+        storageKey
+      );
+
+
+    if (
+      !photo
+    ) {
+
+      photoURLCache.set(
+        storageKey,
+        null
+      );
+
+
+      return null;
+
+    }
+
+
+    const url =
+      URL.createObjectURL(
+        photo
+      );
+
+
+    photoURLCache.set(
+      storageKey,
+      url
+    );
+
+
+    return url;
+
+
+  } catch (
+    error
+  ) {
+
+    console.error(
+      "Could not load team photo:",
+      error
+    );
+
+
+    return null;
+
+  }
+
+}
+
+
+
+/* ==========================================
+   QUESTION
+========================================== */
+
+function clearAnswerRevealStyles() {
+
+  const letters =
+    [
+      "A",
+      "B",
+      "C",
+      "D"
+    ];
+
+
+  for (
+    const letter of
+    letters
+  ) {
+
+    const card =
+      document.getElementById(
+        "answer" +
+        letter
+      );
+
+
+    card.classList.remove(
+      "correctAnswer"
+    );
+
+
+    card.classList.remove(
+      "dimmedAnswer"
+    );
+
+  }
+
+
+  revealMessage.classList.remove(
+    "visible"
+  );
+
+
+  targetCelebration.classList.remove(
+    "visible"
+  );
+
+}
+
+
+
+function updateMoonPowerDisplay(
+  roomData
+) {
+
+  const rawMoonPower =
+    Number(
+      roomData.moonPower
+    ) || 0;
+
+
+  const target =
+    Number(
+      roomData.targetMoonPower
+    ) || 1500;
+
+
+  const visibleMoonPower =
+    Math.min(
+      rawMoonPower,
+      target
+    );
+
+
+  const percent =
+    Math.min(
+      100,
+      (
+        visibleMoonPower /
+        target
+      ) * 100
+    );
+
+
+  moonPowerFill.style.width =
+    percent +
+    "%";
+
+
+  moonPowerText.textContent =
+    visibleMoonPower +
+    " / " +
+    target;
+
+}
+
+
+
+function renderQuestion(
+  questionNumber,
+  roomData
+) {
+
+  clearAnswerRevealStyles();
+
+
+  const question =
+    questions.find(
+      q =>
+        q.id ===
+        questionNumber
+    );
+
+
+  if (
+    !question
+  ) {
+
+    questionChineseEl.textContent =
+      "找不到此題目";
+
+
+    questionEnglishEl.textContent =
+      "Question not found";
+
+
+    return;
+
+  }
+
+
+  questionNumberEl.textContent =
+    "QUESTION " +
+    questionNumber +
+    " / " +
+    questions.length;
+
+
+  questionChineseEl.textContent =
+    question.chinese;
+
+
+  questionEnglishEl.textContent =
+    question.english;
+
+
+  const letters =
+    [
+      "A",
+      "B",
+      "C",
+      "D"
+    ];
+
+
+  for (
+    const letter of
+    letters
+  ) {
+
+    const card =
+      document.getElementById(
+        "answer" +
+        letter
+      );
+
+
+    card.querySelector(
+      ".answerChinese"
+    ).textContent =
+      question.options[
+        letter
+      ].chinese;
+
+
+    card.querySelector(
+      ".answerEnglish"
+    ).textContent =
+      question.options[
+        letter
+      ].english;
+
+  }
+
+
+  if (
+    question.image
+  ) {
+
+    questionImage.src =
+      question.image;
+
+
+    questionImageArea.hidden =
+      false;
+
+
+  } else {
+
+    questionImageArea.hidden =
+      true;
+
+
+    questionImage.removeAttribute(
+      "src"
+    );
+
+  }
+
+
+  updateMoonPowerDisplay(
+    roomData
+  );
+
+
+  const teams =
+    roomData.teams ||
+    {};
+
+
+  const activeTeamKeys =
+    Object.keys(
+      teams
+    ).filter(
+      teamKey =>
+        teams[
+          teamKey
+        ] &&
+        teams[
+          teamKey
+        ].joined ===
+          true
+    );
+
+
+  const questionKey =
+    "q" +
+    questionNumber;
+
+
+  const questionAnswers =
+    (
+      roomData.answers &&
+      roomData.answers[
+        questionKey
+      ]
+    ) || {};
+
+
+  const answeredCount =
+    activeTeamKeys.filter(
+      teamKey =>
+        questionAnswers[
+          teamKey
+        ]
+    ).length;
+
+
+  answeredStatus.textContent =
+    answeredCount +
+    " / " +
+    activeTeamKeys.length +
+    " teams answered";
+
+}
+
+
+
+function renderAnswerReveal(
+  questionNumber,
+  roomData
+) {
+
+  renderQuestion(
+    questionNumber,
+    roomData
+  );
+
+
+  const question =
+    questions.find(
+      q =>
+        q.id ===
+        questionNumber
+    );
+
+
+  if (
+    !question
+  ) {
+
+    return;
+
+  }
+
+
+  const correctAnswer =
+    question.correctAnswer;
+
+
+  const letters =
+    [
+      "A",
+      "B",
+      "C",
+      "D"
+    ];
+
+
+  for (
+    const letter of
+    letters
+  ) {
+
+    const card =
+      document.getElementById(
+        "answer" +
+        letter
+      );
+
+
+    if (
+      letter ===
+      correctAnswer
+    ) {
+
+      card.classList.add(
+        "correctAnswer"
+      );
+
+
+    } else {
+
+      card.classList.add(
+        "dimmedAnswer"
+      );
+
+    }
+
+  }
+
+
+  revealMessage.classList.add(
+    "visible"
+  );
+
+
+  const teams =
+    roomData.teams ||
+    {};
+
+
+  const activeTeamKeys =
+    Object.keys(
+      teams
+    ).filter(
+      teamKey =>
+        teams[
+          teamKey
+        ] &&
+        teams[
+          teamKey
+        ].joined ===
+          true
+    );
+
+
+  const questionKey =
+    "q" +
+    questionNumber;
+
+
+  const answers =
+    (
+      roomData.answers &&
+      roomData.answers[
+        questionKey
+      ]
+    ) || {};
+
+
+  const correctCount =
+    activeTeamKeys.filter(
+      teamKey =>
+        answers[
+          teamKey
+        ] &&
+        answers[
+          teamKey
+        ].answer ===
+          correctAnswer
+    ).length;
+
+
+  answeredStatus.textContent =
+    correctCount +
+    " / " +
+    activeTeamKeys.length +
+    " teams correct";
+
+
+  const rawMoonPower =
+    Number(
+      roomData.moonPower
+    ) || 0;
+
+
+  const target =
+    Number(
+      roomData.targetMoonPower
+    ) || 1500;
+
+
+  const reachedAtQuestion =
+    Number(
+      roomData
+        .moonPowerReachedAtQuestion
+    ) || 0;
+
+
+  if (
+    rawMoonPower >=
+      target &&
+    reachedAtQuestion ===
+      questionNumber
+  ) {
+
+    targetCelebration.classList.add(
+      "visible"
+    );
+
+  }
+
+}
+
+
+
+/* ==========================================
+   QUIZ COMPLETE
+========================================== */
+
+function renderQuizComplete(
+  room
+) {
+
+  const target =
+    Number(
+      room.targetMoonPower
+    ) || 1500;
+
+
+  const rawMoonPower =
+    Number(
+      room.rawMoonPowerAtQuizComplete
+    ) ||
+    Number(
+      room.moonPower
+    ) ||
+    0;
+
+
+  const completedByHost =
+    room.moonPowerCompletedByHost ===
+      true;
+
+
+  completePowerText.textContent =
+    target +
+    " / " +
+    target;
+
+
+  rawPowerNotice.classList.remove(
+    "visible"
+  );
+
+
+  if (
+    completedByHost
+  ) {
+
+    completeChinese.textContent =
+      "月華力量已恢復！";
+
+
+    completeEnglish.textContent =
+      "MOON POWER RESTORED!";
+
+
+    completeDescription.innerHTML =
+      "十題月宮問答已全部完成！" +
+      "<br>" +
+      "The Moon Palace quiz challenge is complete!";
+
+
+    rawPowerNotice.innerHTML =
+      "問答實際收集月華力量：" +
+      rawMoonPower +
+      " / " +
+      target +
+      "<br>" +
+      "Quiz-collected Moon Power: " +
+      rawMoonPower +
+      " / " +
+      target +
+      "<br><br>" +
+      "主持人已完成月華力量啟動；各隊問答分數維持不變。" +
+      "<br>" +
+      "The Host completed the Moon Power mission. Team quiz scores remain unchanged.";
+
+
+    rawPowerNotice.classList.add(
+      "visible"
+    );
+
+
+  } else {
+
+    completeChinese.textContent =
+      "月華力量已聚集！";
+
+
+    completeEnglish.textContent =
+      "MOON POWER COMPLETE!";
+
+
+    completeDescription.innerHTML =
+      "大家成功收集足夠月華力量！" +
+      "<br>" +
+      "Together you gathered enough Moon Power!";
+
+
+    if (
+      rawMoonPower >
+      target
+    ) {
+
+      rawPowerNotice.innerHTML =
+        "實際問答累積：" +
+        rawMoonPower +
+        " Moon Power" +
+        "<br>" +
+        "Actual quiz total: " +
+        rawMoonPower +
+        " Moon Power";
+
+
+      rawPowerNotice.classList.add(
+        "visible"
+      );
+
+    }
+
+  }
+
+}
+
+
+
+/* ==========================================
+   LEADERBOARD DATA
+========================================== */
+
+function getStandings(
+  room
+) {
+
+  const source =
+    room.finalStandings ||
+    {};
+
+
+  const standings =
+    Object.entries(
+      source
+    ).map(
+      (
+        [
+          teamKey,
+          data
+        ]
+      ) => {
+
+        return {
+
+          teamKey:
+            teamKey,
+
+          teamNumber:
+            Number(
+              data.teamNumber
+            ) || 0,
+
+          previousScore:
+            Number(
+              data.previousScore
+            ) || 0,
+
+          quizScore:
+            Number(
+              data.quizScore
+            ) || 0,
+
+          totalScore:
+            Number(
+              data.totalScore
+            ) || 0,
+
+          rank:
+            Number(
+              data.rank
+            ) || 0
+
+        };
+
+      }
+    );
+
+
+  standings.sort(
+    (
+      a,
+      b
+    ) => {
+
+      if (
+        a.rank !==
+        b.rank
+      ) {
+
+        return (
+          a.rank -
+          b.rank
+        );
+
+      }
+
+
+      return (
+        a.teamNumber -
+        b.teamNumber
+      );
+
+    }
+  );
+
+
+  return standings;
+
+}
+
+
+
+function getRevealOrder(
+  room
+) {
+
+  const raw =
+    room.leaderboardRevealOrder;
+
+
+  if (
+    Array.isArray(
+      raw
+    )
+  ) {
+
+    return raw
+      .filter(
+        value =>
+          value !== null &&
+          value !== undefined
+      )
+      .map(
+        value =>
+          Number(
+            value
+          )
+      );
+
+  }
+
+
+  if (
+    raw &&
+    typeof raw ===
+      "object"
+  ) {
+
+    return Object
+      .keys(
+        raw
+      )
+      .sort(
+        (
+          a,
+          b
+        ) =>
+          Number(a) -
+          Number(b)
+      )
+      .map(
+        key =>
+          Number(
+            raw[
+              key
+            ]
+          )
+      );
+
+  }
+
+
+  return [];
+
+}
+
+
+
+function rankEmoji(
+  rank
+) {
+
+  if (
+    rank === 1
+  ) {
+
+    return "🥇";
+
+  }
+
+
+  if (
+    rank === 2
+  ) {
+
+    return "🥈";
+
+  }
+
+
+  if (
+    rank === 3
+  ) {
+
+    return "🥉";
+
+  }
+
+
+  return "🌙";
+
+}
+
+
+
+function rankChinese(
+  rank,
+  teamCount
+) {
+
+  if (
+    rank === 1
+  ) {
+
+    return teamCount >
+      1
+        ? "共同冠軍"
+        : "冠軍";
+
+  }
+
+
+  return "第 " +
+    rank +
+    " 名";
+
+}
+
+
+
+function rankEnglish(
+  rank,
+  teamCount
+) {
+
+  if (
+    rank === 1
+  ) {
+
+    return teamCount >
+      1
+        ? "SHARED CHAMPIONS"
+        : "CHAMPION";
+
+  }
+
+
+  return "RANK " +
+    rank;
+
+}
+
+
+
+/* ==========================================
+   FEATURED CARD
+========================================== */
+
+async function createFeaturedTeamCard(
+  team
+) {
+
+  const card =
+    document.createElement(
+      "div"
+    );
+
+
+  card.className =
+    "featuredTeamCard";
+
+
+  if (
+    team.rank ===
+    1
+  ) {
+
+    card.classList.add(
+      "rank1"
+    );
+
+  }
+
+
+  if (
+    team.rank ===
+    2
+  ) {
+
+    card.classList.add(
+      "rank2"
+    );
+
+  }
+
+
+  if (
+    team.rank ===
+    3
+  ) {
+
+    card.classList.add(
+      "rank3"
+    );
+
+  }
+
+
+  const photoWrap =
+    document.createElement(
+      "div"
+    );
+
+
+  photoWrap.className =
+    "featuredPhotoWrap";
+
+
+  const photoURL =
+    await getTeamPhotoURL(
+      team.teamKey
+    );
+
+
+  if (
+    photoURL
+  ) {
+
+    const photo =
+      document.createElement(
+        "img"
+      );
+
+
+    photo.className =
+      "featuredPhoto";
+
+
+    photo.src =
+      photoURL;
+
+
+    photo.alt =
+      "Team " +
+      team.teamNumber;
+
+
+    photoWrap.appendChild(
+      photo
+    );
+
+
+  } else {
+
+    const fallback =
+      document.createElement(
+        "div"
+      );
+
+
+    fallback.className =
+      "photoFallback";
+
+
+    fallback.textContent =
+      "🐇";
+
+
+    photoWrap.appendChild(
+      fallback
+    );
+
+  }
+
+
+  const teamName =
+    document.createElement(
+      "div"
+    );
+
+
+  teamName.className =
+    "featuredTeamName";
+
+
+  const displayName =
+    getTeamName(
+      team.teamNumber
+    );
+
+
+  teamName.innerHTML =
+    `
+      <div class="teamEnglishName">
+        ${displayName.english}
+      </div>
+
+      <div class="teamChineseName">
+        ${displayName.chinese}
+      </div>
+    `;
+
+
+  const scoreLabel =
+    document.createElement(
+      "div"
+    );
+
+
+  scoreLabel.className =
+    "featuredScoreLabel";
+
+
+  scoreLabel.textContent =
+    "FINAL SCORE";
+
+
+  const score =
+    document.createElement(
+      "div"
+    );
+
+
+  score.className =
+    "featuredScore";
+
+
+  score.textContent =
+    team.totalScore;
+
+
+  card.appendChild(
+    photoWrap
+  );
+
+
+  card.appendChild(
+    teamName
+  );
+
+
+  card.appendChild(
+    scoreLabel
+  );
+
+
+  card.appendChild(
+    score
+  );
+
+
+  return card;
+
+}
+
+
+
+/* ==========================================
+   MINI CARD
+========================================== */
+
+async function createMiniRankCard(
+  team
+) {
+
+  const card =
+    document.createElement(
+      "div"
+    );
+
+
+  card.className =
+    "miniRankCard";
+
+
+  const photoURL =
+    await getTeamPhotoURL(
+      team.teamKey
+    );
+
+
+  if (
+    photoURL
+  ) {
+
+    const photo =
+      document.createElement(
+        "img"
+      );
+
+
+    photo.className =
+      "miniPhoto";
+
+
+    photo.src =
+      photoURL;
+
+
+    card.appendChild(
+      photo
+    );
+
+
+  } else {
+
+    const fallback =
+      document.createElement(
+        "div"
+      );
+
+
+    fallback.className =
+      "miniPhotoFallback";
+
+
+    fallback.textContent =
+      "🐇";
+
+
+    card.appendChild(
+      fallback
+    );
+
+  }
+
+
+  const info =
+    document.createElement(
+      "div"
+    );
+
+
+  const rank =
+    document.createElement(
+      "div"
+    );
+
+
+  rank.className =
+    "miniRank";
+
+
+  rank.textContent =
+    "#" +
+    team.rank;
+
+
+  const name =
+    document.createElement(
+      "div"
+    );
+
+
+  name.className =
+    "miniTeamName";
+
+
+  const displayName =
+    getTeamName(
+      team.teamNumber
+    );
+
+
+  name.innerHTML =
+    `
+      <div class="teamEnglishName">
+        ${displayName.english}
+      </div>
+
+      <div class="teamChineseName">
+        ${displayName.chinese}
+      </div>
+    `;
+
+
+  const score =
+    document.createElement(
+      "div"
+    );
+
+
+  score.className =
+    "miniScore";
+
+
+  score.textContent =
+    team.totalScore +
+    " pts";
+
+
+  info.appendChild(
+    rank
+  );
+
+
+  info.appendChild(
+    name
+  );
+
+
+  info.appendChild(
+    score
+  );
+
+
+  card.appendChild(
+    info
+  );
+
+
+  return card;
+
+}
+
+
+
+/* ==========================================
+   PROGRESSIVE LEADERBOARD
+========================================== */
+
+async function renderLeaderboard(
+  room
+) {
+
+  const standings =
+    getStandings(
+      room
+    );
+
+
+  const revealOrder =
+    getRevealOrder(
+      room
+    );
+
+
+  const step =
+    Math.min(
+      Number(
+        room.leaderboardStep
+      ) || 0,
+      revealOrder.length
+    );
+
+
+  const revealedRanks =
+    revealOrder.slice(
+      0,
+      step
+    );
+
+
+  currentRevealArea.innerHTML =
+    "";
+
+
+  previousRanksGrid.innerHTML =
+    "";
+
+
+  hiddenRanksMessage.textContent =
+    "";
+
+
+  if (
+    step ===
+    0
+  ) {
+
+    const panel =
+      document.createElement(
+        "div"
+      );
+
+
+    panel.className =
+      "suspensePanel";
+
+
+    panel.innerHTML =
+      `
+        <div class="suspenseIcon">
+          🏆
+        </div>
+
+        <div class="suspenseChinese">
+          最終排名即將揭曉……
+        </div>
+
+        <div class="suspenseEnglish">
+          The Final Leaderboard is ready.
+        </div>
+      `;
+
+
+    currentRevealArea.appendChild(
+      panel
+    );
+
+
+    previousRanksArea.style.display =
+      "none";
+
+
+    return;
+
+  }
+
+
+  previousRanksArea.style.display =
+    "block";
+
+
+  const currentRank =
+    Number(
+      room.leaderboardCurrentRank
+    ) ||
+    Number(
+      revealedRanks[
+        revealedRanks.length -
+        1
+      ]
+    );
+
+
+  const currentTeams =
+    standings.filter(
+      team =>
+        team.rank ===
+        currentRank
+    );
+
+
+  const header =
+    document.createElement(
+      "div"
+    );
+
+
+  header.className =
+    "currentRankHeader";
+
+
+  header.innerHTML =
+    `
+      <div class="rankEmoji">
+        ${rankEmoji(currentRank)}
+      </div>
+
+      <div class="currentRankChinese">
+        ${rankChinese(
+          currentRank,
+          currentTeams.length
+        )}
+      </div>
+
+      <div class="currentRankEnglish">
+        ${rankEnglish(
+          currentRank,
+          currentTeams.length
+        )}
+      </div>
+    `;
+
+
+  currentRevealArea.appendChild(
+    header
+  );
+
+
+  const featuredGrid =
+    document.createElement(
+      "div"
+    );
+
+
+  featuredGrid.className =
+    "featuredTeamGrid";
+
+
+  for (
+    const team of
+    currentTeams
+  ) {
+
+    const card =
+      await createFeaturedTeamCard(
+        team
+      );
+
+
+    featuredGrid.appendChild(
+      card
+    );
+
+  }
+
+
+  currentRevealArea.appendChild(
+    featuredGrid
+  );
+
+
+  const previousRanks =
+    revealedRanks.filter(
+      rank =>
+        Number(
+          rank
+        ) !==
+        currentRank
+    );
+
+
+  const previousTeams =
+    standings.filter(
+      team =>
+        previousRanks.includes(
+          team.rank
+        )
+    );
+
+
+  previousTeams.sort(
+    (
+      a,
+      b
+    ) => {
+
+      if (
+        a.rank !==
+        b.rank
+      ) {
+
+        return (
+          a.rank -
+          b.rank
+        );
+
+      }
+
+
+      return (
+        a.teamNumber -
+        b.teamNumber
+      );
+
+    }
+  );
+
+
+  for (
+    const team of
+    previousTeams
+  ) {
+
+    const miniCard =
+      await createMiniRankCard(
+        team
+      );
+
+
+    previousRanksGrid.appendChild(
+      miniCard
+    );
+
+  }
+
+
+  if (
+    previousTeams.length ===
+    0
+  ) {
+
+    previousRanksArea.style.display =
+      "none";
+
+  }
+
+
+  const remaining =
+    revealOrder.length -
+    step;
+
+
+  if (
+    remaining >
+    0
+  ) {
+
+    hiddenRanksMessage.textContent =
+      "🔒 " +
+      remaining +
+      (
+        remaining ===
+        1
+          ? " rank remains hidden"
+          : " ranks remain hidden"
+      );
+
+
+  } else {
+
+    hiddenRanksMessage.textContent =
+      "🏆 All ranks have been revealed!";
+
+  }
+
+
+  if (
+    currentRank ===
+    1
+  ) {
+
+    const celebrationKey =
+      activeRoomCode +
+      ":" +
+      step;
+
+
+    if (
+      lastChampionCelebrationKey !==
+      celebrationKey
+    ) {
+
+      lastChampionCelebrationKey =
+        celebrationKey;
+
+
+      launchConfetti(
+        100
+      );
+
+    }
+
+  }
+
+}
+
+
+
+/* ==========================================
+   FULL LEADERBOARD
+========================================== */
+
+async function createFullLeaderboardRow(
+  team
+) {
+
+  const row =
+    document.createElement(
+      "div"
+    );
+
+
+  row.className =
+    "fullRankRow";
+
+
+  if (
+    team.rank ===
+    1
+  ) {
+
+    row.classList.add(
+      "rank1"
+    );
+
+  }
+
+
+  if (
+    team.rank ===
+    2
+  ) {
+
+    row.classList.add(
+      "rank2"
+    );
+
+  }
+
+
+  if (
+    team.rank ===
+    3
+  ) {
+
+    row.classList.add(
+      "rank3"
+    );
+
+  }
+
+
+  const rank =
+    document.createElement(
+      "div"
+    );
+
+
+  rank.className =
+    "fullRankNumber";
+
+
+  if (
+    team.rank ===
+    1
+  ) {
+
+    rank.textContent =
+      "🥇";
+
+
+  } else if (
+    team.rank ===
+    2
+  ) {
+
+    rank.textContent =
+      "🥈";
+
+
+  } else if (
+    team.rank ===
+    3
+  ) {
+
+    rank.textContent =
+      "🥉";
+
+
+  } else {
+
+    rank.textContent =
+      "#" +
+      team.rank;
+
+  }
+
+
+  const photoURL =
+    await getTeamPhotoURL(
+      team.teamKey
+    );
+
+
+  let photoElement;
+
+
+  if (
+    photoURL
+  ) {
+
+    photoElement =
+      document.createElement(
+        "img"
+      );
+
+
+    photoElement.className =
+      "fullPhoto";
+
+
+    photoElement.src =
+      photoURL;
+
+
+  } else {
+
+    photoElement =
+      document.createElement(
+        "div"
+      );
+
+
+    photoElement.className =
+      "fullPhotoFallback";
+
+
+    photoElement.textContent =
+      "🐇";
+
+  }
+
+
+  const teamInfo =
+    document.createElement(
+      "div"
+    );
+
+
+  const teamName =
+    document.createElement(
+      "div"
+    );
+
+
+  teamName.className =
+    "fullTeamName";
+
+
+  const displayName =
+    getTeamName(
+      team.teamNumber
+    );
+
+
+  teamName.innerHTML =
+    `
+      <div class="teamEnglishName">
+        ${displayName.english}
+      </div>
+
+      <div class="teamChineseName">
+        ${displayName.chinese}
+      </div>
+    `;
+
+
+  const breakdown =
+    document.createElement(
+      "div"
+    );
+
+
+  breakdown.className =
+    "scoreBreakdown";
+
+
+  breakdown.textContent =
+    "Previous " +
+    team.previousScore +
+    " + Quiz " +
+    team.quizScore;
+
+
+  teamInfo.appendChild(
+    teamName
+  );
+
+
+  teamInfo.appendChild(
+    breakdown
+  );
+
+
+  const totalArea =
+    document.createElement(
+      "div"
+    );
+
+
+  totalArea.className =
+    "fullTotalArea";
+
+
+  const totalLabel =
+    document.createElement(
+      "div"
+    );
+
+
+  totalLabel.className =
+    "fullTotalLabel";
+
+
+  totalLabel.textContent =
+    "FINAL SCORE";
+
+
+  const total =
+    document.createElement(
+      "div"
+    );
+
+
+  total.className =
+    "fullTotal";
+
+
+  total.textContent =
+    team.totalScore;
+
+
+  totalArea.appendChild(
+    totalLabel
+  );
+
+
+  totalArea.appendChild(
+    total
+  );
+
+
+  row.appendChild(
+    rank
+  );
+
+
+  row.appendChild(
+    photoElement
+  );
+
+
+  row.appendChild(
+    teamInfo
+  );
+
+
+  row.appendChild(
+    totalArea
+  );
+
+
+  return row;
+
+}
+
+
+
+async function renderFullLeaderboard(
+  room
+) {
+
+  const standings =
+    getStandings(
+      room
+    );
+
+
+  fullLeaderboardGrid.innerHTML =
+    "";
+
+
+  for (
+    const team of
+    standings
+  ) {
+
+    const row =
+      await createFullLeaderboardRow(
+        team
+      );
+
+
+    fullLeaderboardGrid.appendChild(
+      row
+    );
+
+  }
+
+}
+
+
+
+/* ==========================================
+   FINALE
+========================================== */
+
+function renderFinale() {
+
+  if (
+    !finaleCelebrated
+  ) {
+
+    finaleCelebrated =
+      true;
+
+
+    launchConfetti(
+      140
+    );
+
+
+    setTimeout(
+      () => {
+
+        if (
+          latestRoomData &&
+          latestRoomData.state ===
+            "finale"
+        ) {
+
+          launchConfetti(
+            90
+          );
+
+        }
+
+      },
+      2800
+    );
+
+  }
+
+}
+
+
+
+/* ==========================================
+   STATE AUDIO
+========================================== */
+
+function handleStateAudio(
+  room,
+  state
+) {
+
+  syncBackgroundMusic(
+    state
+  );
+
+
+  if (
+    suppressNextStateSound
+  ) {
+
+    suppressNextStateSound =
+      false;
+
+    return;
+
+  }
+
+
+  /*
+    Answer reveal
+  */
+
+  if (
+    state ===
+    "reveal"
+  ) {
+
+    const questionNumber =
+      Number(
+        room.currentQuestion
+      ) || 1;
+
+
+    const revealKey =
+      activeRoomCode +
+      ":question:" +
+      questionNumber;
+
+
+    if (
+      lastRevealSoundKey ===
+      revealKey
+    ) {
+
+      return;
+
+    }
+
+
+    lastRevealSoundKey =
+      revealKey;
+
+
+    const rawMoonPower =
+      Number(
+        room.moonPower
+      ) || 0;
+
+
+    const target =
+      Number(
+        room.targetMoonPower
+      ) || 1500;
+
+
+    const reachedAtQuestion =
+      Number(
+        room.moonPowerReachedAtQuestion
+      ) || 0;
+
+
+    if (
+      rawMoonPower >=
+        target &&
+      reachedAtQuestion ===
+        questionNumber
+    ) {
+
+      playSoundEffect(
+        moonCompleteSound,
+        2600
+      );
+
+
+    } else {
+
+      playSoundEffect(
+        answerRevealSound,
+        1200
+      );
+
+    }
+
+
+    return;
+
+  }
+
+
+  /*
+    Leaderboard rank reveal
+  */
+
+  if (
+    state ===
+    "leaderboard"
+  ) {
+
+    const step =
+      Number(
+        room.leaderboardStep
+      ) || 0;
+
+
+    if (
+      step <=
+      0
+    ) {
+
+      return;
+
+    }
+
+
+    const rank =
+      Number(
+        room.leaderboardCurrentRank
+      ) || 0;
+
+
+    const rankKey =
+      activeRoomCode +
+      ":leaderboard:" +
+      step +
+      ":" +
+      rank;
+
+
+    if (
+      lastRankSoundKey ===
+      rankKey
+    ) {
+
+      return;
+
+    }
+
+
+    lastRankSoundKey =
+      rankKey;
+
+
+    if (
+      rank ===
+      1
+    ) {
+
+      playSoundEffect(
+        championSound,
+        3200
+      );
+
+
+    } else {
+
+      playSoundEffect(
+        rankRevealSound,
+        1300
+      );
+
+    }
+
+
+    return;
+
+  }
+
+
+  /*
+    Five-Tone Mirror Hint
+  */
+
+  if (
+    state ===
+    "mirrorHint"
+  ) {
+
+    playMirrorHintAudio(
+      room
+    );
+
+
+    return;
+
+  }
+
+}
+
+
+
+/* ==========================================
+   CONFETTI
+========================================== */
+
+function launchConfetti(
+  amount =
+    90
+) {
+
+  confettiLayer.innerHTML =
+    "";
+
+
+  const colours =
+    [
+      "#ffe071",
+      "#ff8fd4",
+      "#8ee6ff",
+      "#9cffad",
+      "#ffffff",
+      "#c7a7ff"
+    ];
+
+
+  for (
+    let i = 0;
+    i < amount;
+    i++
+  ) {
+
+    const piece =
+      document.createElement(
+        "div"
+      );
+
+
+    piece.className =
+      "confettiPiece";
+
+
+    piece.style.left =
+      (
+        Math.random() *
+        100
+      ) +
+      "vw";
+
+
+    piece.style.background =
+      colours[
+        Math.floor(
+          Math.random() *
+          colours.length
+        )
+      ];
+
+
+    piece.style.animationDuration =
+      (
+        2.6 +
+        Math.random() *
+        2.5
+      ) +
+      "s";
+
+
+    piece.style.animationDelay =
+      (
+        Math.random() *
+        0.7
+      ) +
+      "s";
+
+
+    confettiLayer.appendChild(
+      piece
+    );
+
+  }
+
+
+  setTimeout(
+    () => {
+
+      confettiLayer.innerHTML =
+        "";
+
+    },
+    6000
+  );
+
+}
+
+
+
+/* ==========================================
+   CURRENT ROOM
+========================================== */
+
+const currentRoomRef =
+  ref(
+    db,
+    "currentRoom"
+  );
+
+
+onValue(
+  currentRoomRef,
+  (
+    snapshot
+  ) => {
+
+    const roomCode =
+      snapshot.val();
+
+
+    if (
+      stopRoomListener
+    ) {
+
+      stopRoomListener();
+
+      stopRoomListener =
+        null;
+
+    }
+
+
+    if (
+      stopTeamsListener
+    ) {
+
+      stopTeamsListener();
+
+      stopTeamsListener =
+        null;
+
+    }
+
+
+    if (
+      activeRoomCode !==
+      roomCode
+    ) {
+
+      clearPhotoCache();
+
+
+      lastChampionCelebrationKey =
+        null;
+
+
+      finaleCelebrated =
+        false;
+
+
+      lastRevealSoundKey =
+        null;
+
+
+      lastRankSoundKey =
+        null;
+
+
+      lastMirrorHintKey =
+        null;
+
+
+      suppressNextStateSound =
+        true;
+
+    }
+
+
+    activeRoomCode =
+      roomCode ||
+      null;
+
+
+    latestRoomData =
+      null;
+
+
+    if (
+      !roomCode
+    ) {
+
+      showScreen(
+        "lobby"
+      );
+
+
+      syncBackgroundMusic(
+        "lobby"
+      );
+
+
+      roomCodeEl.textContent =
+        "----";
+
+
+      joinedCountEl.textContent =
+        "Waiting for teams...";
+
+
+      statusEl.textContent =
+        "Waiting for host to create a room...";
+
+
+      teamGrid.innerHTML =
+        "";
+
+
+      return;
+
+    }
+
+
+    roomCodeEl.textContent =
+      roomCode;
+
+
+    statusEl.textContent =
+      "Join using the room code above";
+
+
+    watchRoom(
+      roomCode
+    );
+
+
+    watchTeams(
+      roomCode
+    );
+
+  }
+);
+
+
+
+/* ==========================================
+   WATCH ROOM
+========================================== */
+
+function watchRoom(
+  roomCode
+) {
+
+  const roomRef =
+    ref(
+      db,
+      "rooms/" +
+      roomCode
+    );
+
+
+  stopRoomListener =
+    onValue(
+      roomRef,
+      async (
+        snapshot
+      ) => {
+
+        const room =
+          snapshot.val();
+
+
+        if (
+          !room
+        ) {
+
+          return;
+
+        }
+
+
+        latestRoomData =
+          room;
+
+
+        const state =
+          room.state ||
+          "lobby";
+
+
+        handleStateAudio(
+          room,
+          state
+        );
+
+
+        if (
+          state ===
+          "lobby"
+        ) {
+
+          showScreen(
+            "lobby"
+          );
+
+          return;
+
+        }
+
+
+        if (
+          state ===
+          "intro"
+        ) {
+
+          showScreen(
+            "intro"
+          );
+
+          return;
+
+        }
+
+
+        if (
+          state ===
+          "questions"
+        ) {
+
+          showScreen(
+            "questions"
+          );
+
+
+          renderQuestion(
+            Number(
+              room.currentQuestion
+            ) || 1,
+            room
+          );
+
+
+          return;
+
+        }
+
+
+        if (
+          state ===
+          "reveal"
+        ) {
+
+          showScreen(
+            "questions"
+          );
+
+
+          renderAnswerReveal(
+            Number(
+              room.currentQuestion
+            ) || 1,
+            room
+          );
+
+
+          return;
+
+        }
+
+
+        if (
+          state ===
+          "quizComplete"
+        ) {
+
+          showScreen(
+            "quizComplete"
+          );
+
+
+          renderQuizComplete(
+            room
+          );
+
+
+          return;
+
+        }
+
+
+        if (
+          state ===
+          "leaderboard"
+        ) {
+
+          showScreen(
+            "leaderboard"
+          );
+
+
+          await renderLeaderboard(
+            room
+          );
+
+
+          return;
+
+        }
+
+
+        if (
+          state ===
+          "leaderboardFull"
+        ) {
+
+          showScreen(
+            "leaderboardFull"
+          );
+
+
+          await renderFullLeaderboard(
+            room
+          );
+
+
+          return;
+
+        }
+
+
+        if (
+          state ===
+          "mirrorHint"
+        ) {
+
+          showScreen(
+            "mirrorHint"
+          );
+
+
+          return;
+
+        }
+
+
+        if (
+          state ===
+          "finale"
+        ) {
+
+          showScreen(
+            "finale"
+          );
+
+
+          renderFinale();
+
+
+          return;
+
+        }
+
+      }
+    );
+
+}
+
+
+
+/* ==========================================
+   WATCH TEAMS
+========================================== */
+
+function watchTeams(
+  roomCode
+) {
+
+  const teamsRef =
+    ref(
+      db,
+      "rooms/" +
+      roomCode +
+      "/teams"
+    );
+
+
+  stopTeamsListener =
+    onValue(
+      teamsRef,
+      (
+        snapshot
+      ) => {
+
+        const teams =
+          snapshot.val() ||
+          {};
+
+
+        teamGrid.innerHTML =
+          "";
+
+
+        let joinedCount =
+          0;
+
+
+        for (
+          let teamNumber = 1;
+          teamNumber <= 10;
+          teamNumber++
+        ) {
+
+          const teamKey =
+            "team" +
+            teamNumber;
+
+
+          const joined =
+            teams[
+              teamKey
+            ] &&
+            teams[
+              teamKey
+            ].joined ===
+              true;
+
+
+          if (
+            joined
+          ) {
+
+            joinedCount++;
+
+          }
+
+
+          const card =
+            document.createElement(
+              "div"
+            );
+
+
+          card.className =
+            "teamCard " +
+            (
+              joined
+                ? "joined"
+                : "waiting"
+            );
+
+
+          const teamName =
+            getTeamName(
+              teamNumber
+            );
+
+
+          card.innerHTML =
+            `
+              <div class="teamEnglishName">
+                ${teamName.english}${joined ? " ✓" : ""}
+              </div>
+
+              <div class="teamChineseName">
+                ${teamName.chinese}
+              </div>
+            `;
+
+
+          teamGrid.appendChild(
+            card
+          );
+
+        }
+
+
+        joinedCountEl.textContent =
+          joinedCount +
+          " / 10 teams joined";
+
+
+        if (
+          joinedCount ===
+          10
+        ) {
+
+          statusEl.textContent =
+            "All teams are ready ✓";
+
+
+        } else {
+
+          statusEl.textContent =
+            "Waiting for teams to join...";
+
+        }
+
+      }
+    );
+
+}
+
+
+
+/* ==========================================
+   PHOTO UPDATE
+========================================== */
+
+photoChannel.addEventListener(
+  "message",
+  async (
+    event
+  ) => {
+
+    const data =
+      event.data;
+
+
+    if (
+      !data ||
+      data.type !==
+        "photo-updated"
+    ) {
+
+      return;
+
+    }
+
+
+    if (
+      data.roomCode !==
+      activeRoomCode
+    ) {
+
+      return;
+
+    }
+
+
+    const storageKey =
+      data.roomCode +
+      "-" +
+      data.teamKey;
+
+
+    if (
+      photoURLCache.has(
+        storageKey
+      )
+    ) {
+
+      const oldURL =
+        photoURLCache.get(
+          storageKey
+        );
+
+
+      if (
+        typeof oldURL ===
+        "string"
+      ) {
+
+        URL.revokeObjectURL(
+          oldURL
+        );
+
+      }
+
+
+      photoURLCache.delete(
+        storageKey
+      );
+
+    }
+
+
+    if (
+      !latestRoomData
+    ) {
+
+      return;
+
+    }
+
+
+    if (
+      latestRoomData.state ===
+        "leaderboard"
+    ) {
+
+      await renderLeaderboard(
+        latestRoomData
+      );
+
+    }
+
+
+    if (
+      latestRoomData.state ===
+        "leaderboardFull"
+    ) {
+
+      await renderFullLeaderboard(
+        latestRoomData
+      );
+
+    }
+
+  }
+);
+
+
+</script>
+
+</body>
+
+</html>
