@@ -50,17 +50,6 @@ body {
 }
 
 
-h1 {
-  font-size: 56px;
-  margin-bottom: 10px;
-}
-
-h2 {
-  font-size: 34px;
-  margin-top: 0;
-}
-
-
 .screen {
   display: none;
 }
@@ -83,7 +72,6 @@ h2 {
   height: 100vh;
 
   padding: 0;
-
   margin: 0;
 
   background: #000;
@@ -152,7 +140,7 @@ h2 {
       12,
       15,
       40,
-      0.82
+      0.84
     );
 
   color: white;
@@ -174,7 +162,7 @@ h2 {
       50,
       55,
       100,
-      0.9
+      0.94
     );
 }
 
@@ -205,47 +193,225 @@ h2 {
 .teamEnglishName {
   font-weight: bold;
 
-  line-height: 1.18;
+  line-height: 1.16;
 }
 
 
 .teamChineseName {
-  margin-top: 5px;
+  margin-top: 4px;
 
-  font-size: 0.82em;
+  font-size: 0.84em;
 
   opacity: 0.88;
 
-  line-height: 1.18;
+  line-height: 1.16;
 }
 
 
 /* =========================================================
-   LOBBY
+   NEW LOBBY LAYOUT
 ========================================================= */
 
-#roomCode {
-  font-size: 92px;
+#lobbyScreen {
+  position: fixed;
+
+  inset: 0;
+
+  padding: 0;
+
+  width: 100vw;
+  height: 100vh;
+
+  overflow: hidden;
+
+  background:
+    #0b1024;
+}
+
+
+#lobbyScreen.active {
+  display: flex;
+
+  flex-direction: column;
+}
+
+
+/*
+  Top artwork area.
+
+  The image is NOT used as a background.
+  Nothing is placed over it.
+*/
+
+#lobbyBannerArea {
+  flex:
+    0 0 46vh;
+
+  width: 100%;
+
+  min-height: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at center,
+      #202b4a,
+      #090e1e
+    );
+
+  border-bottom:
+    2px solid
+    rgba(
+      255,
+      229,
+      152,
+      0.24
+    );
+}
+
+
+#lobbyBanner {
+  display: block;
+
+  width: auto;
+
+  height: 100%;
+
+  max-width: 100%;
+
+  object-fit: contain;
+}
+
+
+/*
+  Lower functional lobby.
+*/
+
+#lobbyInfoArea {
+  flex: 1;
+
+  min-height: 0;
+
+  padding:
+    10px 32px 14px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  background:
+    linear-gradient(
+      180deg,
+      #131a34,
+      #0d1126
+    );
+}
+
+
+#lobbyHeaderRow {
+  flex: 0 0 auto;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 70px;
+
+  min-height: 78px;
+
+  margin-bottom: 6px;
+}
+
+
+#roomCodeArea {
+  display: flex;
+
+  align-items: center;
+
+  gap: 20px;
+}
+
+
+#roomCodeLabel {
+  font-size: 19px;
 
   font-weight: bold;
 
-  letter-spacing: 16px;
+  line-height: 1.25;
 
-  margin: 25px 0;
+  opacity: 0.72;
+
+  text-align: right;
+}
+
+
+#roomCode {
+  font-size: 54px;
+
+  line-height: 1;
+
+  font-weight: bold;
+
+  letter-spacing: 10px;
 
   color: #ffe89a;
+
+  text-shadow:
+    0 0 20px
+    rgba(
+      255,
+      232,
+      154,
+      0.26
+    );
 }
 
 
 #joinedCount {
-  font-size: 30px;
+  min-width: 250px;
 
-  margin:
-    20px 0 30px;
+  padding:
+    11px 20px;
+
+  border-radius: 999px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.08
+    );
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.15
+    );
+
+  font-size: 22px;
+
+  font-weight: bold;
 }
 
 
 #teamGrid {
+  flex: 1;
+
+  min-height: 0;
+
   display: grid;
 
   grid-template-columns:
@@ -257,22 +423,41 @@ h2 {
       )
     );
 
-  gap: 16px;
+  grid-template-rows:
+    repeat(
+      2,
+      minmax(
+        0,
+        1fr
+      )
+    );
 
-  max-width: 1450px;
+  gap: 10px;
+
+  width: 100%;
+
+  max-width: 1500px;
 
   margin: 0 auto;
 }
 
 
 .teamCard {
-  min-height: 100px;
+  min-width: 0;
 
-  padding: 16px 8px;
+  min-height: 0;
+
+  padding:
+    8px 7px;
 
   border-radius: 14px;
 
-  font-size: 20px;
+  font-size:
+    clamp(
+      14px,
+      1.25vw,
+      20px
+    );
 
   display: flex;
 
@@ -280,12 +465,14 @@ h2 {
 
   justify-content: center;
 
+  align-items: center;
+
   background:
     rgba(
       255,
       255,
       255,
-      0.08
+      0.07
     );
 
   border:
@@ -294,18 +481,20 @@ h2 {
       255,
       255,
       255,
-      0.2
+      0.15
     );
+
+  overflow: hidden;
 }
 
 
-.joined {
+.teamCard.joined {
   background:
     rgba(
       110,
       220,
       140,
-      0.2
+      0.16
     );
 
   border-color:
@@ -313,20 +502,37 @@ h2 {
       110,
       220,
       140,
-      0.9
+      0.82
+    );
+
+  box-shadow:
+    0 0 18px
+    rgba(
+      110,
+      220,
+      140,
+      0.08
     );
 }
 
 
-.waiting {
-  opacity: 0.55;
+.teamCard.waiting {
+  opacity: 0.48;
 }
 
 
 #status {
-  font-size: 24px;
+  flex: 0 0 auto;
 
-  margin-top: 30px;
+  min-height: 24px;
+
+  margin-top: 7px;
+
+  font-size: 17px;
+
+  line-height: 1.2;
+
+  opacity: 0.78;
 }
 
 
@@ -1443,17 +1649,20 @@ h2 {
 
 
 .fullRankRow.rank1 {
-  border-color: #ffe071;
+  border-color:
+    #ffe071;
 }
 
 
 .fullRankRow.rank2 {
-  border-color: #dfe6ee;
+  border-color:
+    #dfe6ee;
 }
 
 
 .fullRankRow.rank3 {
-  border-color: #d69a68;
+  border-color:
+    #d69a68;
 }
 
 
@@ -1715,6 +1924,31 @@ h2 {
   1000px
 ) {
 
+  #lobbyBannerArea {
+    flex-basis: 40vh;
+  }
+
+  #lobbyHeaderRow {
+    gap: 25px;
+  }
+
+  #roomCode {
+    font-size: 42px;
+  }
+
+  #teamGrid {
+    grid-template-columns:
+      repeat(
+        2,
+        1fr
+      );
+
+    grid-template-rows:
+      none;
+
+    overflow-y: auto;
+  }
+
   #questionChinese {
     font-size: 42px;
   }
@@ -1765,7 +1999,7 @@ h2 {
 
 
 <!-- =======================================================
-     LOBBY
+     NEW LOBBY
 ======================================================= -->
 
 <section
@@ -1773,26 +2007,59 @@ h2 {
   class="screen active"
 >
 
-  <h1>
-    🌙 Moon Palace Adventure
-  </h1>
 
-  <h2>
-    月宮大冒險
-  </h2>
+  <!-- Artwork only: absolutely no lobby information overlays it -->
 
-  <div id="roomCode">
-    ----
+  <div id="lobbyBannerArea">
+
+    <img
+      id="lobbyBanner"
+      src="./media/lobby-background.png"
+      alt="Moon Palace Adventure"
+    >
+
   </div>
 
-  <div id="joinedCount">
-    Waiting for teams...
-  </div>
 
-  <div id="teamGrid"></div>
+  <!-- All functional information stays BELOW the artwork -->
 
-  <div id="status">
-    Waiting for host to create a room...
+  <div id="lobbyInfoArea">
+
+
+    <div id="lobbyHeaderRow">
+
+
+      <div id="roomCodeArea">
+
+        <div id="roomCodeLabel">
+          房間號碼
+          <br>
+          ROOM CODE
+        </div>
+
+        <div id="roomCode">
+          ----
+        </div>
+
+      </div>
+
+
+      <div id="joinedCount">
+        Waiting for teams...
+      </div>
+
+
+    </div>
+
+
+    <div id="teamGrid"></div>
+
+
+    <div id="status">
+      Waiting for host to create a room...
+    </div>
+
+
   </div>
 
 </section>
@@ -1863,6 +2130,7 @@ h2 {
       class="answerCard"
       id="answerA"
     >
+
       <div class="answerLetter">
         A
       </div>
@@ -1870,6 +2138,7 @@ h2 {
       <div class="answerChinese"></div>
 
       <div class="answerEnglish"></div>
+
     </div>
 
 
@@ -1877,6 +2146,7 @@ h2 {
       class="answerCard"
       id="answerB"
     >
+
       <div class="answerLetter">
         B
       </div>
@@ -1884,6 +2154,7 @@ h2 {
       <div class="answerChinese"></div>
 
       <div class="answerEnglish"></div>
+
     </div>
 
 
@@ -1891,6 +2162,7 @@ h2 {
       class="answerCard"
       id="answerC"
     >
+
       <div class="answerLetter">
         C
       </div>
@@ -1898,6 +2170,7 @@ h2 {
       <div class="answerChinese"></div>
 
       <div class="answerEnglish"></div>
+
     </div>
 
 
@@ -1905,6 +2178,7 @@ h2 {
       class="answerCard"
       id="answerD"
     >
+
       <div class="answerLetter">
         D
       </div>
@@ -1912,6 +2186,7 @@ h2 {
       <div class="answerChinese"></div>
 
       <div class="answerEnglish"></div>
+
     </div>
 
   </div>
@@ -5117,10 +5392,6 @@ function handleStateAudio(
   );
 
 
-  /*
-    Stop videos when leaving their states.
-  */
-
   if (
     state !==
     "intro"
@@ -5141,13 +5412,6 @@ function handleStateAudio(
   }
 
 
-
-  /*
-    Videos are not treated like tiny SFX.
-
-    If we are entering intro/finale,
-    play them.
-  */
 
   if (
     state ===
@@ -5175,10 +5439,6 @@ function handleStateAudio(
   }
 
 
-
-  /*
-    Don't replay old SFX after a TV refresh.
-  */
 
   if (
     suppressNextStateSound
