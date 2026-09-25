@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8">
 
   <meta
@@ -10,54 +12,79 @@
 
   <title>Moon Palace Host</title>
 
+
   <style>
 
     body {
       margin: 0;
       padding: 28px;
-      font-family: Arial, sans-serif;
+
+      font-family:
+        Arial,
+        sans-serif;
+
       background: #11152b;
+
       color: white;
     }
+
 
     h1 {
       margin-top: 0;
     }
 
+
     button {
       font-size: 18px;
+
       padding: 12px 18px;
+
       border-radius: 10px;
+
       border: none;
+
       cursor: pointer;
     }
 
+
     button:disabled {
       opacity: 0.4;
+
       cursor: not-allowed;
     }
+
 
     #topButtons,
     #controls,
     #leaderboardControls,
     #finaleControls {
       display: flex;
+
       gap: 12px;
+
       flex-wrap: wrap;
     }
 
+
     #roomCode {
       font-size: 48px;
+
       font-weight: bold;
+
       letter-spacing: 8px;
+
       margin: 16px 0;
     }
 
+
     #teamList {
       margin-top: 25px;
+
       display: grid;
+
       gap: 12px;
     }
+
 
     .teamRow {
       display: grid;
@@ -69,49 +96,70 @@
         1fr;
 
       align-items: center;
+
       gap: 12px;
 
       padding: 12px;
 
       background:
-        rgba(255,255,255,0.07);
+        rgba(
+          255,
+          255,
+          255,
+          0.07
+        );
 
       border-radius: 10px;
     }
 
+
     .teamName {
       font-weight: bold;
+
       font-size: 18px;
     }
+
 
     .statusJoined {
       color: #8ff0a4;
     }
 
+
     .statusWaiting {
       color: #aaa;
     }
 
+
     input[type="number"] {
       width: 135px;
+
       font-size: 18px;
+
       padding: 8px;
 
       border-radius: 8px;
+
       border: none;
     }
 
+
     .photoArea {
       display: flex;
+
       align-items: center;
+
       gap: 12px;
+
       flex-wrap: wrap;
     }
 
+
     .photoButton {
       font-size: 15px;
+
       padding: 9px 12px;
     }
+
 
     .photoPreview {
       width: 70px;
@@ -123,100 +171,171 @@
 
       border:
         2px solid
-        rgba(255,255,255,0.35);
+        rgba(
+          255,
+          255,
+          255,
+          0.35
+        );
     }
+
 
     .photoStatus {
       font-size: 14px;
+
       color: #8ff0a4;
     }
+
 
     #controls {
       margin-top: 28px;
     }
 
+
     #leaderboardControls {
       margin-top: 16px;
     }
 
+
     #finaleControls {
       margin-top: 16px;
+
+      padding-top: 16px;
+
+      border-top:
+        1px solid
+        rgba(
+          255,
+          255,
+          255,
+          0.16
+        );
     }
+
 
     #playIntroButton {
       background: #d7cbff;
+
       color: #11152b;
+
       font-weight: bold;
     }
+
 
     #startButton {
       background: #ffe89a;
+
       color: #11152b;
+
       font-weight: bold;
     }
+
 
     #revealButton {
       background: #8ff0a4;
+
       color: #11152b;
+
       font-weight: bold;
     }
+
 
     #nextQuestionButton {
       background: #8dd9ff;
+
       color: #11152b;
+
       font-weight: bold;
     }
+
 
     #finishQuizButton {
       background: #ffcf70;
+
       color: #11152b;
+
       font-weight: bold;
     }
+
 
     #startLeaderboardButton {
       background: #e1b7ff;
+
       color: #11152b;
+
       font-weight: bold;
     }
+
 
     #revealRankButton {
       background: #ff9fd0;
+
       color: #11152b;
+
       font-weight: bold;
     }
+
 
     #showFullLeaderboardButton {
       background: #ffd76e;
+
       color: #11152b;
+
       font-weight: bold;
     }
+
+
+    #playMirrorHintButton {
+      background: #bfe3ff;
+
+      color: #11152b;
+
+      font-weight: bold;
+
+      font-size: 19px;
+    }
+
 
     #playFinaleButton {
       background: #fff0a6;
+
       color: #11152b;
+
       font-weight: bold;
+
       font-size: 20px;
     }
 
+
     #status {
       margin-top: 18px;
+
       font-size: 18px;
+
       line-height: 1.5;
     }
 
-    @media (max-width: 800px) {
+
+    @media (
+      max-width:
+      800px
+    ) {
 
       .teamRow {
-        grid-template-columns: 1fr;
+        grid-template-columns:
+          1fr;
       }
 
     }
 
   </style>
+
 </head>
 
 
+
 <body>
+
 
   <h1>
     🌙 Moon Palace Host
@@ -229,6 +348,7 @@
       Create New Game Room
     </button>
 
+
     <button id="resetRoomButton">
       Reset / End Current Game
     </button>
@@ -236,10 +356,12 @@
   </div>
 
 
+
   <section
     id="roomSection"
     hidden
   >
+
 
     <p>
       Room Code
@@ -259,7 +381,13 @@
     <div id="teamList"></div>
 
 
+
+    <!-- ==========================================
+         QUIZ CONTROLS
+    =========================================== -->
+
     <div id="controls">
+
 
       <button
         id="playIntroButton"
@@ -303,7 +431,13 @@
     </div>
 
 
+
+    <!-- ==========================================
+         LEADERBOARD CONTROLS
+    =========================================== -->
+
     <div id="leaderboardControls">
+
 
       <button
         id="startLeaderboardButton"
@@ -331,16 +465,31 @@
     </div>
 
 
+
+    <!-- ==========================================
+         MIRROR HINT + FINALE
+    =========================================== -->
+
     <div id="finaleControls">
+
+
+      <button
+        id="playMirrorHintButton"
+        disabled
+      >
+        🎵 Play Five-Tone Mirror Hint
+      </button>
+
 
       <button
         id="playFinaleButton"
         disabled
       >
-        ▶ Play Finale
+        ▶ Play Victory Finale
       </button>
 
     </div>
+
 
   </section>
 
@@ -348,7 +497,13 @@
   <p id="status"></p>
 
 
+
   <script type="module">
+
+
+    /* ==========================================
+       IMPORTS
+    ========================================== */
 
     import {
       db,
@@ -371,86 +526,113 @@
     } from "./questions.js";
 
 
+
     const photoChannel =
       new BroadcastChannel(
         "moon-palace-photos"
       );
 
 
+
+    /* ==========================================
+       ELEMENTS
+    ========================================== */
+
     const createRoomButton =
       document.getElementById(
         "createRoomButton"
       );
+
 
     const resetRoomButton =
       document.getElementById(
         "resetRoomButton"
       );
 
+
     const roomSection =
       document.getElementById(
         "roomSection"
       );
+
 
     const roomCodeEl =
       document.getElementById(
         "roomCode"
       );
 
+
     const joinedCountEl =
       document.getElementById(
         "joinedCount"
       );
+
 
     const teamList =
       document.getElementById(
         "teamList"
       );
 
+
     const playIntroButton =
       document.getElementById(
         "playIntroButton"
       );
+
 
     const startButton =
       document.getElementById(
         "startButton"
       );
 
+
     const revealButton =
       document.getElementById(
         "revealButton"
       );
+
 
     const nextQuestionButton =
       document.getElementById(
         "nextQuestionButton"
       );
 
+
     const finishQuizButton =
       document.getElementById(
         "finishQuizButton"
       );
+
 
     const startLeaderboardButton =
       document.getElementById(
         "startLeaderboardButton"
       );
 
+
     const revealRankButton =
       document.getElementById(
         "revealRankButton"
       );
+
 
     const showFullLeaderboardButton =
       document.getElementById(
         "showFullLeaderboardButton"
       );
 
+
+    const playMirrorHintButton =
+      document.getElementById(
+        "playMirrorHintButton"
+      );
+
+
     const playFinaleButton =
       document.getElementById(
         "playFinaleButton"
       );
+
 
     const statusEl =
       document.getElementById(
@@ -458,31 +640,46 @@
       );
 
 
+
+    /* ==========================================
+       VARIABLES
+    ========================================== */
+
     let currentRoomCode =
       null;
+
 
     let currentGameState =
       "none";
 
+
     let currentJoinedCount =
       0;
+
 
     let revealInProgress =
       false;
 
+
     let stopTeamsListener =
       null;
+
 
     let stopRoomListener =
       null;
 
 
 
+    /* ==========================================
+       GENERAL HELPERS
+    ========================================== */
+
     function generateRoomCode() {
 
       return Math.floor(
         1000 +
-        Math.random() * 9000
+        Math.random() *
+        9000
       ).toString();
 
     }
@@ -491,11 +688,14 @@
 
     function stopExistingListeners() {
 
+
       if (
         stopTeamsListener
       ) {
 
+
         stopTeamsListener();
+
 
         stopTeamsListener =
           null;
@@ -507,7 +707,9 @@
         stopRoomListener
       ) {
 
+
         stopRoomListener();
+
 
         stopRoomListener =
           null;
@@ -520,8 +722,10 @@
 
     function updatePrimaryButtons() {
 
+
       const hasTeams =
-        currentJoinedCount > 0;
+        currentJoinedCount >
+        0;
 
 
       playIntroButton.disabled =
@@ -548,7 +752,8 @@
 
 
 
-    function resetLeaderboardButtons() {
+    function resetEndButtons() {
+
 
       startLeaderboardButton.disabled =
         true;
@@ -562,12 +767,24 @@
         true;
 
 
+      playMirrorHintButton.disabled =
+        true;
+
+
       playFinaleButton.disabled =
         true;
 
 
       revealRankButton.textContent =
         "Reveal Next Rank";
+
+
+      playMirrorHintButton.textContent =
+        "🎵 Play Five-Tone Mirror Hint";
+
+
+      playFinaleButton.textContent =
+        "▶ Play Victory Finale";
 
     }
 
@@ -580,6 +797,7 @@
     createRoomButton.addEventListener(
       "click",
       async () => {
+
 
         stopExistingListeners();
 
@@ -610,6 +828,7 @@
 
         try {
 
+
           await set(
             ref(
               db,
@@ -617,6 +836,7 @@
               roomCode
             ),
             {
+
               state:
                 "lobby",
 
@@ -643,6 +863,7 @@
 
               createdAt:
                 Date.now()
+
             }
           );
 
@@ -676,7 +897,7 @@
             true;
 
 
-          resetLeaderboardButtons();
+          resetEndButtons();
 
 
           nextQuestionButton.textContent =
@@ -685,10 +906,6 @@
 
           finishQuizButton.textContent =
             "Finish Quiz →";
-
-
-          playFinaleButton.textContent =
-            "▶ Play Finale";
 
 
           statusEl.textContent =
@@ -711,6 +928,7 @@
         } catch (
           error
         ) {
+
 
           console.error(
             error
@@ -736,6 +954,7 @@
       roomCode
     ) {
 
+
       const teamsRef =
         ref(
           db,
@@ -751,6 +970,7 @@
           (
             snapshot
           ) => {
+
 
             const teams =
               snapshot.val() ||
@@ -776,6 +996,7 @@
       roomCode
     ) {
 
+
       const roomRef =
         ref(
           db,
@@ -790,6 +1011,7 @@
           async (
             snapshot
           ) => {
+
 
             const room =
               snapshot.val();
@@ -817,24 +1039,34 @@
 
 
 
+            /* ==================================
+               LOBBY
+            ================================== */
+
             if (
               state ===
               "lobby"
             ) {
 
+
               revealButton.disabled =
                 true;
+
 
               nextQuestionButton.disabled =
                 true;
 
+
               finishQuizButton.disabled =
                 true;
 
-              resetLeaderboardButtons();
+
+              resetEndButtons();
+
 
               revealInProgress =
                 false;
+
 
               return;
 
@@ -842,21 +1074,30 @@
 
 
 
+            /* ==================================
+               INTRO
+            ================================== */
+
             if (
               state ===
               "intro"
             ) {
 
+
               revealButton.disabled =
                 true;
+
 
               nextQuestionButton.disabled =
                 true;
 
+
               finishQuizButton.disabled =
                 true;
 
-              resetLeaderboardButtons();
+
+              resetEndButtons();
+
 
               revealInProgress =
                 false;
@@ -872,16 +1113,23 @@
 
 
 
+            /* ==================================
+               QUIZ COMPLETE
+            ================================== */
+
             if (
               state ===
               "quizComplete"
             ) {
 
+
               revealButton.disabled =
                 true;
 
+
               nextQuestionButton.disabled =
                 true;
+
 
               finishQuizButton.disabled =
                 true;
@@ -890,11 +1138,18 @@
               startLeaderboardButton.disabled =
                 false;
 
+
               revealRankButton.disabled =
                 true;
 
+
               showFullLeaderboardButton.disabled =
                 true;
+
+
+              playMirrorHintButton.disabled =
+                true;
+
 
               playFinaleButton.disabled =
                 true;
@@ -914,34 +1169,55 @@
 
 
 
+            /* ==================================
+               PROGRESSIVE LEADERBOARD
+            ================================== */
+
             if (
               state ===
               "leaderboard"
             ) {
 
+
               revealButton.disabled =
                 true;
+
 
               nextQuestionButton.disabled =
                 true;
 
+
               finishQuizButton.disabled =
                 true;
+
 
               startLeaderboardButton.disabled =
                 true;
 
+
               showFullLeaderboardButton.disabled =
                 true;
 
+
+              playMirrorHintButton.disabled =
+                true;
+
+
               playFinaleButton.disabled =
                 true;
+
 
 
               let revealOrder =
                 room.leaderboardRevealOrder ||
                 [];
 
+
+              /*
+                Firebase sometimes returns an
+                array-like object instead of
+                a true JS Array.
+              */
 
               if (
                 !Array.isArray(
@@ -951,24 +1227,26 @@
                   "object"
               ) {
 
+
                 revealOrder =
-                  Object.keys(
-                    revealOrder
-                  )
-                  .sort(
-                    (
-                      a,
-                      b
-                    ) =>
-                      Number(a) -
-                      Number(b)
-                  )
-                  .map(
-                    key =>
-                      revealOrder[
-                        key
-                      ]
-                  );
+                  Object
+                    .keys(
+                      revealOrder
+                    )
+                    .sort(
+                      (
+                        a,
+                        b
+                      ) =>
+                        Number(a) -
+                        Number(b)
+                    )
+                    .map(
+                      key =>
+                        revealOrder[
+                          key
+                        ]
+                    );
 
               }
 
@@ -983,10 +1261,12 @@
                 revealOrder.length;
 
 
+
               if (
                 step <
                 totalSteps
               ) {
+
 
                 revealRankButton.disabled =
                   false;
@@ -1014,6 +1294,7 @@
 
               } else {
 
+
                 revealRankButton.disabled =
                   true;
 
@@ -1038,40 +1319,140 @@
 
 
 
+            /* ==================================
+               FULL LEADERBOARD
+            ================================== */
+
             if (
               state ===
               "leaderboardFull"
             ) {
 
+
               revealButton.disabled =
                 true;
+
 
               nextQuestionButton.disabled =
                 true;
 
+
               finishQuizButton.disabled =
                 true;
+
 
               startLeaderboardButton.disabled =
                 true;
 
+
               revealRankButton.disabled =
                 true;
+
 
               showFullLeaderboardButton.disabled =
                 true;
 
+
+              /*
+                This is where the new
+                ending sequence begins.
+
+                We deliberately require the
+                Mirror Hint before Finale.
+              */
+
+              playMirrorHintButton.disabled =
+                false;
+
+
+              playMirrorHintButton.textContent =
+                "🎵 Play Five-Tone Mirror Hint";
+
+
+              playFinaleButton.disabled =
+                true;
+
+
+              playFinaleButton.textContent =
+                "▶ Play Victory Finale";
+
+
+              statusEl.textContent =
+                "🏆 Full Final Leaderboard displayed. Next: play the Five-Tone Mirror hint.";
+
+
+              return;
+
+            }
+
+
+
+            /* ==================================
+               FIVE-TONE MIRROR HINT
+            ================================== */
+
+            if (
+              state ===
+              "mirrorHint"
+            ) {
+
+
+              revealButton.disabled =
+                true;
+
+
+              nextQuestionButton.disabled =
+                true;
+
+
+              finishQuizButton.disabled =
+                true;
+
+
+              startLeaderboardButton.disabled =
+                true;
+
+
+              revealRankButton.disabled =
+                true;
+
+
+              showFullLeaderboardButton.disabled =
+                true;
+
+
+              /*
+                Important:
+                the Hint button stays enabled.
+
+                Every press writes a new
+                mirrorHintStartedAt timestamp,
+                so the TV will replay the MP3.
+              */
+
+              playMirrorHintButton.disabled =
+                false;
+
+
+              playMirrorHintButton.textContent =
+                "🔁 Play Hint Again";
+
+
+              /*
+                Once the hint has been started,
+                the Finale becomes available.
+              */
 
               playFinaleButton.disabled =
                 false;
 
 
               playFinaleButton.textContent =
-                "▶ Play Finale";
+                "▶ Play Victory Finale";
 
 
               statusEl.textContent =
-                "🏆 Full Final Leaderboard is displayed. When ready, play the finale.";
+                "🎵 Five-Tone Mirror hint screen active. Replay the hint as often as needed, then start the Victory Finale.";
 
 
               return;
@@ -1079,40 +1460,59 @@
             }
 
 
+
+            /* ==================================
+               FINALE
+            ================================== */
 
             if (
               state ===
               "finale"
             ) {
 
+
               revealButton.disabled =
                 true;
+
 
               nextQuestionButton.disabled =
                 true;
 
+
               finishQuizButton.disabled =
                 true;
+
 
               startLeaderboardButton.disabled =
                 true;
 
+
               revealRankButton.disabled =
                 true;
 
+
               showFullLeaderboardButton.disabled =
                 true;
+
+
+              playMirrorHintButton.disabled =
+                true;
+
 
               playFinaleButton.disabled =
                 true;
 
 
+              playMirrorHintButton.textContent =
+                "Mirror Hint Complete ✓";
+
+
               playFinaleButton.textContent =
-                "Finale Playing ✓";
+                "Victory Finale Playing ✓";
 
 
               statusEl.textContent =
-                "🌕 Finale is playing on the TV.";
+                "🌕 Victory Finale is playing on the TV.";
 
 
               return;
@@ -1121,16 +1521,21 @@
 
 
 
+            /* ==================================
+               ANSWER REVEAL
+            ================================== */
+
             if (
               state ===
               "reveal"
             ) {
 
+
               revealButton.disabled =
                 true;
 
 
-              resetLeaderboardButtons();
+              resetEndButtons();
 
 
               revealInProgress =
@@ -1173,10 +1578,12 @@
                 questions.length;
 
 
+
               if (
                 moonPowerComplete &&
                 !isLastQuestion
               ) {
+
 
                 nextQuestionButton.disabled =
                   false;
@@ -1207,10 +1614,12 @@
               }
 
 
+
               if (
                 moonPowerComplete &&
                 isLastQuestion
               ) {
+
 
                 nextQuestionButton.disabled =
                   true;
@@ -1237,10 +1646,12 @@
               }
 
 
+
               if (
                 !moonPowerComplete &&
                 isLastQuestion
               ) {
+
 
                 nextQuestionButton.disabled =
                   true;
@@ -1269,6 +1680,7 @@
                 return;
 
               }
+
 
 
               nextQuestionButton.disabled =
@@ -1305,6 +1717,10 @@
 
 
 
+            /* ==================================
+               QUESTION OPEN
+            ================================== */
+
             if (
               state !==
               "questions"
@@ -1327,7 +1743,8 @@
               true;
 
 
-            resetLeaderboardButtons();
+            resetEndButtons();
+
 
 
             const teams =
@@ -1336,18 +1753,20 @@
 
 
             const activeTeamKeys =
-              Object.keys(
-                teams
-              ).filter(
-                teamKey =>
-                  teams[
-                    teamKey
-                  ] &&
-                  teams[
-                    teamKey
-                  ].joined ===
-                    true
-              );
+              Object
+                .keys(
+                  teams
+                )
+                .filter(
+                  teamKey =>
+                    teams[
+                      teamKey
+                    ] &&
+                    teams[
+                      teamKey
+                    ].joined ===
+                      true
+                );
 
 
             const activeTeamCount =
@@ -1375,12 +1794,14 @@
 
 
             const answeredCount =
-              activeTeamKeys.filter(
-                teamKey =>
-                  answers[
-                    teamKey
-                  ]
-              ).length;
+              activeTeamKeys
+                .filter(
+                  teamKey =>
+                    answers[
+                      teamKey
+                    ]
+                )
+                .length;
 
 
             statusEl.textContent =
@@ -1405,6 +1826,7 @@
               !revealInProgress
             ) {
 
+
               revealInProgress =
                 true;
 
@@ -1423,12 +1845,13 @@
 
 
     /* ==========================================
-       SCORE / REVEAL
+       SCORE / REVEAL QUESTION
     ========================================== */
 
     async function revealCurrentQuestion(
       roomCode
     ) {
+
 
       if (
         !roomCode
@@ -1440,6 +1863,7 @@
 
 
       try {
+
 
         const roomRef =
           ref(
@@ -1459,8 +1883,10 @@
           !snapshot.exists()
         ) {
 
+
           revealInProgress =
             false;
+
 
           return;
 
@@ -1494,6 +1920,7 @@
           !question
         ) {
 
+
           revealInProgress =
             false;
 
@@ -1505,6 +1932,7 @@
           return;
 
         }
+
 
 
         const alreadyScored =
@@ -1519,6 +1947,7 @@
           alreadyScored
         ) {
 
+
           await update(
             roomRef,
             {
@@ -1531,6 +1960,7 @@
           return;
 
         }
+
 
 
         const teams =
@@ -1559,6 +1989,7 @@
           {};
 
 
+
         for (
           const [
             teamKey,
@@ -1568,6 +1999,7 @@
             teams
           )
         ) {
+
 
           if (
             !teamData ||
@@ -1648,6 +2080,7 @@
         }
 
 
+
         const currentMoonPower =
           Number(
             room.moonPower
@@ -1684,6 +2117,7 @@
             targetMoonPower;
 
 
+
         updates[
           "moonPower"
         ] =
@@ -1702,9 +2136,11 @@
           isNowComplete;
 
 
+
         if (
           justReachedTarget
         ) {
+
 
           updates[
             "moonPowerReachedAtQuestion"
@@ -1718,6 +2154,7 @@
             Date.now();
 
         }
+
 
 
         updates[
@@ -1743,6 +2180,7 @@
         error
       ) {
 
+
         console.error(
           error
         );
@@ -1762,9 +2200,14 @@
 
 
 
+    /* ==========================================
+       MANUAL REVEAL
+    ========================================== */
+
     revealButton.addEventListener(
       "click",
       async () => {
+
 
         if (
           !currentRoomCode ||
@@ -1802,6 +2245,7 @@
       "click",
       async () => {
 
+
         if (
           !currentRoomCode ||
           currentGameState !==
@@ -1822,6 +2266,7 @@
 
 
         try {
+
 
           const roomRef =
             ref(
@@ -1873,8 +2318,10 @@
             !nextQuestionExists
           ) {
 
+
             finishQuizButton.disabled =
               false;
+
 
             return;
 
@@ -1888,6 +2335,7 @@
           await update(
             roomRef,
             {
+
               state:
                 "questions",
 
@@ -1896,6 +2344,7 @@
 
               lastQuestionGain:
                 0
+
             }
           );
 
@@ -1903,6 +2352,7 @@
         } catch (
           error
         ) {
+
 
           console.error(
             error
@@ -1928,6 +2378,7 @@
       "click",
       async () => {
 
+
         if (
           !currentRoomCode ||
           currentGameState !==
@@ -1948,6 +2399,7 @@
 
 
         try {
+
 
           const roomRef =
             ref(
@@ -2006,17 +2458,25 @@
               targetMoonPower;
 
 
+
           if (
             !naturallyComplete &&
             !isLastQuestion
           ) {
 
+
             statusEl.textContent =
               "Moon Power has not reached the target yet.";
+
+
+            finishQuizButton.disabled =
+              true;
+
 
             return;
 
           }
+
 
 
           const completedByHost =
@@ -2032,6 +2492,7 @@
           await update(
             roomRef,
             {
+
               state:
                 "quizComplete",
 
@@ -2052,6 +2513,7 @@
 
               completionReason:
                 completionReason
+
             }
           );
 
@@ -2059,6 +2521,7 @@
         } catch (
           error
         ) {
+
 
           console.error(
             error
@@ -2088,6 +2551,7 @@
       "click",
       async () => {
 
+
         if (
           !currentRoomCode ||
           currentGameState !==
@@ -2104,6 +2568,7 @@
 
 
         try {
+
 
           const roomRef =
             ref(
@@ -2141,6 +2606,7 @@
             [];
 
 
+
           for (
             const [
               teamKey,
@@ -2150,6 +2616,7 @@
               teams
             )
           ) {
+
 
             if (
               !teamData ||
@@ -2190,6 +2657,7 @@
 
             standings.push(
               {
+
                 teamKey:
                   teamKey,
 
@@ -2204,16 +2672,19 @@
 
                 totalScore:
                   totalScore
+
               }
             );
 
           }
 
 
+
           if (
             standings.length ===
               0
           ) {
+
 
             statusEl.textContent =
               "No active teams found.";
@@ -2228,16 +2699,19 @@
           }
 
 
+
           standings.sort(
             (
               a,
               b
             ) => {
 
+
               if (
                 b.totalScore !==
                 a.totalScore
               ) {
+
 
                 return (
                   b.totalScore -
@@ -2256,6 +2730,22 @@
           );
 
 
+
+          /*
+            Competition ranking:
+
+            500
+            500
+            450
+
+            becomes
+
+            Rank 1
+            Rank 1
+            Rank 3
+          */
+
+
           let lastScore =
             null;
 
@@ -2264,11 +2754,13 @@
             0;
 
 
+
           standings.forEach(
             (
               team,
               index
             ) => {
+
 
               if (
                 lastScore ===
@@ -2276,6 +2768,7 @@
                 team.totalScore !==
                   lastScore
               ) {
+
 
                 lastRank =
                   index + 1;
@@ -2294,12 +2787,15 @@
           );
 
 
+
           const finalStandings =
             {};
 
 
+
           standings.forEach(
             team => {
+
 
               finalStandings[
                 team.teamKey
@@ -2326,6 +2822,7 @@
           );
 
 
+
           const revealOrder =
             [
               ...new Set(
@@ -2344,9 +2841,11 @@
             );
 
 
+
           await update(
             roomRef,
             {
+
               state:
                 "leaderboard",
 
@@ -2361,6 +2860,7 @@
 
               leaderboardStartedAt:
                 Date.now()
+
             }
           );
 
@@ -2368,6 +2868,7 @@
         } catch (
           error
         ) {
+
 
           console.error(
             error
@@ -2397,6 +2898,7 @@
       "click",
       async () => {
 
+
         if (
           !currentRoomCode ||
           currentGameState !==
@@ -2413,6 +2915,7 @@
 
 
         try {
+
 
           const roomRef =
             ref(
@@ -2454,24 +2957,26 @@
               "object"
           ) {
 
+
             revealOrder =
-              Object.keys(
-                revealOrder
-              )
-              .sort(
-                (
-                  a,
-                  b
-                ) =>
-                  Number(a) -
-                  Number(b)
-              )
-              .map(
-                key =>
-                  revealOrder[
-                    key
-                  ]
-              );
+              Object
+                .keys(
+                  revealOrder
+                )
+                .sort(
+                  (
+                    a,
+                    b
+                  ) =>
+                    Number(a) -
+                    Number(b)
+                )
+                .map(
+                  key =>
+                    revealOrder[
+                      key
+                    ]
+                );
 
           }
 
@@ -2482,10 +2987,12 @@
             ) || 0;
 
 
+
           if (
             step >=
             revealOrder.length
           ) {
+
 
             revealRankButton.disabled =
               true;
@@ -2511,6 +3018,7 @@
           await update(
             roomRef,
             {
+
               leaderboardStep:
                 step + 1,
 
@@ -2519,6 +3027,7 @@
 
               leaderboardLastRevealAt:
                 Date.now()
+
             }
           );
 
@@ -2526,6 +3035,7 @@
         } catch (
           error
         ) {
+
 
           console.error(
             error
@@ -2555,6 +3065,7 @@
       "click",
       async () => {
 
+
         if (
           !currentRoomCode ||
           currentGameState !==
@@ -2572,6 +3083,7 @@
 
         try {
 
+
           await update(
             ref(
               db,
@@ -2579,11 +3091,13 @@
               currentRoomCode
             ),
             {
+
               state:
                 "leaderboardFull",
 
               leaderboardCompletedAt:
                 Date.now()
+
             }
           );
 
@@ -2591,6 +3105,7 @@
         } catch (
           error
         ) {
+
 
           console.error(
             error
@@ -2613,17 +3128,128 @@
 
 
     /* ==========================================
-       PLAY FINALE
+       PLAY / REPLAY FIVE-TONE MIRROR HINT
+    ========================================== */
+
+    playMirrorHintButton.addEventListener(
+      "click",
+      async () => {
+
+
+        /*
+          Valid from:
+
+          leaderboardFull
+          OR
+          mirrorHint
+
+          This means once you're already
+          on the hint screen, pressing the
+          button simply replays the clue.
+        */
+
+
+        if (
+          !currentRoomCode ||
+          (
+            currentGameState !==
+              "leaderboardFull" &&
+
+            currentGameState !==
+              "mirrorHint"
+          )
+        ) {
+
+          return;
+
+        }
+
+
+        playMirrorHintButton.disabled =
+          true;
+
+
+        statusEl.textContent =
+          "Starting Five-Tone Mirror audio hint...";
+
+
+        try {
+
+
+          await update(
+            ref(
+              db,
+              "rooms/" +
+              currentRoomCode
+            ),
+            {
+
+              state:
+                "mirrorHint",
+
+
+              /*
+                IMPORTANT:
+
+                This timestamp changes every
+                time the button is pressed.
+
+                screen.html uses it to identify
+                each replay as a new hint event.
+              */
+
+              mirrorHintStartedAt:
+                Date.now()
+
+            }
+          );
+
+
+        } catch (
+          error
+        ) {
+
+
+          console.error(
+            error
+          );
+
+
+          playMirrorHintButton.disabled =
+            false;
+
+
+          statusEl.textContent =
+            "Could not play Mirror hint: " +
+            error.message;
+
+        }
+
+      }
+    );
+
+
+
+    /* ==========================================
+       PLAY VICTORY FINALE
     ========================================== */
 
     playFinaleButton.addEventListener(
       "click",
       async () => {
 
+
+        /*
+          Finale is intentionally only
+          allowed AFTER entering the
+          mirrorHint stage.
+        */
+
+
         if (
           !currentRoomCode ||
           currentGameState !==
-            "leaderboardFull"
+            "mirrorHint"
         ) {
 
           return;
@@ -2635,11 +3261,16 @@
           true;
 
 
+        playMirrorHintButton.disabled =
+          true;
+
+
         playFinaleButton.textContent =
-          "Starting Finale...";
+          "Starting Victory Finale...";
 
 
         try {
+
 
           await update(
             ref(
@@ -2648,11 +3279,13 @@
               currentRoomCode
             ),
             {
+
               state:
                 "finale",
 
               finaleStartedAt:
                 Date.now()
+
             }
           );
 
@@ -2660,6 +3293,7 @@
         } catch (
           error
         ) {
+
 
           console.error(
             error
@@ -2670,8 +3304,12 @@
             false;
 
 
+          playMirrorHintButton.disabled =
+            false;
+
+
           playFinaleButton.textContent =
-            "▶ Play Finale";
+            "▶ Play Victory Finale";
 
 
           statusEl.textContent =
@@ -2693,6 +3331,7 @@
       teams
     ) {
 
+
       teamList.innerHTML =
         "";
 
@@ -2701,11 +3340,13 @@
         0;
 
 
+
       for (
         let teamNumber = 1;
         teamNumber <= 10;
         teamNumber++
       ) {
+
 
         const teamKey =
           "team" +
@@ -2732,6 +3373,7 @@
         }
 
 
+
         const row =
           document.createElement(
             "div"
@@ -2740,6 +3382,7 @@
 
         row.className =
           "teamRow";
+
 
 
         const name =
@@ -2755,6 +3398,7 @@
         name.textContent =
           "Team " +
           teamNumber;
+
 
 
         const connectionStatus =
@@ -2775,15 +3419,18 @@
             : "statusWaiting";
 
 
+
         const scoreArea =
           document.createElement(
             "div"
           );
 
 
+
         if (
           joined
         ) {
+
 
           const input =
             document.createElement(
@@ -2812,9 +3459,11 @@
             0;
 
 
+
           input.addEventListener(
             "change",
             async () => {
+
 
               const score =
                 Math.max(
@@ -2834,8 +3483,10 @@
                   teamKey
                 ),
                 {
+
                   previousScore:
                     score
+
                 }
               );
 
@@ -2850,10 +3501,12 @@
 
         } else {
 
+
           scoreArea.textContent =
             "—";
 
         }
+
 
 
         const photoArea =
@@ -2866,14 +3519,17 @@
           "photoArea";
 
 
+
         if (
           joined
         ) {
+
 
           const photoStorageKey =
             currentRoomCode +
             "-" +
             teamKey;
+
 
 
           const fileInput =
@@ -2894,6 +3550,7 @@
             true;
 
 
+
           const chooseButton =
             document.createElement(
               "button"
@@ -2910,6 +3567,7 @@
 
           chooseButton.textContent =
             "Choose Photo";
+
 
 
           const preview =
@@ -2932,6 +3590,7 @@
             true;
 
 
+
           const photoStatus =
             document.createElement(
               "span"
@@ -2942,9 +3601,11 @@
             "photoStatus";
 
 
+
           chooseButton.addEventListener(
             "click",
             () => {
+
 
               fileInput.click();
 
@@ -2952,9 +3613,11 @@
           );
 
 
+
           fileInput.addEventListener(
             "change",
             async () => {
+
 
               const file =
                 fileInput.files[
@@ -2971,11 +3634,13 @@
               }
 
 
+
               if (
                 !file.type.startsWith(
                   "image/"
                 )
               ) {
+
 
                 alert(
                   "Please choose an image file."
@@ -2987,7 +3652,9 @@
               }
 
 
+
               try {
+
 
                 await saveTeamPhoto(
                   photoStorageKey,
@@ -2997,6 +3664,7 @@
 
                 photoChannel.postMessage(
                   {
+
                     type:
                       "photo-updated",
 
@@ -3005,6 +3673,7 @@
 
                     teamKey:
                       teamKey
+
                   }
                 );
 
@@ -3035,6 +3704,7 @@
                 error
               ) {
 
+
                 console.error(
                   error
                 );
@@ -3049,7 +3719,9 @@
           );
 
 
+
           try {
+
 
             const savedPhoto =
               await getTeamPhoto(
@@ -3060,6 +3732,7 @@
             if (
               savedPhoto
             ) {
+
 
               const savedURL =
                 URL.createObjectURL(
@@ -3089,12 +3762,14 @@
             error
           ) {
 
+
             console.error(
               "Could not load stored photo:",
               error
             );
 
           }
+
 
 
           photoArea.appendChild(
@@ -3119,10 +3794,12 @@
 
         } else {
 
+
           photoArea.textContent =
             "—";
 
         }
+
 
 
         row.appendChild(
@@ -3152,6 +3829,7 @@
       }
 
 
+
       currentJoinedCount =
         joinedCount;
 
@@ -3164,6 +3842,7 @@
       updatePrimaryButtons();
 
 
+
       if (
         currentGameState ===
           "lobby" ||
@@ -3171,16 +3850,19 @@
           "none"
       ) {
 
+
         if (
           joinedCount ===
             10
         ) {
+
 
           statusEl.textContent =
             "✅ All 10 teams are ready.";
 
 
         } else {
+
 
           statusEl.textContent =
             joinedCount +
@@ -3202,6 +3884,7 @@
       "click",
       async () => {
 
+
         if (
           !currentRoomCode
         ) {
@@ -3218,8 +3901,10 @@
             currentRoomCode
           ),
           {
+
             state:
               "intro"
+
           }
         );
 
@@ -3235,6 +3920,7 @@
     startButton.addEventListener(
       "click",
       async () => {
+
 
         if (
           !currentRoomCode
@@ -3266,6 +3952,7 @@
             currentRoomCode
           ),
           {
+
             state:
               "questions",
 
@@ -3273,6 +3960,7 @@
               questions[
                 0
               ].id
+
           }
         );
 
@@ -3282,12 +3970,13 @@
 
 
     /* ==========================================
-       RESET / END
+       RESET / END GAME
     ========================================== */
 
     resetRoomButton.addEventListener(
       "click",
       async () => {
+
 
         const confirmed =
           confirm(
@@ -3305,6 +3994,7 @@
 
 
         try {
+
 
           await set(
             ref(
@@ -3370,11 +4060,7 @@
             true;
 
 
-          resetLeaderboardButtons();
-
-
-          playFinaleButton.textContent =
-            "▶ Play Finale";
+          resetEndButtons();
 
 
           statusEl.textContent =
@@ -3384,6 +4070,7 @@
         } catch (
           error
         ) {
+
 
           console.error(
             error
@@ -3407,16 +4094,16 @@
 
     async function recoverCurrentRoom() {
 
+
       statusEl.textContent =
         "Checking for an active game...";
 
 
       try {
 
+
         /*
-          Step 1:
-          Ask Firebase which room is
-          currently active.
+          Find current active room.
         */
 
         const currentRoomSnapshot =
@@ -3433,6 +4120,7 @@
           !currentRoomSnapshot.val()
         ) {
 
+
           statusEl.textContent =
             "No active game. Ready to create a new room.";
 
@@ -3448,10 +4136,9 @@
           );
 
 
+
         /*
-          Step 2:
-          Make sure that room still
-          actually exists.
+          Confirm room still exists.
         */
 
         const roomSnapshot =
@@ -3468,6 +4155,7 @@
           !roomSnapshot.exists()
         ) {
 
+
           statusEl.textContent =
             "An active room reference was found, but the room data no longer exists.";
 
@@ -3481,9 +4169,9 @@
           roomSnapshot.val();
 
 
+
         /*
-          Step 3:
-          Restore Host variables.
+          Restore host variables.
         */
 
         stopExistingListeners();
@@ -3508,19 +4196,22 @@
 
 
         currentJoinedCount =
-          Object.values(
-            teams
-          ).filter(
-            team =>
-              team &&
-              team.joined ===
-                true
-          ).length;
+          Object
+            .values(
+              teams
+            )
+            .filter(
+              team =>
+                team &&
+                team.joined ===
+                  true
+            )
+            .length;
+
 
 
         /*
-          Step 4:
-          Restore visible Host room.
+          Restore visible room.
         */
 
         roomCodeEl.textContent =
@@ -3544,8 +4235,12 @@
           "Finish Quiz →";
 
 
+        playMirrorHintButton.textContent =
+          "🎵 Play Five-Tone Mirror Hint";
+
+
         playFinaleButton.textContent =
-          "▶ Play Finale";
+          "▶ Play Victory Finale";
 
 
         statusEl.textContent =
@@ -3554,20 +4249,18 @@
           "...";
 
 
-        /*
-          Step 5:
-          Reconnect exactly the same
-          live Firebase listeners used
-          before the refresh.
-
-          The room listener will then
-          restore the correct buttons
-          for whichever state the game
-          is currently in.
-        */
-
         updatePrimaryButtons();
 
+
+
+        /*
+          Reconnect live listeners.
+
+          watchRoomForAnswers() will
+          automatically restore the correct
+          buttons for the current state,
+          including mirrorHint.
+        */
 
         watchTeams(
           roomCode
@@ -3582,6 +4275,7 @@
       } catch (
         error
       ) {
+
 
         console.error(
           "Host recovery failed:",
@@ -3600,7 +4294,7 @@
 
 
     /* ==========================================
-       RUN RECOVERY WHEN HOST PAGE OPENS
+       RUN RECOVERY ON PAGE LOAD
     ========================================== */
 
     recoverCurrentRoom();
@@ -3609,4 +4303,5 @@
   </script>
 
 </body>
+
 </html>
